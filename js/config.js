@@ -6,8 +6,8 @@
    la ponen los permisos de la base de datos y las funciones.
    ========================================================= */
 window.A2_CONFIG = {
-  supabaseUrl: '',        // ej. https://lfpagqdemvjhdgkxnxrg.supabase.co/rest/v1/
-  supabaseAnonKey: '',    // clave "sb_publishable__iOKt9uzpBqNNaIYN449-w_6LDVYfxd"
+  supabaseUrl: 'https://lfpagqdemvjhdgkxnxrg.supabase.co',
+  supabaseAnonKey: 'sb_publishable__iOKt9uzpBqNNaIYN449-w_6LDVYfxd',
 
   dominioCorporativo: 'a2desarrollos.com',
 
