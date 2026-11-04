@@ -556,3 +556,16 @@ header.site .wrap{max-width:none;padding-left:clamp(20px,3.5vw,56px);padding-rig
   .u-areas{grid-column:1/-1;order:4}
   .u-search{min-width:0;width:100%}
 }
+
+/* ---------- Encabezado del portal (solo logo + cerrar sesión) ---------- */
+header.site-portal .nav ul.nav-portal{position:static;display:flex;opacity:1;transform:none;pointer-events:auto;flex-direction:row;padding:0;border:0;background:none;gap:0}
+header.site-portal .nav-portal .nav-login{font-family:var(--fb);font-size:11px;font-weight:500;letter-spacing:.24em;text-transform:uppercase;color:var(--grafito);background:var(--blanco);border:1px solid var(--negro);padding:10px 18px;cursor:pointer;margin:0;transition:background .2s,color .2s}
+header.site-portal .nav-portal .nav-login:hover{background:var(--negro);color:var(--blanco)}
+
+/* ---------- Usuarios: pendientes ---------- */
+.u-pend{margin-top:32px;margin-bottom:8px}
+.u-pend .h2,.u-h2{font-size:22px;margin:0 0 14px}
+.u-pend .h2 em,.u-h2 em{font-style:normal;font-family:var(--fb);font-size:12px;background:var(--amarillo);padding:2px 8px;vertical-align:4px;margin-left:6px}
+.u-h2{margin-top:44px}
+.u-pend .req-list li{padding:16px 14px}
+.u-pend .req-list b{font-family:var(--fh);font-weight:500;font-size:15.5px}

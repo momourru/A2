@@ -147,5 +147,7 @@
   /* Barra de "modo demostración" solo cuando aplica */
   document.addEventListener('DOMContentLoaded', function(){
     var bar = document.querySelector('.demo-bar'); if (bar) bar.hidden = LIVE;
+    var out = document.getElementById('hdr-logout');
+    if (out) out.addEventListener('click', function(){ window.A2Portal.logout().then(function(){ location.href = 'login.html'; }); });
   });
 })();
