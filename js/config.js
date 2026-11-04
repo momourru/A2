@@ -37,15 +37,11 @@ window.A2_CONFIG = {
 
   /* Áreas o departamentos. El "id" no se debe cambiar una vez haya usuarios. */
   areas: [
-    {id:'gerencia',  n:'Gerencia general'},
     {id:'finanzas',  n:'Contabilidad y finanzas'},
-    {id:'legal',     n:'Legal'},
-    {id:'mercadeo',  n:'Mercadeo'},
-    {id:'ventas',    n:'Ventas'},
-    {id:'proyectos', n:'Desarrollo de proyectos'},
-    {id:'obra',      n:'Construcción y obra'},
-    {id:'compras',   n:'Compras y proveedores'},
     {id:'admin',     n:'Administración y RR. HH.'},
-    {id:'ti',        n:'Tecnología'}
+    {id:'legal',     n:'Legal'},
+    {id:'proyectos', n:'Proyectos y obra'},
+    {id:'ventas',    n:'Ventas'},
+    {id:'mercadeo',  n:'Mercadeo'}
   ]
 };
