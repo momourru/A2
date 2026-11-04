@@ -23,7 +23,8 @@
     return Promise.reject((error && error.message) || 'Ocurrió un error. Intentá de nuevo.');
   }
   function invoke(name, body){
-    return sb.functions.invoke(name, {body: body}).then(function(r){
+    var real = (C.funciones && C.funciones[name]) || name;
+    return sb.functions.invoke(real, {body: body}).then(function(r){
       if (r.error) return fnErr(r.error);
       if (r.data && r.data.error) throw r.data.error;
       return r.data;

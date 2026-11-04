@@ -11,6 +11,13 @@ window.A2_CONFIG = {
 
   dominioCorporativo: 'a2desarrollos.com',
 
+  /* Nombre con el que quedó cada función en Supabase → Edge Functions */
+  funciones: {
+    solicitar: 'quick-responder',
+    aprobar:   'bright-task',
+    activar:   'smart-action'
+  },
+
   /* Puestos que puede elegir quien solicita usuario. Editá esta lista libremente. */
   puestos: [
     'Gerente general',
@@ -42,4 +49,3 @@ window.A2_CONFIG = {
     {id:'ti',        n:'Tecnología'}
   ]
 };
-
