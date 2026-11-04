@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Solicitar usuario — Área Cuadrada</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="img/iso.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <a href="index.html" class="brand" aria-label="Área Cuadrada — inicio"><img src="img/logo-sd.png" alt="Área Cuadrada"></a>
+    <button class="menu-btn" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span></button>
+    <ul>
+      <li><a href="index.html#nosotros">Nosotros</a></li>
+      <li><a href="index.html#historia">Historia</a></li>
+      <li><a href="index.html#proyectos">Proyectos</a></li>
+      <li><a href="portafolio.html">Portafolio</a></li>
+      <li><a href="index.html#contacto">Contacto</a></li>
+      <li class="nav-sep" aria-hidden="true"></li>
+      <li><a href="login.html" class="nav-login">Log In</a></li>
+    </ul>
+  </div>
+</header>
+
+<div class="demo-bar"><b>Modo demostración</b><span>Todavía no está conectado a Supabase: no se crean cuentas ni se envían correos.</span></div>
+
+<main class="portal">
+  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="portal-col wide">
+    <a class="back" href="login.html">← Volver a Log In</a>
+    <div class="portal-title">
+      <span class="tag">Equipo A2</span>
+      <h1>Solicitá tu usuario</h1>
+      <p>Tu solicitud le llega a Gerencia para que la autorice. Cuando lo haga, te mandamos un correo con un enlace y un código único para terminar de crear tu cuenta.</p>
+      <div class="steps-mini">
+        <div class="cur"><span>01</span><b>Solicitud</b>Tus datos</div>
+        <div><span>02</span><b>Autorización</b>Gerencia</div>
+        <div><span>03</span><b>Código</b>Por correo</div>
+        <div><span>04</span><b>Perfil</b>Activación</div>
+      </div>
+    </div>
+
+    <div class="card" id="wrap-form"><div class="panel">
+      <form class="form" id="f-req" novalidate>
+        <div class="field"><label for="r-nom">Nombres</label><input id="r-nom" required autocomplete="given-name"><div class="msg">Requerido.</div></div>
+        <div class="field"><label for="r-ape">Apellidos</label><input id="r-ape" required autocomplete="family-name"><div class="msg">Requerido.</div></div>
+        <div class="field full"><label for="r-mail">Correo corporativo</label><input id="r-mail" type="email" required placeholder="nombre@a2desarrollos.com" autocomplete="email"><div class="hint">A este correo te llegará el enlace de activación.</div><div class="msg">Usá tu correo @a2desarrollos.com.</div></div>
+        <div class="field"><label for="r-cel">Celular</label><input id="r-cel" type="tel" required placeholder="+502" autocomplete="tel"><div class="msg">Requerido.</div></div>
+        <div class="field"><label for="r-pue">Puesto</label><select id="r-pue" required><option value="">Seleccioná…</option></select><div class="msg">Elegí tu puesto.</div></div>
+        <div class="field full"><label for="r-nota">Mensaje para Gerencia <span style="text-transform:none;letter-spacing:0;font-weight:400">(opcional)</span></label><textarea id="r-nota" maxlength="500" placeholder="Ej. Me incorporo al equipo de ventas de Vistas de San Miguel."></textarea></div>
+        <div class="hp" aria-hidden="true"><label>Empresa<input id="r-hp" tabindex="-1" autocomplete="off"></label></div>
+        <div class="full" id="r-out" hidden></div>
+        <div class="full"><button class="btn dark wide" type="submit">Enviar solicitud
+          <svg class="arr" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 7h12M8 2l5 5-5 5"/></svg></button></div>
+      </form>
+    </div></div>
+
+    <div class="card" id="wrap-done" hidden><div class="panel done">
+      <div class="ok"><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.4"><path d="M4 12l5 5L20 6"/></svg></div>
+      <h3>Solicitud enviada</h3>
+      <p class="sub">Gerencia ya recibió tu solicitud. Cuando la autorice, te llegará un correo de A2 a <b id="d-mail"></b> con tu enlace y código de activación.</p>
+      <div id="demo-next" hidden>
+        <p class="note"><b>Demo:</b> no se envió ningún correo. Podés ver la pantalla que recibe Gerencia para autorizarla.</p>
+        <div class="btns"><a class="btn dark" href="aprobar.html?id=demo">Ver lo que recibe Gerencia
+          <svg class="arr" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 7h12M8 2l5 5-5 5"/></svg></a></div>
+      </div>
+    </div></div>
+  </div>
+</main>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  var $ = function(s){return document.querySelector(s)};
+  A2Portal.puestos.forEach(function(p){ $('#r-pue').add(new Option(p, p)); });
+
+  var mailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/, dom = '@' + A2Portal.dominio;
+  function check(i, ok){ i.closest('.field').classList.toggle('err', !ok); return ok; }
+
+  $('#f-req').addEventListener('submit', function(e){
+    e.preventDefault();
+    var ok = true;
+    ['#r-nom','#r-ape','#r-cel'].forEach(function(id){ ok = check($(id), $(id).value.trim().length > 1) && ok; });
+    ok = check($('#r-pue'), !!$('#r-pue').value) && ok;
+    var m = $('#r-mail').value.trim().toLowerCase();
+    ok = check($('#r-mail'), mailRe.test(m) && m.slice(-dom.length) === dom) && ok;
+    if (!ok) return;
+    var f = this, out = $('#r-out'); f.classList.add('loading'); out.hidden = true;
+    A2Portal.requestAccess({
+      nombres: $('#r-nom').value.trim(), apellidos: $('#r-ape').value.trim(), correo: m,
+      celular: $('#r-cel').value.trim(), puesto: $('#r-pue').value, nota: $('#r-nota').value.trim(), empresa: $('#r-hp').value
+    }).then(function(){
+      $('#d-mail').textContent = m; $('#wrap-form').hidden = true; $('#wrap-done').hidden = false;
+      $('#demo-next').hidden = !A2Portal.demo; window.scrollTo({top:0, behavior:'smooth'});
+    }, function(msg){ out.hidden = false; out.className = 'full err-box'; out.textContent = msg; })
+    .finally(function(){ f.classList.remove('loading'); });
+  });
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/portal.js"></script>
+<script src="js/site.js"></script>
+</body>
+</html>
