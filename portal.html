@@ -43,7 +43,7 @@
           <h1 id="d-hola">Hola</h1>
           <div class="who" id="d-who"></div>
         </div>
-        <button class="btn" type="button" id="logout">Cerrar sesión</button>
+        <div class="dash-actions"><a class="btn dark" href="usuarios.html" id="go-users" hidden>Usuarios</a><button class="btn" type="button" id="logout">Cerrar sesión</button></div>
       </div>
 
       <section id="g-box" hidden style="margin-top:32px">
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function(){
     $('#d-who').textContent = [me.puesto, A2Portal.areaName(me.area), me.correo].filter(Boolean).join(' · ');
     $('#tiles').innerHTML = (me.areas || []).map(function(a){ return '<div class="tile"><h3>' + esc(A2Portal.areaName(a)) + '</h3><p>Contenido por definir.</p></div>'; }).join('') || '<div class="tile"><h3>Sin áreas asignadas</h3><p>Pedile a Gerencia que te asigne acceso.</p></div>';
     if (me.rol === 'owner' || me.rol === 'gerente') {
-      $('#g-box').hidden = false;
+      $('#g-box').hidden = false; $('#go-users').hidden = false;
       A2Portal.listPending().then(function(list){
         $('#g-list').innerHTML = list.length ? list.map(function(r){
           return '<li><div><b>' + esc(r.nombres + ' ' + r.apellidos) + '</b><small>' + esc(r.puesto) + ' · ' + esc(r.correo) + '</small></div><a class="btn dark" href="aprobar.html?id=' + encodeURIComponent(r.id) + '">Revisar</a></li>';

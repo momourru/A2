@@ -15,7 +15,8 @@ window.A2_CONFIG = {
   funciones: {
     solicitar: 'quick-responder',
     aprobar:   'bright-task',
-    activar:   'smart-action'
+    activar:   'smart-action',
+    usuarios:  'usuarios'
   },
 
   /* Puestos que puede elegir quien solicita usuario. Editá esta lista libremente. */

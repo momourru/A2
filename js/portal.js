@@ -70,7 +70,15 @@
     reject: function(id, motivo){ return invoke('aprobar', {id:id, accion:'rechazar', motivo:motivo||''}); },
 
     verifyCode: function(id, code){ return invoke('activar', {id:id, codigo:code, accion:'verificar'}); },
-    completeProfile: function(id, code, perfil, password){ return invoke('activar', {id:id, codigo:code, accion:'completar', perfil:perfil, password:password}); }
+    completeProfile: function(id, code, perfil, password){ return invoke('activar', {id:id, codigo:code, accion:'completar', perfil:perfil, password:password}); },
+
+    listUsers: function(){
+      return sb.from('perfiles').select('id,correo,nombres,apellidos,puesto,rol,area,areas,activo,creado_at').order('nombres')
+        .then(function(r){ if (r.error) throw r.error.message; return r.data || []; });
+    },
+    updateUser: function(id, d){ return invoke('usuarios', {accion:'actualizar', id:id, rol:d.rol, areas:d.areas, area:d.area}); },
+    setActive: function(id, on){ return invoke('usuarios', {accion: on ? 'reactivar' : 'desactivar', id:id}); },
+    deleteUser: function(id){ return invoke('usuarios', {accion:'eliminar', id:id}); }
   };
 
   /* ======================= MODO DEMO ======================= */
@@ -97,7 +105,7 @@
     forgot: function(){ return P(); },
     setNewPassword: function(){ return P(); },
     onRecovery: function(){},
-    me: function(){ var db = load(); return P(db.session && db.request ? Object.assign({}, db.request, {rol: db.request.rol || 'colaborador'}) : null); },
+    me: function(){ var db = load(); if (location.search.indexOf('demo=owner')>-1) return P({id:'u0', correo:'muc@a2desarrollos.com', nombres:'Mauricio', rol:'owner', areas:AREAS.map(function(a){return a.id}), activo:true}); return P(db.session && db.request ? Object.assign({}, db.request, {rol: db.request.rol || 'colaborador'}) : null); },
     getRequest: function(){ return P(load().request || null); },
     listPending: function(){ var r = load().request; return P(r && r.status==='pendiente' ? [r] : []); },
     approve: function(id, o){
@@ -118,6 +126,18 @@
         var db = load(); Object.assign(db.request, perfil, {status:'activa', code:null}); save(db); return {ok:true, perfil: db.request};
       });
     },
+    listUsers: function(){
+      var db = load();
+      if (!db.users) { db.users = [
+        {id:'u0', correo:'muc@a2desarrollos.com', nombres:'Mauricio', apellidos:'Urruela', puesto:'Gerente general', rol:'owner', area:null, areas:AREAS.map(function(a){return a.id}), activo:true},
+        {id:'u1', correo:'ana.perez@a2desarrollos.com', nombres:'Ana Lucía', apellidos:'Pérez', puesto:'Asesor(a) de ventas', rol:'colaborador', area:'ventas', areas:['ventas','mercadeo'], activo:true},
+        {id:'u2', correo:'jorge.lopez@a2desarrollos.com', nombres:'Jorge', apellidos:'López', puesto:'Supervisor(a) de obra', rol:'colaborador', area:'proyectos', areas:['proyectos'], activo:false}
+      ]; save(db); }
+      return P(db.users.slice());
+    },
+    updateUser: function(id, d){ var db = load(); db.users.forEach(function(u){ if (u.id===id){ u.rol=d.rol; u.areas=d.areas; u.area=d.area; } }); save(db); return P({ok:true}); },
+    setActive: function(id, on){ var db = load(); db.users.forEach(function(u){ if (u.id===id) u.activo=on; }); save(db); return P({ok:true}); },
+    deleteUser: function(id){ var db = load(); db.users = db.users.filter(function(u){ return u.id!==id; }); save(db); return P({ok:true}); },
     reset: function(){ save({}); }
   };
 

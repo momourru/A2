@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Usuarios — Área Cuadrada</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="img/iso.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <a href="index.html" class="brand" aria-label="Área Cuadrada — inicio"><img src="img/logo-sd.png" alt="Área Cuadrada"></a>
+    <button class="menu-btn" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span></button>
+    <ul>
+      <li><a href="index.html#nosotros">Nosotros</a></li>
+      <li><a href="index.html#historia">Historia</a></li>
+      <li><a href="index.html#proyectos">Proyectos</a></li>
+      <li><a href="portafolio.html">Portafolio</a></li>
+      <li><a href="index.html#contacto">Contacto</a></li>
+      <li class="nav-sep" aria-hidden="true"></li>
+      <li><a href="login.html" class="nav-login">Log In</a></li>
+    </ul>
+  </div>
+</header>
+
+<div class="demo-bar"><b>Modo demostración</b><span>Todavía no está conectado a Supabase: no se crean cuentas ni se envían correos.</span></div>
+
+<main class="portal">
+  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="portal-col wide" style="max-width:1100px">
+    <a class="back" href="portal.html">← Volver al portal</a>
+    <div class="dash-head">
+      <div>
+        <span class="tag">Configuración</span>
+        <h1>Usuarios</h1>
+        <div class="who">Cambiá roles y áreas, desactivá o eliminá usuarios del Portal A2.</div>
+      </div>
+      <div class="u-search field"><label for="q" class="sr">Buscar</label><input id="q" placeholder="Buscar por nombre o correo"></div>
+    </div>
+
+    <div class="card" id="c-load"><div class="panel"><p class="sub" style="margin:0">Cargando usuarios…</p></div></div>
+    <div class="err-box" id="c-err" hidden></div>
+
+    <div id="wrap" hidden>
+      <div class="u-filters filtros" role="group" aria-label="Filtrar">
+        <button aria-pressed="true" data-f="todos">Todos <em id="n-todos"></em></button>
+        <button aria-pressed="false" data-f="activos">Activos <em id="n-activos"></em></button>
+        <button aria-pressed="false" data-f="inactivos">Desactivados <em id="n-inactivos"></em></button>
+      </div>
+      <ul class="u-list" id="list"></ul>
+      <p class="note" style="margin-top:20px">Las solicitudes nuevas se autorizan desde el <a href="portal.html" style="text-decoration:underline">portal</a>. Un usuario desactivado no puede ingresar, pero conserva su información; si lo eliminás, se borra por completo y puede volver a solicitar acceso.</p>
+    </div>
+  </div>
+</main>
+
+<template id="tpl-row">
+  <li class="u-row">
+    <div class="u-main">
+      <div class="u-id"><b class="u-name"></b><small class="u-mail"></small></div>
+      <div class="u-meta"><span class="u-rol"></span><span class="u-state"></span></div>
+      <div class="u-areas"></div>
+      <button class="btn u-edit" type="button">Editar</button>
+    </div>
+    <form class="u-form form" hidden novalidate>
+      <div class="field"><label>Rol</label><select class="f-rol">
+        <option value="colaborador">Colaborador</option>
+        <option value="gerente">Gerente (autoriza usuarios)</option>
+        <option value="owner">Owner (control total)</option>
+      </select><div class="hint f-rol-hint"></div></div>
+      <div class="field"><label>Área o departamento</label><select class="f-area"><option value="">Sin área</option></select></div>
+      <div class="field full"><label>Información que puede ver</label><div class="chips f-areas"></div></div>
+      <div class="full u-out" hidden></div>
+      <div class="full u-actions">
+        <div class="u-danger">
+          <button type="button" class="link f-toggle"></button>
+          <button type="button" class="link f-del">Eliminar usuario</button>
+        </div>
+        <div class="u-save">
+          <button type="button" class="link f-cancel">Cancelar</button>
+          <button type="submit" class="btn dark">Guardar cambios</button>
+        </div>
+      </div>
+    </form>
+  </li>
+</template>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  var $ = function(s, c){ return (c||document).querySelector(s); }, $$ = function(s, c){ return Array.prototype.slice.call((c||document).querySelectorAll(s)); };
+  var ROL = {owner:'Owner', gerente:'Gerente', colaborador:'Colaborador'};
+  var me = null, users = [], filtro = 'todos';
+  function fail(m){ $('#c-load').hidden = true; $('#c-err').hidden = false; $('#c-err').textContent = m; }
+
+  A2Portal.me().then(function(m){
+    if (!m) { location.href = 'login.html?next=usuarios.html'; return; }
+    if (['owner','gerente'].indexOf(m.rol) < 0) { fail('Solo Owner o Gerente puede administrar usuarios.'); return; }
+    me = m; return load();
+  }).catch(function(e){ fail(String(e)); });
+
+  function load(){
+    return A2Portal.listUsers().then(function(list){ users = list; $('#c-load').hidden = true; $('#wrap').hidden = false; render(); });
+  }
+
+  function puedeEditar(u){
+    if (me.rol === 'owner') return true;
+    return u.rol === 'colaborador'; // gerente solo administra colaboradores
+  }
+
+  function render(){
+    var q = $('#q').value.trim().toLowerCase();
+    $('#n-todos').textContent = users.length;
+    $('#n-activos').textContent = users.filter(function(u){ return u.activo !== false; }).length;
+    $('#n-inactivos').textContent = users.filter(function(u){ return u.activo === false; }).length;
+    var list = users.filter(function(u){
+      if (filtro === 'activos' && u.activo === false) return false;
+      if (filtro === 'inactivos' && u.activo !== false) return false;
+      if (!q) return true;
+      return ((u.nombres||'') + ' ' + (u.apellidos||'') + ' ' + u.correo).toLowerCase().indexOf(q) > -1;
+    });
+    var ul = $('#list'); ul.innerHTML = '';
+    if (!list.length) { ul.innerHTML = '<li class="empty">No hay usuarios con ese filtro.</li>'; return; }
+    list.forEach(function(u){ ul.appendChild(row(u)); });
+  }
+
+  function row(u){
+    var li = $('#tpl-row').content.firstElementChild.cloneNode(true);
+    var esYo = u.id === me.id, activo = u.activo !== false;
+    li.classList.toggle('off', !activo);
+    $('.u-name', li).textContent = ((u.nombres||'') + ' ' + (u.apellidos||'')).trim() || u.correo;
+    if (esYo) $('.u-name', li).insertAdjacentHTML('beforeend', ' <span class="u-you">Vos</span>');
+    $('.u-mail', li).textContent = [u.puesto, u.correo].filter(Boolean).join(' · ');
+    var r = $('.u-rol', li); r.textContent = ROL[u.rol] || u.rol; r.className = 'u-rol r-' + u.rol;
+    $('.u-state', li).textContent = activo ? 'Activo' : 'Desactivado';
+    $('.u-state', li).className = 'u-state ' + (activo ? 'on' : 'off');
+    $('.u-areas', li).innerHTML = (u.areas||[]).map(function(a){ return '<span></span>'; }).join('');
+    $$('.u-areas span', li).forEach(function(s, i){ s.textContent = A2Portal.areaName(u.areas[i]); });
+    if (!(u.areas||[]).length) $('.u-areas', li).innerHTML = '<em>Sin áreas</em>';
+
+    var edit = $('.u-edit', li), form = $('.u-form', li);
+    if (!puedeEditar(u)) { edit.disabled = true; edit.title = 'Solo el Owner puede editar a otros gerentes u owners.'; }
+    edit.addEventListener('click', function(){
+      $$('.u-form').forEach(function(f){ if (f !== form) { f.hidden = true; f.closest('.u-row').classList.remove('open'); } });
+      form.hidden = !form.hidden; li.classList.toggle('open', !form.hidden);
+    });
+
+    // formulario
+    var sel = $('.f-rol', form); sel.value = u.rol;
+    if (esYo) { sel.disabled = true; $('.f-rol-hint', form).textContent = 'No podés cambiar tu propio rol.'; }
+    else if (me.rol !== 'owner') { $$('option', sel).forEach(function(o){ if (o.value !== 'colaborador') o.disabled = true; }); $('.f-rol-hint', form).textContent = 'Solo el Owner asigna Gerente u Owner.'; }
+    var fa = $('.f-area', form);
+    A2Portal.areas.forEach(function(a){ fa.add(new Option(a.n, a.id)); }); fa.value = u.area || '';
+    $('.f-areas', form).innerHTML = A2Portal.areas.map(function(a){ return '<label class="chip"><input type="checkbox" value="'+a.id+'"><span>'+a.n+'</span></label>'; }).join('');
+    $$('.f-areas input', form).forEach(function(i){ i.checked = (u.areas||[]).indexOf(i.value) > -1; });
+
+    var tg = $('.f-toggle', form), del = $('.f-del', form);
+    tg.textContent = activo ? 'Desactivar acceso' : 'Reactivar acceso';
+    if (esYo) { tg.hidden = true; del.hidden = true; }
+
+    function out(m, bad){ var o = $('.u-out', form); o.hidden = false; o.className = 'full u-out ' + (bad ? 'err-box' : 'note'); o.textContent = m; }
+    function busy(on){ form.classList.toggle('loading', on); }
+    function done(msg){ return load().then(function(){ flash(msg); }); }
+
+    $('.f-cancel', form).addEventListener('click', function(){ form.hidden = true; li.classList.remove('open'); });
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var areas = $$('.f-areas input:checked', form).map(function(i){ return i.value; });
+      busy(true);
+      A2Portal.updateUser(u.id, {rol: sel.value, area: fa.value || null, areas: areas})
+        .then(function(){ return done('Cambios guardados.'); }, function(m){ out(m, true); }).finally(function(){ busy(false); });
+    });
+    function confirmar(btn, texto, accion){
+      if (!btn.dataset.sure) { btn.dataset.sure = '1'; var t = btn.textContent; btn.textContent = texto; btn.classList.add('warn');
+        setTimeout(function(){ delete btn.dataset.sure; btn.textContent = t; btn.classList.remove('warn'); }, 4000); return; }
+      busy(true); accion().finally(function(){ busy(false); });
+    }
+    tg.addEventListener('click', function(){
+      confirmar(tg, activo ? '¿Seguro? Tocá de nuevo para desactivar' : '¿Seguro? Tocá de nuevo para reactivar', function(){
+        return A2Portal.setActive(u.id, !activo).then(function(){ return done(activo ? 'Usuario desactivado.' : 'Usuario reactivado.'); }, function(m){ out(m, true); });
+      });
+    });
+    del.addEventListener('click', function(){
+      confirmar(del, '¿Eliminar definitivamente? Tocá de nuevo', function(){
+        return A2Portal.deleteUser(u.id).then(function(){ return done('Usuario eliminado.'); }, function(m){ out(m, true); });
+      });
+    });
+    return li;
+  }
+
+  function flash(m){
+    var f = document.createElement('div'); f.className = 'u-flash'; f.textContent = m; document.body.appendChild(f);
+    setTimeout(function(){ f.classList.add('show'); }, 10); setTimeout(function(){ f.classList.remove('show'); setTimeout(function(){ f.remove(); }, 300); }, 2600);
+  }
+
+  $('#q').addEventListener('input', render);
+  $$('.u-filters button').forEach(function(b){ b.addEventListener('click', function(){
+    $$('.u-filters button').forEach(function(x){ x.setAttribute('aria-pressed','false'); }); b.setAttribute('aria-pressed','true'); filtro = b.dataset.f; render();
+  }); });
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/portal.js"></script>
+<script src="js/site.js"></script>
+</body>
+</html>
