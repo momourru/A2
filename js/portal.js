@@ -53,7 +53,9 @@
       return sb.auth.getSession().then(function(r){
         var s = r.data.session; if (!s) return null;
         return sb.from('perfiles').select('*').eq('id', s.user.id).maybeSingle().then(function(p){
-          if (p.error) throw p.error.message; return p.data ? p.data : {correo: s.user.email, sinPerfil: true};
+          if (p.error) throw p.error.message; if (p.data) return p.data;
+          if ((s.user.app_metadata || {}).tipo === 'proveedor') return {tipo: 'proveedor', id: s.user.id, correo: s.user.email};
+          return {correo: s.user.email, sinPerfil: true};
         });
       });
     },
@@ -106,6 +108,8 @@
     login: function(email){
       var db = load(), r = db.request;
       if (r && r.status === 'activa' && r.correo === email.toLowerCase()) { db.session = true; save(db); return P({}); }
+      var pv = ((db.f1 || {}).proveedores || []).filter(function(x){ return x.usuario_id && (x.correo || '').toLowerCase() === email.toLowerCase(); })[0];
+      if (pv && window.A2Demo) { A2Demo.setProv(pv.id); return P({}); }
       return R('Demo: activá primero un usuario de prueba con ese correo.');
     },
     logout: function(){ var db = load(); db.session = false; save(db); return P(); },
@@ -166,6 +170,8 @@
   window.A2Portal = Object.assign({ live: LIVE, demo: !LIVE, areas: AREAS, puestos: C.puestos || [], dominio: C.dominioCorporativo || 'a2desarrollos.com', areaName: areaName,
     permisos: C.permisos || [],
     /* ¿El usuario tiene el permiso? (Owner tiene todos) */
+    /* ¿A dónde va cada quien al ingresar? */
+    inicio: function(me){ return me && me.tipo === 'proveedor' ? 'proveedor.html' : 'portal.html'; },
     can: function(me, p){ return !!me && me.activo !== false && (me.rol === 'owner' || (me.permisos || []).indexOf(p) > -1); },
     inArea: function(me, a){ return !!me && (me.rol === 'owner' || me.rol === 'gerente' || me.area === a || (me.areas || []).indexOf(a) > -1); },
     _sb: sb, _invoke: LIVE ? invoke : null, _load: load, _save: save }, LIVE ? live : demo);

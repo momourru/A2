@@ -747,3 +747,70 @@ header.site-portal .nav-portal .nav-login:hover{background:var(--negro);color:va
 }
 .perm input{width:auto;height:auto;padding:0;border:0;appearance:auto;flex:none;box-shadow:none}
 @media (max-width:980px){ .det-grid > div:last-child{order:-1} }
+
+/* ===== Registro y portal de proveedores ===== */
+.pill{display:inline-block;font-size:9.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;padding:3px 8px;background:var(--concreto);color:var(--acero);vertical-align:2px}
+.pill.ok{background:#e6f2ea;color:#1f5d34}
+.pill.warn{background:#fff4d6;color:#7a5600}
+.pill.bad{background:#fbeceb;color:#8a2a22}
+.pill.yel{background:var(--amarillo);color:var(--negro)}
+.pill.dark{background:var(--negro);color:var(--amarillo)}
+.steps-pago.s6{grid-template-columns:repeat(6,1fr)}
+.steps-pago.s4{grid-template-columns:repeat(4,1fr)}
+.steps-pago button{all:unset;cursor:pointer;display:block;border-top:4px solid #e2e1dc;padding-top:10px;color:var(--cemento)}
+.steps-pago button[disabled]{cursor:default}
+.steps-pago button.ok{border-top-color:var(--amarillo);color:var(--acero)}
+.steps-pago button.ok b{color:var(--negro)}
+.steps-pago button.on{border-top-color:var(--negro);color:var(--negro)}
+.steps-pago button:focus-visible{outline:2px solid var(--negro);outline-offset:4px}
+.grp{font-family:var(--fh);font-weight:500;font-size:15.5px;margin:26px 0 12px;padding-top:18px;border-top:1px solid #e6e5e0;grid-column:1/-1}
+.grp:first-child{margin-top:0;padding-top:0;border-top:0}
+.grp small{font-family:var(--fb);font-weight:400;font-size:12.5px;color:var(--acero);margin-left:8px}
+.refs{display:grid;gap:8px;grid-column:1/-1}
+.ref-row{display:grid;grid-template-columns:1.4fr 1fr auto;gap:8px;align-items:center}
+.ref-row input{font-family:var(--fb);font-size:14px;padding:12px;border:1px solid #cfcec8;background:var(--blanco);width:100%}
+.legal{max-height:340px;overflow:auto;border:1px solid #dddcd7;background:var(--concreto);padding:18px 20px;font-size:13.5px;line-height:1.65}
+.legal h4{font-family:var(--fh);font-weight:500;font-size:15px;margin-bottom:10px}
+.legal ol{padding-left:20px;display:grid;gap:10px}
+.acepto{display:flex;gap:12px;align-items:flex-start;margin-top:16px;font-size:14px;cursor:pointer}
+.acepto input{width:20px;height:20px;flex:none;accent-color:#000;margin-top:1px}
+.doc-list{list-style:none;border-top:1px solid var(--negro)}
+.doc-list li{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;padding:16px 0;border-bottom:1px solid #e6e5e0}
+.doc-list b{font-family:var(--fh);font-weight:500;font-size:15px}
+.doc-list small{display:block;font-size:12.5px;color:var(--acero);margin-top:2px}
+.doc-list .d-file{font-size:12.5px;margin-top:6px}
+.doc-list .d-file a{text-decoration:underline;text-underline-offset:3px}
+.doc-list .btn{padding:11px 16px;white-space:nowrap}
+.cta-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.cta{border:1px solid #dddcd7;background:var(--blanco);padding:18px}
+.cta.principal{border-color:var(--negro);box-shadow:inset 0 4px 0 var(--amarillo)}
+.cta h4{font-family:var(--fh);font-weight:500;font-size:16px;margin-bottom:4px}
+.cta .num{font-family:var(--fh);font-size:15px;letter-spacing:.04em}
+.cta p{font-size:13px;color:var(--acero);margin-top:4px}
+.cta .row-between{margin-top:14px;gap:10px;flex-wrap:wrap}
+.cta .link{font-size:13px}
+.cta-cambio{margin-top:14px;padding-top:14px;border-top:1px dashed #cfcec8}
+.cta-cambio label{display:block;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;color:var(--acero);margin-bottom:8px}
+.cta-cambio select{flex:1;font-family:var(--fb);font-size:13.5px;padding:11px;border:1px solid #cfcec8;background:var(--blanco);min-width:0}
+.check-list{list-style:none;display:grid;gap:8px;margin:6px 0 4px}
+.check-list li{display:flex;gap:10px;align-items:center;font-size:14px}
+.check-list li::before{content:"";width:16px;height:16px;flex:none;border:1.5px solid #cfcec8;background:var(--blanco)}
+.check-list li.ok::before{background:var(--amarillo) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3.5'%3E%3Cpath d='M4 12l5 5L20 6'/%3E%3C/svg%3E") center/11px no-repeat;border-color:var(--amarillo)}
+.check-list a{text-decoration:underline;text-underline-offset:3px}
+.estado-box{display:flex;gap:18px;align-items:flex-start;border-left:4px solid var(--amarillo);background:var(--concreto);padding:18px 20px}
+.estado-box h3{font-size:18px;margin-bottom:4px}
+.estado-box p{font-size:14px;color:var(--acero)}
+.estado-box.bad{border-left-color:#b3261e}
+.estado-box.ok{border-left-color:#1f5d34}
+.estado-box blockquote{margin-top:10px;background:var(--blanco);padding:10px 12px;font-size:13.5px;white-space:pre-line;color:var(--negro)}
+.code-in{font-family:var(--fh);font-size:26px;letter-spacing:.4em;text-transform:uppercase;text-align:center;padding:14px!important}
+.tabs-prov{display:flex;flex-wrap:wrap;gap:0;border-bottom:1px solid var(--negro);margin:26px 0 22px}
+.tabs-prov button{font-family:var(--fb);font-size:11.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;border:0;background:none;padding:14px 18px;cursor:pointer;color:var(--acero);border-bottom:3px solid transparent;margin-bottom:-1px}
+.tabs-prov button[aria-pressed="true"]{color:var(--negro);border-bottom-color:var(--amarillo)}
+.ro-note{font-size:12.5px;color:var(--acero)}
+@media (max-width:980px){
+  .steps-pago.s6{grid-template-columns:repeat(3,1fr);row-gap:14px}
+  .ref-row{grid-template-columns:1fr 1fr auto}
+  .doc-list li{grid-template-columns:1fr}
+  .estado-box{flex-direction:column;gap:8px}
+}

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Registro de proveedores — Área Cuadrada</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="img/iso.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <a href="index.html" class="brand" aria-label="Área Cuadrada — inicio"><img src="img/logo-sd.png" alt="Área Cuadrada"></a>
+    <button class="menu-btn" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span></button>
+    <ul>
+      <li><a href="index.html#nosotros">Nosotros</a></li>
+      <li><a href="index.html#historia">Historia</a></li>
+      <li><a href="index.html#proyectos">Proyectos</a></li>
+      <li><a href="portafolio.html">Portafolio</a></li>
+      <li><a href="index.html#contacto">Contacto</a></li>
+      <li class="nav-sep" aria-hidden="true"></li>
+      <li><a href="login.html" class="nav-login">Log In</a></li>
+    </ul>
+  </div>
+</header>
+
+<div class="demo-bar"><b>Modo demostración</b><span>Todavía no está conectado a Supabase: no se crean cuentas ni se envían correos.</span></div>
+
+<main class="portal">
+  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="portal-col wide">
+    <a class="back" href="login.html">← Volver a Log In</a>
+    <div class="portal-title">
+      <span class="tag">Proveedores</span>
+      <h1>Formá parte de la red de proveedores de A2</h1>
+      <p>Pedí tu código de proveedor. Cuando A2 autorice tu solicitud, te llegará un correo con tu código y un código de acceso para completar tu registro en el portal.</p>
+      <div class="steps-mini">
+        <div class="cur"><span>01</span><b>Solicitud</b>Datos básicos</div>
+        <div><span>02</span><b>Autorización</b>A2 revisa</div>
+        <div><span>03</span><b>Expediente</b>Datos, documentos y cuentas</div>
+        <div><span>04</span><b>Aprobación</b>Proveedor activo</div>
+      </div>
+    </div>
+
+    <div class="card" id="wrap-form"><div class="panel">
+      <form class="form" id="f-reg" novalidate>
+        <div class="field"><label for="g-emp">Nombre de la empresa</label><input id="g-emp" required autocomplete="organization" placeholder="Nombre comercial"><div class="msg">Requerido.</div></div>
+        <div class="field"><label for="g-rs">Razón social</label><input id="g-rs" required placeholder="Como aparece en el RTU"><div class="msg">Requerido.</div></div>
+        <div class="field"><label for="g-nit">NIT</label><input id="g-nit" required inputmode="text" placeholder="1234567-8"><div class="msg">Ingresá un NIT válido.</div></div>
+        <div class="field"><label for="g-tel">Teléfono</label><input id="g-tel" type="tel" required placeholder="+502" autocomplete="tel"><div class="msg">Requerido.</div></div>
+        <div class="field full"><label for="g-mail">Correo</label><input id="g-mail" type="email" required autocomplete="email" placeholder="nombre@empresa.com">
+          <div class="hint">Será tu usuario para ingresar a tu portal de proveedor.</div><div class="msg">Ingresá un correo válido.</div></div>
+        <div class="field"><label for="g-pw">Crear contraseña</label><input id="g-pw" type="password" required autocomplete="new-password" minlength="8">
+          <div class="hint">Mínimo 8 caracteres, con letras y números.</div><div class="msg">Mínimo 8 caracteres, con letras y números.</div></div>
+        <div class="field"><label for="g-pw2">Confirmar contraseña</label><input id="g-pw2" type="password" required autocomplete="new-password"><div class="msg">Las contraseñas no coinciden.</div></div>
+        <div class="hp" aria-hidden="true"><label>Sitio<input id="g-hp" tabindex="-1" autocomplete="off"></label></div>
+        <div class="full" id="g-out" hidden></div>
+        <div class="full"><button class="btn dark wide" type="submit">Solicitar código de proveedor
+          <svg class="arr" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 7h12M8 2l5 5-5 5"/></svg></button></div>
+        <p class="full sub" style="margin:0">¿Ya solicitaste tu código? <a href="login.html" style="text-decoration:underline">Ingresá con tu correo y contraseña</a> para ver en qué va tu registro.</p>
+      </form>
+    </div></div>
+
+    <div class="card" id="wrap-done" hidden><div class="panel done">
+      <div class="ok"><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.4"><path d="M4 12l5 5L20 6"/></svg></div>
+      <h3>Solicitud enviada</h3>
+      <p class="sub">A2 ya recibió tu solicitud. Cuando sea autorizada te llegará un correo a <b id="d-mail"></b> con tu código de proveedor y los pasos para completar tu registro.</p>
+      <p class="sub">Mientras tanto podés ingresar con tu correo y contraseña para ver el estado de tu solicitud.</p>
+      <div class="btns"><a class="btn" href="login.html">Ir a Log In</a></div>
+      <div id="demo-next" hidden>
+        <p class="note" style="margin-top:18px"><b>Demo:</b> no se envió ningún correo. Podés ver lo que recibe A2 para autorizarla, o tu portal de proveedor.</p>
+        <div class="btns"><a class="btn dark" id="demo-a2" href="#">Ver lo que recibe A2</a><a class="btn" href="proveedor.html?demo=proveedor">Ver mi portal de proveedor</a></div>
+      </div>
+    </div></div>
+  </div>
+</main>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  var $ = function(s){ return document.querySelector(s); }, A = A2Portal;
+  var mailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  function check(i, ok){ i.closest('.field').classList.toggle('err', !ok); return ok; }
+  $('#f-reg').addEventListener('submit', function(e){
+    e.preventDefault();
+    var pw = $('#g-pw').value;
+    var ok = [check($('#g-emp'), $('#g-emp').value.trim()), check($('#g-rs'), $('#g-rs').value.trim()),
+      check($('#g-nit'), $('#g-nit').value.toUpperCase().replace(/[^0-9K]/g, '').length >= 5), check($('#g-tel'), $('#g-tel').value.trim().length >= 8),
+      check($('#g-mail'), mailRe.test($('#g-mail').value.trim())), check($('#g-pw'), pw.length >= 8 && /[A-Za-z]/.test(pw) && /\d/.test(pw)),
+      check($('#g-pw2'), pw === $('#g-pw2').value && pw.length > 0)].every(Boolean);
+    if (!ok) return;
+    var f = this, out = $('#g-out'); out.hidden = true; f.classList.add('loading');
+    var correo = $('#g-mail').value.trim().toLowerCase();
+    A.provAccion('solicitar', {empresa:$('#g-emp').value.trim(), razon_social:$('#g-rs').value.trim(), nit:$('#g-nit').value.trim(), telefono:$('#g-tel').value.trim(),
+      correo:correo, password:pw, sitio:$('#g-hp').value}).then(function(r){
+      $('#wrap-form').hidden = true; $('#wrap-done').hidden = false; $('#d-mail').textContent = correo;
+      if (A.demo) { $('#demo-next').hidden = false; $('#demo-a2').href = 'proveedores.html?demo=owner&id=' + encodeURIComponent(r.id); }
+      window.scrollTo({top:0, behavior:'smooth'});
+    }, function(m){ out.hidden = false; out.className = 'full err-box'; out.textContent = m; }).finally(function(){ f.classList.remove('loading'); });
+  });
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/portal.js"></script>
+<script src="js/datos.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/site.js"></script>
+</body>
+</html>

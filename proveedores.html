@@ -42,7 +42,7 @@
 
     <form class="card" id="f-prv" hidden novalidate><div class="panel">
       <h3 id="f-t">Nuevo proveedor</h3>
-      <p class="sub">El código (PRV-0001, PRV-0002…) se asigna solo al guardar.</p>
+      <p class="sub">Para proveedores que A2 registra directamente. El código (PRV-0001, PRV-0002…) se asigna solo al guardar. Lo normal es que el proveedor se registre desde “Registrarme” en Log In.</p>
       <div class="form">
         <div class="field"><label>Razón social</label><input name="razon_social" required><div class="msg">Requerido.</div></div>
         <div class="field"><label>Nombre comercial</label><input name="nombre_comercial"></div>
@@ -52,15 +52,18 @@
         <div class="field"><label>Correo</label><input name="correo" type="email"><div class="hint">Aquí le llega la confirmación de cada pago.</div></div>
         <div class="field"><label>Teléfono</label><input name="telefono"></div>
         <div class="field"><label>Dirección</label><input name="direccion"></div>
-        <div class="field full"><label>Notas</label><textarea name="notas"></textarea></div>
+        <div class="field"><label>Régimen de ISR</label><select name="regimen_isr" id="f-isr"></select></div>
+        <div class="field"><label>Página web</label><input name="web"></div>
+        <div class="field full"><label>Notas internas</label><textarea name="notas"></textarea><div class="hint">Solo las ve el equipo de A2.</div></div>
       </div>
-      <h3 style="margin-top:26px;font-size:17px">Datos bancarios</h3>
+      <h3 style="margin-top:26px;font-size:17px">Cuenta principal</h3>
       <div class="form" id="f-banco" style="margin-top:12px">
         <div class="field"><label>Banco</label><input name="banco"></div>
         <div class="field"><label>Tipo de cuenta</label><select name="tipo_cuenta"><option value="">—</option><option>Monetaria</option><option>Ahorro</option></select></div>
         <div class="field"><label>Número de cuenta</label><input name="numero_cuenta"></div>
         <div class="field"><label>A nombre de</label><input name="nombre_cuenta"></div>
         <div class="field"><label>Moneda de la cuenta</label><select name="moneda"><option value="">—</option><option value="GTQ">Quetzales</option><option value="USD">Dólares</option></select></div>
+        <div class="field"><label>Correo para notificaciones</label><input name="correo_notificacion" type="email"></div>
         <div class="field"><label>Estado</label><label class="check" style="margin-top:12px"><input type="checkbox" id="f-act" checked> Proveedor activo</label></div>
       </div>
       <div class="form" style="margin-top:16px">
@@ -70,26 +73,62 @@
     </div></form>
 
     <section id="v-list" hidden>
-      <div class="toolbar"><div class="filtros"><button aria-pressed="true" data-a="1">Activos</button><button aria-pressed="false" data-a="0">Inactivos</button></div>
+      <div class="toolbar"><div class="filtros">
+          <button aria-pressed="true" data-a="ap">Aprobados</button>
+          <button aria-pressed="false" data-a="proc" id="tab-proc" hidden>En proceso <span class="t-badge" id="n-proc" hidden></span></button>
+          <button aria-pressed="false" data-a="in">Inactivos</button></div>
         <div class="field"><input id="q" placeholder="Buscar por nombre, código, NIT o rubro"></div></div>
       <div class="tbl-wrap"><table class="tbl" id="tbl">
-        <thead><tr><th>Código</th><th>Proveedor</th><th>Rubro</th><th>Contacto</th><th>Teléfono</th></tr></thead><tbody></tbody></table></div>
+        <thead><tr><th>Código</th><th>Proveedor</th><th id="th3">Rubro</th><th>Contacto</th><th id="th5">Teléfono</th></tr></thead><tbody></tbody></table></div>
     </section>
 
     <section id="v-det" hidden>
+      <div class="steps-pago s4" id="d-steps" hidden></div>
       <div class="det-grid">
         <div>
           <div class="card"><div class="panel">
             <div class="row-between"><h3 class="det-h" style="margin:0">Datos del proveedor</h3><button class="link" type="button" id="d-edit" hidden>Editar</button></div>
             <dl class="summary" id="d-datos" style="margin-top:14px"></dl>
           </div></div>
-          <div class="card" id="d-banco-c" hidden><div class="panel"><h3 class="det-h">Datos bancarios</h3><dl class="summary" id="d-banco"></dl></div></div>
+          <div class="card" id="d-exp-c" hidden><div class="panel">
+            <h3 class="det-h">Expediente</h3>
+            <dl class="summary" id="d-exp"></dl>
+          </div></div>
+          <div class="card" id="d-docs-c" hidden><div class="panel">
+            <h3 class="det-h">Documentos</h3>
+            <ul class="docs" id="d-docs"></ul>
+          </div></div>
+          <div class="card" id="d-banco-c" hidden><div class="panel">
+            <h3 class="det-h">Cuentas bancarias</h3>
+            <div class="cta-grid" id="d-ctas"></div>
+          </div></div>
         </div>
         <div>
+          <div class="card accion" id="d-reg" hidden><div class="panel">
+            <span class="tag" id="r-tag">Registro</span>
+            <h3 id="r-t" style="margin-top:10px"></h3>
+            <p class="sub" id="r-s"></p>
+            <div class="form" id="r-form" style="margin-top:6px">
+              <div class="field full" id="r-mot-f"><label for="r-mot" id="r-mot-l">Comentario</label><textarea id="r-mot" maxlength="1500"></textarea></div>
+              <div class="full" id="r-out" hidden></div>
+              <div class="full row-between" id="r-btns"></div>
+            </div>
+          </div></div>
           <div class="card"><div class="panel"><h3 class="det-h">Proyectos</h3><ul class="people" id="d-pry"></ul></div></div>
           <div class="card" id="d-cot-c" hidden><div class="panel">
             <div class="row-between"><h3 class="det-h" style="margin:0">Cotizaciones y saldos</h3><a class="link" id="d-sol" hidden>Nueva solicitud de pago</a></div>
             <ul class="mini-list" id="d-cot" style="margin-top:12px"></ul>
+          </div></div>
+          <div class="card" id="d-his-c" hidden><div class="panel">
+            <h3 class="det-h">Historial del registro</h3>
+            <ol class="firmas" id="d-his"></ol>
+          </div></div>
+          <div class="card" id="d-del-c" hidden><div class="panel">
+            <h3 class="det-h">Eliminar registro</h3>
+            <p class="sub">Borra el proveedor, sus documentos y su acceso al portal. Queda un respaldo de quién lo eliminó y por qué. Si ya tiene cotizaciones o pagos, desactivalo en lugar de eliminarlo.</p>
+            <div class="form"><div class="field full"><label for="del-mot">Motivo</label><input id="del-mot" maxlength="500"></div>
+              <div class="full" id="del-out" hidden></div>
+              <div class="full"><button class="link danger" type="button" id="del-ok">Eliminar proveedor</button></div></div>
           </div></div>
         </div>
       </div>
@@ -100,73 +139,188 @@
 <script>
 document.addEventListener('DOMContentLoaded', function(){
   var $ = UI.$, $$ = UI.$$, esc = UI.esc, A = A2Portal;
-  var ME, prvs = [], activos = '1', DET = null, GEST = false;
+  var ME, prvs = [], filtro = 'ap', DET = null, GEST = false, APRUEBA = false, VEREG = false, VEEXP = false;
+  var EST = function(e){ return A.ESTADOS_PROVEEDOR[e || 'aprobado'] || {n:e, corto:e}; };
+  function pill(e){ var c = {aprobado:'ok', corregir:'warn', en_revision:'yel', solicitado:'dark'}[e || 'aprobado'] || ''; return '<span class="pill ' + c + '">' + esc(EST(e).corto) + '</span>'; }
+  $('#f-isr').innerHTML = '<option value="">—</option>' + A.REGIMENES_ISR.map(function(r){ return '<option>' + esc(r) + '</option>'; }).join('');
 
   UI.sesion(function(me){
-    ME = me; GEST = A.can(me, 'gestionar_proveedores');
-    var acceso = A.inArea(me, 'admin') || GEST || A.can(me, 'solicitar_pago') || A.inArea(me, 'proyectos') || A.inArea(me, 'mercadeo');
+    ME = me; GEST = A.can(me, 'gestionar_proveedores'); APRUEBA = A.can(me, 'aprobar_proveedores');
+    VEEXP = APRUEBA || GEST || A.can(me, 'ver_expediente_proveedor'); VEREG = VEEXP || A.inArea(me, 'admin');
+    var acceso = VEREG || A.can(me, 'solicitar_pago') || A.inArea(me, 'proyectos') || A.inArea(me, 'mercadeo');
     if (!acceso) { $('#c-load').hidden = true; UI.err($('#c-err'), 'No tenés acceso a Proveedores.'); return; }
-    $('#b-new').hidden = !GEST;
-    var id = UI.param('id'); if (id) detalle(id); else { lista(); if (UI.param('nuevo') && GEST) abrirForm(null); }
+    $('#b-new').hidden = !GEST; $('#tab-proc').hidden = !VEREG;
+    var id = UI.param('id'); if (id) detalle(id); else { if (UI.param('f') === 'proc' && VEREG) filtro = 'proc'; lista(); if (UI.param('nuevo') && GEST) abrirForm(null); }
   });
 
+  /* ================= LISTA ================= */
   function lista(){
-    A.listProveedores().then(function(l){ prvs = l || []; $('#c-load').hidden = true; $('#v-list').hidden = false; pintar(); })
+    A.listProveedores().then(function(l){ prvs = (l || []).filter(function(p){ return VEREG || (p.estado || 'aprobado') === 'aprobado'; });
+      $('#c-load').hidden = true; $('#v-list').hidden = false;
+      var n = prvs.filter(function(p){ return (p.estado || 'aprobado') !== 'aprobado'; }).length; $('#n-proc').hidden = !n; $('#n-proc').textContent = n;
+      if (UI.param('eliminado')) UI.flash('Registro de proveedor eliminado.');
+      $$('#v-list .filtros button').forEach(function(x){ x.setAttribute('aria-pressed', x.dataset.a === filtro); }); pintar(); })
       .catch(function(m){ $('#c-load').hidden = true; UI.err($('#c-err'), m); });
   }
   function pintar(){
-    var q = $('#q').value.trim().toLowerCase();
-    var l = prvs.filter(function(p){ return String(p.activo !== false ? 1 : 0) === activos && (!q || [p.codigo, p.razon_social, p.nombre_comercial, p.nit, p.rubro].join(' ').toLowerCase().indexOf(q) > -1); });
+    var q = $('#q').value.trim().toLowerCase(), proc = filtro === 'proc';
+    $('#th3').textContent = proc ? 'Estado' : 'Rubro'; $('#th5').textContent = proc ? 'Solicitado' : 'Teléfono';
+    var l = prvs.filter(function(p){ var ap = (p.estado || 'aprobado') === 'aprobado';
+      var ok = proc ? !ap : filtro === 'ap' ? ap && p.activo !== false : ap && p.activo === false;
+      return ok && (!q || [p.codigo, p.razon_social, p.nombre_comercial, p.nit, p.rubro].join(' ').toLowerCase().indexOf(q) > -1); });
+    if (proc) l.sort(function(a, b){ var o = {en_revision:0, solicitado:1, corregir:2, en_registro:3}; return (o[a.estado] - o[b.estado]) || (a.solicitado_at < b.solicitado_at ? 1 : -1); });
     $('#tbl tbody').innerHTML = l.length ? l.map(function(p){
-      return '<tr data-id="' + esc(p.id) + '"><td><b>' + esc(p.codigo) + '</b></td><td>' + esc(p.razon_social) + (p.nombre_comercial ? '<small>' + esc(p.nombre_comercial) + '</small>' : '') + '</td>' +
-        '<td>' + esc(p.rubro || '—') + '</td><td>' + esc(p.contacto_nombre || '—') + '<small>' + esc(p.correo || '') + '</small></td><td>' + esc(p.telefono || '—') + '</td></tr>';
-    }).join('') : '<tr><td colspan="5" class="empty">' + (prvs.length ? 'No hay proveedores con ese filtro.' : 'Todavía no hay proveedores registrados.') + '</td></tr>';
+      return '<tr data-id="' + esc(p.id) + '"><td><b>' + esc(p.codigo || '—') + '</b></td><td>' + esc(p.razon_social) + (p.nombre_comercial ? '<small>' + esc(p.nombre_comercial) + '</small>' : '') + '</td>' +
+        (proc ? '<td>' + pill(p.estado) + '</td>' : '<td>' + esc(p.rubro || '—') + '</td>') +
+        '<td>' + esc(p.contacto_nombre || '—') + '<small>' + esc(p.correo || '') + '</small></td><td>' + (proc ? UI.fecha(p.solicitado_at) : esc(p.telefono || '—')) + '</td></tr>';
+    }).join('') : '<tr><td colspan="5" class="empty">' + (proc ? 'No hay proveedores en proceso de registro.' : prvs.length ? 'No hay proveedores con ese filtro.' : 'Todavía no hay proveedores registrados.') + '</td></tr>';
     $$('#tbl tbody tr[data-id]').forEach(function(tr){ tr.addEventListener('click', function(){ location.href = 'proveedores.html?id=' + tr.dataset.id; }); });
   }
   $('#q').addEventListener('input', pintar);
-  $$('#v-list .filtros button').forEach(function(b){ b.addEventListener('click', function(){ activos = b.dataset.a; $$('#v-list .filtros button').forEach(function(x){ x.setAttribute('aria-pressed', x === b); }); pintar(); }); });
+  $$('#v-list .filtros button').forEach(function(b){ b.addEventListener('click', function(){ filtro = b.dataset.a; $$('#v-list .filtros button').forEach(function(x){ x.setAttribute('aria-pressed', x === b); }); pintar(); }); });
 
+  /* ================= FORMULARIO (equipo A2) ================= */
   function abrirForm(p){
-    $('#f-prv').hidden = false; $('#f-t').textContent = p ? 'Editar ' + p.codigo : 'Nuevo proveedor';
+    $('#f-prv').hidden = false; $('#f-t').textContent = p ? 'Editar ' + (p.codigo || p.razon_social) : 'Nuevo proveedor';
     UI.llenar($('#f-prv'), Object.assign({}, p || {}, (p && p.banco) || {}));
-    $('#f-act').checked = !p || p.activo !== false; $('#f-prv').dataset.id = p ? p.id : ''; $('#f-out').hidden = true; window.scrollTo({top:0, behavior:'smooth'});
+    $('#f-act').checked = !p || p.activo !== false; $('#f-prv').dataset.id = p ? p.id : ''; $('#f-prv').dataset.banco = p && p.banco ? p.banco.id : '';
+    $('#f-out').hidden = true; window.scrollTo({top:0, behavior:'smooth'});
   }
   $('#b-new').addEventListener('click', function(){ abrirForm(null); });
   $('#f-cancel').addEventListener('click', function(){ $('#f-prv').hidden = true; });
   $('#f-prv').addEventListener('submit', function(e){
     e.preventDefault(); var f = this; if (!UI.requeridos(f)) return;
-    var todo = UI.datos(f), banco = {}, prv = {};
-    ['banco','tipo_cuenta','numero_cuenta','nombre_cuenta','moneda'].forEach(function(k){ banco[k] = todo[k]; delete todo[k]; });
+    var todo = UI.datos(f), banco = {}, prv;
+    ['banco','tipo_cuenta','numero_cuenta','nombre_cuenta','moneda','correo_notificacion'].forEach(function(k){ banco[k] = todo[k]; delete todo[k]; });
     prv = todo; prv.activo = $('#f-act').checked; if (f.dataset.id) prv.id = f.dataset.id;
-    var hayBanco = Object.keys(banco).some(function(k){ return banco[k]; });
+    var hayBanco = ['banco','numero_cuenta'].some(function(k){ return banco[k]; }); if (f.dataset.banco) banco.id = f.dataset.banco;
     UI.busy(f, true);
     A.saveProveedor(prv, hayBanco ? banco : null).then(function(r){ location.href = 'proveedores.html?id=' + encodeURIComponent((r && r.id) || prv.id) + (r && r.codigo ? '&nuevo_codigo=' + encodeURIComponent(r.codigo) : ''); },
       function(m){ UI.err($('#f-out'), m); }).finally(function(){ UI.busy(f, false); });
   });
+
+  /* ================= DETALLE ================= */
+  function dl(filas){ return filas.filter(function(f){ return f[1]; }).map(function(f){ return '<div><dt>' + f[0] + '</dt><dd>' + f[1] + '</dd></div>'; }).join(''); }
+  function persona(x){ if (!x || !x.nombre) return ''; return esc([x.titulo, x.nombre, x.apellido].filter(Boolean).join(' ')) + '<small>' + esc([x.puesto, x.sexo === 'F' ? 'Femenino' : x.sexo === 'M' ? 'Masculino' : '', x.dpi ? 'DPI ' + x.dpi : ''].filter(Boolean).join(' · ')) + '</small><small>' + esc([x.telefono, x.correo].filter(Boolean).join(' · ')) + '</small>'; }
+  function verDoc(a){ a.addEventListener('click', function(e){ e.preventDefault();
+    if (A.demo) { UI.flash('Demo: los archivos no se guardan.'); return; }
+    var w = window.open('', '_blank'); A.urlAdjunto(a.dataset.r).then(function(u){ if (w) w.location = u; else location.href = u; }, function(m){ if (w) w.close(); UI.flash(m, true); }); }); }
 
   function detalle(id){
     $('#back').href = 'proveedores.html'; $('#back').textContent = '← Volver a proveedores'; $('#b-new').hidden = true;
     A.getProveedor(id).then(function(p){
       $('#c-load').hidden = true;
       if (!p) { UI.err($('#c-err'), 'No encontramos este proveedor o no tenés acceso.'); return; }
-      DET = p; $('#v-det').hidden = false;
+      DET = p; $('#v-det').hidden = false; pintarDet(p);
       if (UI.param('nuevo_codigo')) UI.flash('Proveedor registrado con el código ' + UI.param('nuevo_codigo') + '.');
-      $('#h-title').textContent = p.razon_social; $('#h-sub').innerHTML = '<b>' + esc(p.codigo) + '</b>' + (p.activo === false ? ' · Inactivo' : '');
-      $('#d-edit').hidden = !GEST;
-      var filas = [['Código', p.codigo], ['Nombre comercial', p.nombre_comercial], ['NIT', p.nit], ['Rubro', p.rubro], ['Contacto', p.contacto_nombre], ['Correo', p.correo], ['Teléfono', p.telefono], ['Dirección', p.direccion], ['Notas', p.notas]];
-      $('#d-datos').innerHTML = filas.filter(function(f){ return f[1]; }).map(function(f){ return '<div><dt>' + f[0] + '</dt><dd>' + esc(f[1]) + '</dd></div>'; }).join('');
-      if (p.banco) { $('#d-banco-c').hidden = false; var b = p.banco;
-        $('#d-banco').innerHTML = [['Banco', b.banco], ['Tipo de cuenta', b.tipo_cuenta], ['Número', b.numero_cuenta], ['A nombre de', b.nombre_cuenta], ['Moneda', b.moneda === 'USD' ? 'Dólares' : b.moneda === 'GTQ' ? 'Quetzales' : '']]
-          .filter(function(x){ return x[1]; }).map(function(x){ return '<div><dt>' + x[0] + '</dt><dd>' + esc(x[1]) + '</dd></div>'; }).join(''); }
-      $('#d-pry').innerHTML = (p.proyectos || []).map(function(x){ return '<li><div><b><a href="proyectos.html?id=' + encodeURIComponent(x.id) + '">' + esc(x.nombre) + '</a></b><small>' + esc([x.codigo, x.servicio].filter(Boolean).join(' · ')) + '</small></div></li>'; }).join('') || '<li class="empty">No está asignado a ningún proyecto.</li>';
-      var vePagos = A.inArea(ME, 'admin') || A.can(ME, 'solicitar_pago') || ['revisar_solicitud','vobo_contable','aprobar_pago','registrar_pago'].some(function(x){ return A.can(ME, x); });
-      if (vePagos) {
-        $('#mt').hidden = false; UI.monedaToggle($('#mt'), cargarCot);
-        if (A.can(ME, 'solicitar_pago')) { $('#d-sol').hidden = false; $('#d-sol').href = 'pagos.html?nueva=1&proveedor=' + encodeURIComponent(p.id); }
-        cargarCot();
-      }
     }).catch(function(m){ $('#c-load').hidden = true; UI.err($('#c-err'), m); });
   }
+  function recargar(msg){ return A.getProveedor(DET.id).then(function(p){ if (msg) UI.flash(msg); if (p) { DET = p; pintarDet(p); } }); }
+
+  function pintarDet(p){
+    var est = p.estado || 'aprobado', ap = est === 'aprobado';
+    $('#h-title').textContent = p.razon_social;
+    $('#h-sub').innerHTML = (p.codigo ? '<b>' + esc(p.codigo) + '</b> · ' : '') + pill(est) + (ap && p.activo === false ? ' <span class="pill bad">Inactivo</span>' : '');
+    $('#d-edit').hidden = !GEST;
+
+    // avance del registro
+    $('#d-steps').hidden = ap && !p.solicitado_at;
+    var pasos = [['Solicitud', p.solicitado_at], ['Código autorizado', p.codigo && est !== 'solicitado' ? (p.codigo_validado_at || true) : null], ['Expediente enviado', p.enviado_at], ['Aprobado', ap ? (p.aprobado_at || true) : null]];
+    var cur = pasos.map(function(x){ return !!x[1]; }).indexOf(false);
+    $('#d-steps').innerHTML = pasos.map(function(x, i){ return '<div class="' + (x[1] ? 'ok' : i === cur ? 'on' : '') + '"><span>' + (i + 1) + '</span><b>' + x[0] + '</b><small>' + (typeof x[1] === 'string' ? UI.fecha(x[1]) : '&nbsp;') + '</small></div>'; }).join('');
+
+    var c = p.contacto || {};
+    $('#d-datos').innerHTML = dl([['Código', esc(p.codigo)], ['Estado', esc(EST(est).n)], ['Nombre comercial', esc(p.nombre_comercial)], ['NIT', esc(p.nit)], ['Rubro', esc(p.rubro)], ['Régimen ISR', esc(p.regimen_isr)],
+      ['Contacto', c.nombre ? persona(c) : esc(p.contacto_nombre)], ['Correo', esc(p.correo)], ['Teléfonos', esc(p.telefono)], ['Dirección', esc(p.direccion)], ['Página web', esc(p.web)], ['Notas internas', esc(p.notas)]]);
+
+    // expediente
+    var e = p.expediente;
+    $('#d-exp-c').hidden = !(VEEXP && (e || p.terminos_at));
+    if (VEEXP) $('#d-exp').innerHTML = dl([['Representante legal', e ? persona(e.representante) : ''], ['Fecha de constitución', e && e.fecha_constitucion ? UI.fecha(e.fecha_constitucion) : ''],
+      ['Referencias', e && e.referencias && e.referencias.length ? e.referencias.map(function(r){ return esc(r.nombre) + '<small>' + esc(r.telefono) + '</small>'; }).join('') : ''],
+      ['Términos y condiciones', p.terminos_at ? 'Aceptados<small>' + UI.fecha(p.terminos_at, true) + (p.terminos_version ? ' · versión ' + esc(p.terminos_version) : '') + '</small>' : ''],
+      ['Declaración y autorización de verificación', p.diligencia_at ? 'Aceptada<small>' + UI.fecha(p.diligencia_at, true) + (p.diligencia_version ? ' · versión ' + esc(p.diligencia_version) : '') + '</small>' : '']]);
+
+    // documentos
+    var docs = p.documentos || [];
+    $('#d-docs-c').hidden = !(VEEXP && (docs.length || p.datos_at));
+    if (VEEXP) $('#d-docs').innerHTML = A.DOCS_PROVEEDOR.map(function(d){ var l = docs.filter(function(x){ return x.tipo === d.id; });
+      return '<li><span class="d-tipo">' + esc(d.n) + '</span>' + (l[0] ? '<a href="#" data-r="' + esc(l[0].ruta) + '">' + esc(l[0].nombre) + '</a><small>' + UI.fecha(l[0].subido_at) + (l.length > 1 ? ' · ' + (l.length - 1) + ' anterior' + (l.length > 2 ? 'es' : '') : '') + '</small>'
+        : '<span class="sub" style="margin:0">' + (d.req ? 'Pendiente' : 'No aplica / no cargado') + '</span><small></small>') + '</li>'; }).join('');
+    $$('#d-docs a[data-r]').forEach(verDoc);
+
+    // cuentas
+    var ctas = p.cuentas || [];
+    $('#d-banco-c').hidden = !ctas.length;
+    $('#d-ctas').innerHTML = ctas.map(function(k){ var d = docs.filter(function(x){ return x.cuenta_id === k.id; })[0];
+      return '<div class="cta' + (k.principal ? ' principal' : '') + '"><h4>' + esc(k.banco) + '</h4><div class="num">' + esc(k.numero_cuenta) + '</div>' +
+        '<p>' + esc(k.tipo_cuenta || '') + ' · ' + (k.moneda === 'USD' ? 'Dólares' : 'Quetzales') + '<br>A nombre de ' + esc(k.nombre_cuenta || '—') + (k.correo_notificacion ? '<br>Notificaciones: ' + esc(k.correo_notificacion) : '') + '</p>' +
+        '<p>' + (k.principal ? '<span class="pill dark">Principal</span> ' : '') + (k.verificada === false ? '<span class="pill warn">Sin verificar</span>' : '<span class="pill ok">Verificada</span>') +
+        (d ? ' <a href="#" data-r="' + esc(d.ruta) + '" style="text-decoration:underline">Ver cheque / encabezado</a>' : '') + '</p>' +
+        (k.verificada === false && APRUEBA && ap ? '<div class="row-between"><span class="sub" style="margin:0;font-size:12px">Revisá el documento antes de verificar.</span><button class="btn dark" type="button" data-v="' + esc(k.id) + '">Verificar cuenta</button></div>' : '') + '</div>';
+    }).join('');
+    $$('#d-ctas a[data-r]').forEach(verDoc);
+    $$('#d-ctas [data-v]').forEach(function(b){ b.addEventListener('click', function(){ UI.busy(b, true);
+      A.provAccion('verificar_cuenta', {id:DET.id, cuenta_id:b.dataset.v}).then(function(){ return recargar('Cuenta verificada.'); }, function(m){ UI.flash(m, true); }).finally(function(){ UI.busy(b, false); }); }); });
+
+    // historial
+    var his = p.historial || [];
+    $('#d-his-c').hidden = !his.length;
+    $('#d-his').innerHTML = his.slice().reverse().map(function(h){ return '<li><div class="f-who"><b>' + esc(h.nombre || '') + '</b><small>' + (h.es_proveedor ? 'Proveedor' : 'Equipo A2') + '</small></div>' +
+      '<div class="f-what">' + esc(h.accion) + (h.detalle ? '<q>' + esc(h.detalle) + '</q>' : '') + '</div><div class="f-when">' + UI.fecha(h.creado_at, true) + '</div></li>'; }).join('');
+
+    accionRegistro(p);
+    $('#d-del-c').hidden = !(A.inArea(ME, 'admin') || APRUEBA);
+
+    // proyectos y cotizaciones (solo aprobados)
+    $('#d-pry').innerHTML = (p.proyectos || []).map(function(x){ return '<li><div><b><a href="proyectos.html?id=' + encodeURIComponent(x.id) + '">' + esc(x.nombre) + '</a></b><small>' + esc([x.codigo, x.servicio].filter(Boolean).join(' · ')) + '</small></div></li>'; }).join('') || '<li class="empty">No está asignado a ningún proyecto.</li>';
+    var vePagos = ap && (A.inArea(ME, 'admin') || A.can(ME, 'solicitar_pago') || ['revisar_solicitud','vobo_contable','aprobar_pago','registrar_pago'].some(function(x){ return A.can(ME, x); }));
+    if (vePagos) {
+      $('#mt').hidden = false; UI.monedaToggle($('#mt'), cargarCot);
+      if (A.can(ME, 'solicitar_pago') && p.activo !== false) { $('#d-sol').hidden = false; $('#d-sol').href = 'pagos.html?nueva=1&proveedor=' + encodeURIComponent(p.id); }
+      cargarCot();
+    }
+  }
+
+  function accionRegistro(p){
+    var est = p.estado || 'aprobado', box = $('#d-reg'), btns = $('#r-btns'), mot = $('#r-mot');
+    var cfg = null;
+    if (est === 'solicitado') cfg = {t:'Solicitud de código de proveedor', s:'Revisá los datos. Al autorizar se asigna el código PRV y se le envía al proveedor con su código de acceso para completar el registro.', l:'Motivo (si la rechazás, se le envía al proveedor)',
+      b:[['rechazar','Rechazar','link danger','decidir_solicitud'], ['autorizar','Autorizar y enviar código','btn dark','decidir_solicitud']]};
+    else if (est === 'en_registro') cfg = {t: p.codigo_validado_at ? 'Completando su registro' : 'Esperando que valide su código', s: p.codigo_validado_at ? 'El proveedor está llenando sus datos, documentos y cuentas. Te avisaremos por correo cuando lo envíe.' : 'Ya se le envió su código de acceso. Si no le llegó o se le venció, podés reenviarlo.',
+      b: p.codigo_validado_at ? [] : [['reenviar','Reenviar código de acceso','btn','reenviar_codigo']], sinMot:true};
+    else if (est === 'corregir') cfg = {t:'Esperando correcciones', s:'Se le pidió al proveedor: ' + (p.observaciones || ''), b:[], sinMot:true};
+    else if (est === 'en_revision') cfg = {t:'Expediente listo para aprobar', s:'Revisá datos, documentos y cuentas. Al aprobar, el proveedor queda activo y sus cuentas verificadas; ya se le pueden cargar cotizaciones y solicitudes de pago.', l:'Comentario (obligatorio si pedís correcciones; se le envía al proveedor)',
+      b:[['corregir','Pedir correcciones','link danger','decidir_registro'], ['aprobar','Aprobar proveedor','btn dark','decidir_registro']]};
+    box.hidden = !cfg; if (!cfg) return;
+    var puede = APRUEBA;
+    $('#r-tag').textContent = puede && cfg.b.length ? 'Te toca a vos' : 'Registro en proceso';
+    $('#r-t').textContent = cfg.t; $('#r-s').textContent = cfg.s + (!puede && cfg.b.length ? ' Lo aprueba quien tiene el permiso “Aprobar proveedores”.' : '');
+    $('#r-mot-f').hidden = !puede || cfg.sinMot || !cfg.b.length; $('#r-mot-l').textContent = cfg.l || 'Comentario'; mot.value = ''; $('#r-out').hidden = true;
+    btns.innerHTML = puede ? '<span></span>' + cfg.b.map(function(x){ return '<button type="button" class="' + x[2] + '" data-d="' + x[0] + '" data-a="' + x[3] + '">' + x[1] + '</button>'; }).join('') : '';
+    if (puede && cfg.b.length === 2) btns.innerHTML = cfg.b.map(function(x){ return '<button type="button" class="' + x[2] + '" data-d="' + x[0] + '" data-a="' + x[3] + '">' + x[1] + '</button>'; }).join('');
+    $$('#r-btns button').forEach(function(b){ b.addEventListener('click', function(){
+      var d = b.dataset.d, m = mot.value.trim();
+      if ((d === 'corregir') && !m) { UI.err($('#r-out'), 'Escribí qué debe corregir el proveedor.'); mot.focus(); return; }
+      function go(){ UI.busy(b, true);
+        A.provAccion(b.dataset.a, {id:DET.id, decision:d, motivo:m}).then(function(r){
+          if (r && r.eliminado) { location.href = 'proveedores.html?f=proc&eliminado=1'; return; }
+          var msg = {autorizar:'Solicitud autorizada. Código ' + ((r && r.codigo) || '') + ' enviado al proveedor.', reenviar:'Código reenviado.', aprobar:'Proveedor aprobado.', corregir:'Se le pidió al proveedor que corrija.'}[d];
+          if (A.demo && r && r.demoCode) msg += ' (Demo: código de acceso ' + r.demoCode + ')';
+          return recargar(msg);
+        }, function(x){ UI.err($('#r-out'), x); }).finally(function(){ UI.busy(b, false); });
+      }
+      if (d === 'rechazar') UI.confirmar(b, '¿Seguro? Tocá de nuevo para rechazar', go); else go();
+    }); });
+  }
+
+  $('#del-ok').addEventListener('click', function(){ var b = this, m = $('#del-mot').value.trim();
+    if (!m) { UI.err($('#del-out'), 'Escribí el motivo.'); return; }
+    UI.confirmar(b, '¿Seguro? Tocá de nuevo para eliminar', function(){
+      A.provAccion('eliminar', {id:DET.id, motivo:m}).then(function(){ location.href = 'proveedores.html?eliminado=1'; }, function(x){ UI.err($('#del-out'), x); b.textContent = 'Eliminar proveedor'; b.classList.remove('warn'); });
+    });
+  });
+
   function cargarCot(){
     Promise.all([A.listCotizaciones(), A.listSolicitudes()]).then(function(r){
       var c = A.saldos((r[0] || []).filter(function(x){ return x.proveedor_id === DET.id; }), r[1] || []);

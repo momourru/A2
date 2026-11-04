@@ -18,7 +18,8 @@ window.A2_CONFIG = {
     activar:   'smart-action',
     usuarios:  'usuarios',
     comunicados: 'comunicados',
-    pagos:     'pagos'
+    pagos:     'pagos',
+    proveedores: 'proveedores'
   },
 
   /* Puestos que puede elegir quien solicita usuario. Editá esta lista libremente. */
@@ -50,6 +51,8 @@ window.A2_CONFIG = {
   permisos: [
     {id:'gestionar_proyectos',   n:'Gestionar proyectos',        d:'Crea proyectos y empresas internas, y asigna el equipo.'},
     {id:'gestionar_proveedores', n:'Gestionar proveedores',      d:'Crea y edita proveedores, sus datos bancarios y a qué proyecto pertenecen.'},
+    {id:'aprobar_proveedores',   n:'Aprobar proveedores',        d:'Recibe las solicitudes de código, aprueba expedientes y verifica cuentas bancarias.'},
+    {id:'ver_expediente_proveedor', n:'Ver expediente de proveedores', d:'Ve toda la información del proveedor: representante legal, documentos, referencias y cuentas.'},
     {id:'solicitar_pago',        n:'Cargar cotizaciones y solicitar pagos', d:'Carga cotizaciones y crea solicitudes de pago.'},
     {id:'revisar_solicitud',     n:'Revisar solicitudes y emitir OC', d:'Revisa que la cotización o factura coincida y emite la orden de compra.'},
     {id:'vobo_contable',         n:'VoBo contable',              d:'Autoriza la orden de compra, detalla retenciones y adjunta documentos.'},

@@ -126,8 +126,10 @@
             <dl class="summary" id="d-datos"></dl>
           </div></div>
           <div class="card" id="d-banco-c" hidden><div class="panel">
-            <h3 class="det-h">Datos bancarios del proveedor</h3>
+            <h3 class="det-h">Cuenta de pago</h3>
             <dl class="summary" id="d-banco"></dl>
+            <div class="cta-cambio" id="d-cta-cambio" hidden><label for="d-cta-sel">Pagar a otra cuenta del proveedor</label>
+              <div class="row-between" style="gap:10px"><select id="d-cta-sel"></select><button class="btn" type="button" id="d-cta-ok">Cambiar</button></div></div>
           </div></div>
           <div class="card"><div class="panel">
             <h3 class="det-h">Firmas digitales internas</h3>
@@ -143,6 +145,7 @@
             <form class="form" id="f-acc" novalidate>
               <div class="full" id="a-ret" hidden>
                 <div class="form">
+                  <p class="full sub" id="r-reg" style="margin:0"></p>
                   <div class="field full"><label for="r-tipo">Retención</label><select id="r-tipo">
                     <option value="ninguna">Sin retención</option><option value="isr">ISR</option><option value="iva">IVA</option><option value="isr_iva">ISR e IVA</option></select></div>
                   <div class="field" data-r="isr"><label for="r-isr">Monto retención ISR</label><input id="r-isr" type="number" step="0.01" min="0" value="0"></div>
@@ -157,6 +160,14 @@
               <div class="full row-between"><button type="button" class="link danger" id="a-rej">Rechazar</button>
                 <button class="btn dark" type="submit" id="a-ok"></button></div>
             </form>
+          </div></div>
+
+          <div class="card" id="d-del-c" hidden><div class="panel">
+            <h3 class="det-h">Eliminar solicitud</h3>
+            <p class="sub">Solo Administración. Queda un respaldo con quién la eliminó, cuándo y por qué. Las solicitudes pagadas no se pueden eliminar.</p>
+            <div class="form"><div class="field full"><label for="del-mot">Motivo</label><input id="del-mot" maxlength="500"></div>
+              <div class="full" id="del-out" hidden></div>
+              <div class="full"><button class="link danger" type="button" id="del-ok">Eliminar solicitud</button></div></div>
           </div></div>
 
           <div class="card"><div class="panel">
@@ -196,7 +207,7 @@ document.addEventListener('DOMContentLoaded', function(){
   function lista(){
     Promise.all([A.listSolicitudes(), A.listCotizaciones()]).then(function(r){
       sols = r[0] || []; cots = A.saldos(r[1] || [], sols);
-      $('#c-load').hidden = true; $('#v-list').hidden = false;
+      $('#c-load').hidden = true; $('#v-list').hidden = false; if (UI.param('eliminada')) UI.flash('Solicitud ' + UI.param('eliminada') + ' eliminada.');
       if (ME.rol === 'owner') { $('#fx-box').hidden = false; $('#fx').value = UI.getFx(); }
       if (!sols.some(misPendientes)) filtro = 'todas';
       armarFiltros(); kpis(); pintarSol(); pintarCot();
@@ -266,7 +277,7 @@ document.addEventListener('DOMContentLoaded', function(){
     $('#back').href = 'pagos.html'; $('#back').textContent = '← Volver a compras y pagos'; $('#b-new').hidden = true;
     $('#h-title').textContent = 'Nueva solicitud de pago';
     Promise.all([A.listProveedores(), A.listProyectos(), A.listCotizaciones(), A.listSolicitudes()]).then(function(r){
-      prvs = (r[0] || []).filter(function(p){ return p.activo !== false; }); prys = r[1] || []; cots = A.saldos(r[2] || [], r[3] || []);
+      prvs = (r[0] || []).filter(function(p){ return p.activo !== false && (p.estado || 'aprobado') === 'aprobado'; }); prys = r[1] || []; cots = A.saldos(r[2] || [], r[3] || []);
       UI.opciones($('#n-prv'), prvs, 'id', function(p){ return p.codigo + ' · ' + p.razon_social; }, 'Seleccioná el proveedor…');
       if (!prvs.length) $('#n-prv-hint').innerHTML = 'Todavía no hay proveedores registrados.' + (A.can(ME, 'gestionar_proveedores') ? ' <a href="proveedores.html?nuevo=1" class="link">Registrar uno</a>' : '');
       UI.opciones($('#n-pry'), prys, 'id', function(p){ return (p.codigo ? p.codigo + ' · ' : '') + p.nombre; }, 'Sin proyecto (gasto general)');
@@ -351,9 +362,18 @@ document.addEventListener('DOMContentLoaded', function(){
     if (s.fase === 'rechazada') filas.push(['Motivo del rechazo', esc(s.rechazo_motivo || '')]);
     $('#d-datos').innerHTML = filas.map(function(f){ return '<div><dt>' + f[0] + '</dt><dd>' + f[1] + '</dd></div>'; }).join('');
 
-    if (s.banco) { $('#d-banco-c').hidden = false; var b = s.banco;
-      $('#d-banco').innerHTML = [['Banco', b.banco], ['Tipo de cuenta', b.tipo_cuenta], ['Número de cuenta', b.numero_cuenta], ['A nombre de', b.nombre_cuenta], ['Moneda', b.moneda === 'USD' ? 'Dólares' : b.moneda === 'GTQ' ? 'Quetzales' : '']]
-        .filter(function(x){ return x[1]; }).map(function(x){ return '<div><dt>' + x[0] + '</dt><dd>' + esc(x[1]) + '</dd></div>'; }).join(''); }
+    var ctas = s.cuentas || [];
+    $('#d-banco-c').hidden = !ctas.length && !s.banco;
+    if (s.banco) { var b = s.banco;
+      $('#d-banco').innerHTML = [['Banco', esc(b.banco)], ['Tipo de cuenta', esc(b.tipo_cuenta)], ['Número de cuenta', esc(b.numero_cuenta)], ['A nombre de', esc(b.nombre_cuenta)], ['Moneda', b.moneda === 'USD' ? 'Dólares' : b.moneda === 'GTQ' ? 'Quetzales' : ''],
+        ['Verificación', b.verificada === false ? '<span class="pill warn">Sin verificar</span><small>El proveedor cambió esta cuenta; hay que verificarla en Proveedores antes de aprobar el pago.</small>' : '<span class="pill ok">Verificada</span>']]
+        .filter(function(x){ return x[1]; }).map(function(x){ return '<div><dt>' + x[0] + '</dt><dd>' + x[1] + '</dd></div>'; }).join(''); }
+    else $('#d-banco').innerHTML = '<div><dt>Cuenta</dt><dd>Sin cuenta asignada.</dd></div>';
+    var flujoCta = (['revisar_solicitud','vobo_contable','aprobar_pago','registrar_pago'].some(function(p){ return A.can(ME, p); }) || A.inArea(ME, 'admin')) && ['solicitada','oc_emitida','vobo_contable'].indexOf(s.fase) > -1;
+    var otras = ctas.filter(function(c){ return c.id !== s.cuenta_id; });
+    $('#d-cta-cambio').hidden = !(flujoCta && otras.length);
+    UI.opciones($('#d-cta-sel'), otras, 'id', function(c){ return c.banco + ' · ' + c.numero_cuenta + (c.moneda === 'USD' ? ' (US$)' : ' (Q)') + (c.verificada === false ? ' · sin verificar' : ''); });
+    $('#d-del-c').hidden = !(A.inArea(ME, 'admin') && s.fase !== 'pagada');
 
     $('#d-firmas').innerHTML = (s.firmas || []).map(function(f){
       return '<li class="' + (f.fase === 'rechazada' ? 'bad' : '') + '"><div class="f-who"><b>' + esc(f.nombre) + '</b>' + (f.puesto ? '<small>' + esc(f.puesto) + '</small>' : '') + '</div>' +
@@ -385,6 +405,7 @@ document.addEventListener('DOMContentLoaded', function(){
       }[s.fase];
       $('#a-t').textContent = textos[0]; $('#a-s').textContent = textos[1]; $('#a-ok').textContent = fase.boton;
       $('#a-ret').hidden = s.fase !== 'oc_emitida';
+      $('#r-reg').textContent = s.proveedor && s.proveedor.regimen_isr ? 'Régimen ISR del proveedor: ' + s.proveedor.regimen_isr : 'El proveedor no indicó su régimen de ISR.';
       var tipos = (s.adjuntos || []).filter(function(a){ return a.solicitud_id === s.id; }).map(function(a){ return a.tipo; });
       var falta = s.fase === 'oc_emitida' && tipos.indexOf('factura') < 0 ? 'Falta adjuntar la factura (abajo, en Documentos).' :
                   s.fase === 'aprobada' && tipos.indexOf('comprobante') < 0 ? 'Falta adjuntar el comprobante de pago (abajo, en Documentos).' : '';
@@ -412,6 +433,16 @@ document.addEventListener('DOMContentLoaded', function(){
     if (DET.fase === 'oc_emitida') { d.retencion_tipo = $('#r-tipo').value; d.retencion_isr = Number($('#r-isr').value || 0); d.retencion_iva = Number($('#r-iva').value || 0); d.retencion_nota = $('#r-nota').value.trim(); }
     A.avanzar(DET.id, d).then(function(){ UI.flash('Listo, quedó firmado.'); $('#a-nota').value = ''; return A.getSolicitud(DET.id); })
       .then(function(s){ if (s) { DET = s; pintarDet(s); } }, function(m){ UI.err(out, m); }).finally(function(){ UI.busy(f, false); });
+  });
+  $('#d-cta-ok').addEventListener('click', function(){ var b = this; UI.busy(b, true);
+    A.cambiarCuenta(DET.id, $('#d-cta-sel').value).then(function(){ UI.flash('Cuenta de pago actualizada.'); return A.getSolicitud(DET.id); })
+      .then(function(s){ if (s) { DET = s; pintarDet(s); } }, function(m){ UI.flash(m, true); }).finally(function(){ UI.busy(b, false); });
+  });
+  $('#del-ok').addEventListener('click', function(){ var b = this, mot = $('#del-mot').value.trim();
+    if (!mot) { UI.err($('#del-out'), 'Escribí el motivo.'); return; }
+    UI.confirmar(b, '¿Seguro? Tocá de nuevo para eliminar', function(){
+      A.eliminarSolicitud(DET.id, mot).then(function(){ location.href = 'pagos.html?eliminada=' + encodeURIComponent(DET.numero); }, function(m){ UI.err($('#del-out'), m); b.textContent = 'Eliminar solicitud'; b.classList.remove('warn'); });
+    });
   });
   $('#a-rej').addEventListener('click', function(){
     var b = this, motivo = $('#a-nota').value.trim(), out = $('#a-out');

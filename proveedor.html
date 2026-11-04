@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portal de proveedores — Área Cuadrada</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="img/iso.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+
+<header class="site site-portal">
+  <div class="wrap nav">
+    <a href="proveedor.html" class="brand" aria-label="Portal de proveedores A2"><img src="img/logo-sd.png" alt="Área Cuadrada"></a>
+    <ul class="nav-portal">
+      <li><button type="button" class="nav-login" id="hdr-logout">Cerrar sesión</button></li>
+    </ul>
+  </div>
+</header>
+
+
+<div class="demo-bar"><b>Modo demostración</b><span>Todavía no está conectado a Supabase: no se crean cuentas ni se envían correos.</span></div>
+
+<main class="portal">
+  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="portal-col wide" style="max-width:1040px">
+    <div class="dash-head">
+      <div>
+        <span class="tag">Portal de proveedores</span>
+        <h1 id="h-t">Mi registro</h1>
+        <div class="who" id="h-s"></div>
+      </div>
+      <div class="dash-actions"><button class="link" type="button" id="b-pw" hidden>Cambiar contraseña</button></div>
+    </div>
+    <div class="err-box" id="c-err" hidden></div>
+    <div class="card" id="c-load"><div class="panel"><p class="sub" style="margin:0">Cargando…</p></div></div>
+
+    <div id="v-estado" style="margin-top:22px" hidden></div>
+    <div class="steps-pago s6" id="wiz" hidden></div>
+    <nav class="tabs-prov" id="tabs" hidden>
+      <button type="button" data-s="resumen" aria-pressed="true">Resumen</button>
+      <button type="button" data-s="datos" aria-pressed="false">Mis datos</button>
+      <button type="button" data-s="docs" aria-pressed="false">Documentos</button>
+      <button type="button" data-s="cuentas" aria-pressed="false">Cuentas bancarias</button>
+    </nav>
+
+    <!-- 1. Código de acceso -->
+    <section class="card sec" id="s-codigo" hidden><div class="panel">
+      <h3>Ingresá tu código de acceso</h3>
+      <p class="sub">Es el código de 6 caracteres que te llegó por correo cuando A2 autorizó tu solicitud.</p>
+      <form class="form" id="f-cod" novalidate style="max-width:420px">
+        <div class="field full"><label for="cod">Código de acceso</label><input id="cod" class="code-in" maxlength="8" autocomplete="one-time-code" required><div class="msg">Ingresá el código.</div></div>
+        <div class="full" id="cod-demo" hidden></div>
+        <div class="full" id="cod-out" hidden></div>
+        <div class="full"><button class="btn dark wide" type="submit">Validar y continuar</button></div>
+      </form>
+    </div></section>
+
+    <!-- 2. Datos -->
+    <form class="card sec" id="s-datos" hidden novalidate><div class="panel">
+      <h3>Datos del proveedor</h3>
+      <p class="sub">Podés guardar y volver después: tu avance queda registrado.</p>
+      <div class="form">
+        <h4 class="grp">Datos de la empresa</h4>
+        <div class="field"><label>Razón social</label><input name="razon_social" required data-lock><div class="msg">Requerido.</div></div>
+        <div class="field"><label>NIT</label><input name="nit" required data-lock><div class="msg">Requerido.</div></div>
+        <div class="field"><label>Teléfonos de la empresa</label><input name="telefono" required placeholder="+502 2222 3333 / +502 5555 6666"><div class="msg">Requerido.</div></div>
+        <div class="field"><label>Página web <span class="opt">(opcional)</span></label><input name="web" placeholder="www.empresa.com"></div>
+        <div class="field full"><label>Dirección</label><input name="direccion" required><div class="msg">Requerido.</div></div>
+
+        <h4 class="grp">Contacto directo <small>Con quien coordinamos cotizaciones y órdenes</small></h4>
+        <div class="field"><label>Nombre</label><input name="c.nombre" required><div class="msg">Requerido.</div></div>
+        <div class="field"><label>Apellido</label><input name="c.apellido" required><div class="msg">Requerido.</div></div>
+        <div class="field"><label>Sexo</label><select name="c.sexo" required><option value="">Seleccioná…</option><option value="F">Femenino</option><option value="M">Masculino</option></select><div class="msg">Requerido.</div></div>
+        <div class="field"><label>Título</label><input name="c.titulo" list="titulos" placeholder="Lic., Ing., Arq., Sr., Sra."></div>
+        <div class="field"><label>Puesto</label><input name="c.puesto" required><div class="msg">Requerido.</div></div>
+        <div class="field"><label>Teléfono</label><input name="c.telefono" type="tel" required><div class="msg">Requerido.</div></div>
+        <div class="field full"><label>Correo</label><input name="c.correo" type="email" required><div class="msg">Ingresá un correo válido.</div></div>
+
+        <h4 class="grp">Representante legal</h4>
+        <div class="field"><label>Nombre</label><input name="r.nombre" required><div class="msg">Requerido.</div></div>
+        <div class="field"><label>Apellido</label><input name="r.apellido" required><div class="msg">Requerido.</div></div>
+        <div class="field"><label>DPI</label><input name="r.dpi" required inputmode="numeric" placeholder="0000 00000 0000"><div class="msg">El DPI tiene 13 dígitos.</div></div>
+        <div class="field"><label>Sexo</label><select name="r.sexo" required><option value="">Seleccioná…</option><option value="F">Femenino</option><option value="M">Masculino</option></select><div class="msg">Requerido.</div></div>
+        <div class="field"><label>Título</label><input name="r.titulo" list="titulos"></div>
+        <div class="field"><label>Puesto</label><input name="r.puesto" required placeholder="Gerente general, administrador único…"><div class="msg">Requerido.</div></div>
+        <div class="field"><label>Teléfono</label><input name="r.telefono" type="tel" required><div class="msg">Requerido.</div></div>
+        <div class="field"><label>Correo</label><input name="r.correo" type="email" required><div class="msg">Ingresá un correo válido.</div></div>
+
+        <h4 class="grp">Servicios a proveer</h4>
+        <div class="field full"><label>Tipo de producto o servicio</label><input name="rubro" required placeholder="Ej. Concreto premezclado, instalaciones eléctricas, imprenta"><div class="msg">Requerido.</div></div>
+        <div class="field"><label>Fecha de constitución de la empresa</label><input name="fecha_constitucion" type="date" required><div class="msg">Requerido.</div></div>
+        <div class="field"><label>Régimen de ISR</label><select name="regimen_isr" required id="sel-isr"></select><div class="msg">Requerido.</div></div>
+
+        <h4 class="grp">Referencias comerciales <small>Al menos una</small></h4>
+        <div class="refs" id="refs"></div>
+        <div class="full"><button class="link" type="button" id="ref-add">+ Agregar referencia</button></div>
+
+        <datalist id="titulos"><option>Lic.</option><option>Licda.</option><option>Ing.</option><option>Inga.</option><option>Arq.</option><option>Dr.</option><option>Dra.</option><option>Sr.</option><option>Sra.</option></datalist>
+        <div class="full" id="dat-out" hidden></div>
+        <div class="full row-between"><span class="ro-note" id="dat-lock"></span><button class="btn dark" type="submit" id="dat-ok">Guardar y continuar</button></div>
+      </div>
+    </div></form>
+
+    <!-- 3. Términos -->
+    <section class="card sec" id="s-terminos" hidden><div class="panel">
+      <h3 id="ter-t"></h3>
+      <p class="sub">Leé las reglas que aplican a los proveedores de A2.</p>
+      <div class="legal" id="ter-x"></div>
+      <label class="acepto"><input type="checkbox" id="ter-ok"> <span>Leí y acepto los términos y condiciones para proveedores de A2.</span></label>
+      <div id="ter-out" hidden style="margin-top:12px"></div>
+      <div class="row-between" style="margin-top:18px"><span class="ro-note" id="ter-ya"></span><button class="btn dark" type="button" id="ter-btn">Aceptar y continuar</button></div>
+    </div></section>
+
+    <!-- 4. Documentos -->
+    <section class="card sec" id="s-docs" hidden><div class="panel">
+      <h3>Documentos</h3>
+      <p class="sub">PDF, JPG o PNG de hasta 10 MB. Si un documento cambia, cargá la versión nueva con “Reemplazar”.</p>
+      <ul class="doc-list" id="docs"></ul>
+      <div class="row-between" style="margin-top:18px" id="docs-nav"><span class="ro-note" id="docs-falta"></span><button class="btn dark" type="button" id="docs-btn">Continuar</button></div>
+    </div></section>
+
+    <!-- 5. Cuentas -->
+    <section class="card sec" id="s-cuentas" hidden><div class="panel">
+      <h3>Cuentas bancarias para pagos</h3>
+      <p class="sub" id="cta-sub">A2 paga únicamente a cuentas a nombre de tu empresa. Podés registrar más de una cuenta.</p>
+      <div class="cta-grid" id="ctas"></div>
+      <div class="row-between" style="margin-top:16px"><button class="btn" type="button" id="cta-new">+ Agregar cuenta</button></div>
+
+      <form class="sub-form" id="f-cta" hidden novalidate style="margin-top:18px">
+        <h4 class="grp" id="cta-ft" style="margin-top:0;padding-top:0;border:0">Nueva cuenta</h4>
+        <div class="form">
+          <div class="field"><label>Banco</label><input name="banco" list="bancos" required><div class="msg">Requerido.</div></div>
+          <div class="field"><label>Tipo de cuenta</label><select name="tipo_cuenta" required><option value="">Seleccioná…</option><option>Monetaria</option><option>Ahorro</option></select><div class="msg">Requerido.</div></div>
+          <div class="field"><label>Nombre de la cuenta</label><input name="nombre_cuenta" required placeholder="A nombre de…"><div class="msg">Requerido.</div></div>
+          <div class="field"><label>Número de cuenta</label><input name="numero_cuenta" required><div class="msg">Requerido.</div></div>
+          <div class="field"><label>Moneda</label><select name="moneda"><option value="GTQ">Quetzales</option><option value="USD">Dólares</option></select></div>
+          <div class="field"><label>Correo para notificaciones de pago</label><input name="correo_notificacion" type="email" required><div class="msg">Ingresá un correo válido.</div></div>
+          <div class="field full"><label>Cheque anulado o encabezado de la cuenta</label><input type="file" id="cta-file" accept=".pdf,.jpg,.jpeg,.png,image/*,application/pdf"><div class="hint" id="cta-fh">Imagen o PDF donde se vea el nombre y número de la cuenta.</div><div class="msg">Adjuntá el cheque anulado o el encabezado.</div></div>
+          <label class="acepto full" style="margin-top:0"><input type="checkbox" name="principal"> <span>Usar como cuenta principal para mis pagos</span></label>
+          <datalist id="bancos"><option>Banco Industrial</option><option>Banrural</option><option>Banco G&amp;T Continental</option><option>BAM</option><option>BAC Credomatic</option><option>Bantrab</option><option>Banco Promerica</option><option>Interbanco</option><option>Banco Ficohsa</option><option>Banco de Antigua</option><option>Vivibanco</option><option>Banco Inmobiliario</option><option>Banco Cuscatlán</option><option>Banco Azteca</option><option>Banco INV</option><option>Banco Nexa</option></datalist>
+          <div class="full" id="cta-out" hidden></div>
+          <div class="full row-between"><button class="link" type="button" id="cta-cancel">Cancelar</button><button class="btn dark" type="submit">Guardar cuenta</button></div>
+        </div>
+      </form>
+      <div class="row-between" style="margin-top:22px" id="ctas-nav"><span class="ro-note" id="ctas-falta"></span><button class="btn dark" type="button" id="ctas-btn">Continuar</button></div>
+    </div></section>
+
+    <!-- 6. Confirmar y enviar -->
+    <section class="card sec" id="s-enviar" hidden><div class="panel">
+      <h3>Revisá y enviá tu registro</h3>
+      <ul class="check-list" id="chk"></ul>
+      <div class="legal" id="dil-x" style="margin-top:18px"></div>
+      <label class="acepto"><input type="checkbox" id="dil-ok"> <span>Declaro que la información es verdadera y autorizo a A2 a verificarla y a resguardarla en los términos descritos.</span></label>
+      <div id="env-out" hidden style="margin-top:12px"></div>
+      <div class="row-between" style="margin-top:18px"><span></span><button class="btn dark" type="button" id="env-btn">Aceptar y enviar mi registro</button></div>
+    </div></section>
+
+    <!-- Resumen (en revisión o aprobado) -->
+    <section class="card sec" id="s-resumen" hidden><div class="panel">
+      <h3 class="det-h">Resumen de tu registro</h3>
+      <dl class="summary" id="res"></dl>
+    </div></section>
+
+    <!-- Contraseña -->
+    <form class="card sec" id="s-pw" hidden novalidate><div class="panel">
+      <h3>Cambiar contraseña</h3>
+      <div class="form" style="max-width:520px;margin-top:12px">
+        <div class="field full"><label for="pw1">Nueva contraseña</label><input id="pw1" type="password" autocomplete="new-password" required><div class="hint">Mínimo 8 caracteres, con letras y números.</div><div class="msg">Mínimo 8 caracteres, con letras y números.</div></div>
+        <div class="field full"><label for="pw2">Confirmar contraseña</label><input id="pw2" type="password" autocomplete="new-password" required><div class="msg">Las contraseñas no coinciden.</div></div>
+        <div class="full" id="pw-out" hidden></div>
+        <div class="full row-between"><button class="link" type="button" id="pw-cancel">Cancelar</button><button class="btn dark" type="submit">Guardar contraseña</button></div>
+      </div>
+    </div></form>
+  </div>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  var $ = UI.$, $$ = UI.$$, esc = UI.esc, A = A2Portal, T = window.A2_TEXTOS_PROVEEDOR;
+  var X = null, VISTA = null, PREV = null;
+  document.addEventListener('input', function(e){ var f = e.target.closest && e.target.closest('.field'); if (f) f.classList.remove('err'); });
+  document.addEventListener('change', function(e){ var f = e.target.closest && e.target.closest('.field'); if (f) f.classList.remove('err'); });
+  var PASOS = [['codigo','Código','Acceso'], ['datos','Datos','Empresa y contactos'], ['terminos','Términos','Reglas de A2'], ['docs','Documentos','Legales y fiscales'], ['cuentas','Cuentas','Para tus pagos'], ['enviar','Enviar','Declaración']];
+  var CLAVE = {codigo:'codigo', datos:'datos', terminos:'terminos', docs:'documentos', cuentas:'cuentas', enviar:'enviado'};
+
+  function legal(box, t){ box.innerHTML = '<h4>' + esc(t.titulo) + '</h4><ol>' + t.parrafos.map(function(p){ return '<li>' + esc(p) + '</li>'; }).join('') + '</ol>'; }
+  legal($('#ter-x'), T.terminos); $('#ter-t').textContent = T.terminos.titulo; legal($('#dil-x'), T.diligencia);
+  $('#sel-isr').innerHTML = '<option value="">Seleccioná…</option>' + A.REGIMENES_ISR.map(function(r){ return '<option>' + esc(r) + '</option>'; }).join('');
+
+  A.me().then(function(me){
+    if (!me) { location.href = 'login.html'; return; }
+    if (me.tipo !== 'proveedor') { location.href = 'portal.html'; return; }
+    cargar();
+  }).catch(function(m){ $('#c-load').hidden = true; UI.err($('#c-err'), m); });
+
+  function cargar(ir){
+    return A.provAccion('yo').then(function(r){ X = r; $('#c-load').hidden = true; $('#b-pw').hidden = false; pintar(ir); })
+      .catch(function(m){ $('#c-load').hidden = true; UI.err($('#c-err'), m); });
+  }
+
+  function pintar(ir){
+    var p = X.proveedor, st = A.ESTADOS_PROVEEDOR[p.estado] || {n:p.estado};
+    $('#h-t').textContent = p.nombre_comercial || p.razon_social;
+    $('#h-s').innerHTML = (p.codigo ? '<b>' + esc(p.codigo) + '</b> · ' : '') + esc(p.razon_social) + ' · <span class="pill ' + (p.estado === 'aprobado' ? 'ok' : p.estado === 'corregir' ? 'warn' : 'yel') + '">' + esc(st.n) + '</span>';
+    var box = $('#v-estado'); box.hidden = false;
+    $('#wiz').hidden = true; $('#tabs').hidden = true;
+
+    if (p.estado === 'solicitado') {
+      box.innerHTML = '<div class="estado-box"><div><h3>Tu solicitud está en revisión</h3><p>A2 está revisando tu solicitud de código de proveedor. Cuando la autorice te llegará un correo a <b>' + esc(p.correo) + '</b> con tu código y un código de acceso para continuar aquí mismo.</p>' +
+        (A.demo ? '<p class="note" style="margin-top:12px"><b>Demo:</b> <a href="proveedores.html?demo=owner&id=' + encodeURIComponent(p.id) + '" style="text-decoration:underline">autorizala como A2</a> y volvé a esta página.</p>' : '') + '</div></div>';
+      resumen(); mostrar('resumen'); return;
+    }
+    if (p.estado === 'en_revision') {
+      box.innerHTML = '<div class="estado-box"><div><h3>Tu registro está en revisión</h3><p>Enviaste tu expediente el ' + esc(UI.fecha(p.enviado_at)) + '. A2 está verificando la información; te avisaremos por correo cuando sea aprobado o si hay algo que corregir.</p></div></div>';
+      resumen(); mostrar('resumen'); return;
+    }
+    if (p.estado === 'aprobado') {
+      box.innerHTML = '<div class="estado-box ok"><div><h3>Sos proveedor aprobado de A2</h3><p>Tu código de proveedor es <b>' + esc(p.codigo) + '</b>. Mantené tus datos, documentos y cuentas al día. Cualquier cambio de cuenta bancaria queda pendiente de verificación por A2 antes de recibir pagos.</p></div></div>';
+      $('#tabs').hidden = false; resumen();
+      var v = ir || VISTA || 'resumen'; if (['resumen','datos','docs','cuentas'].indexOf(v) < 0) v = 'resumen';
+      tab(v); return;
+    }
+    // en_registro o corregir → asistente
+    box.innerHTML = p.estado === 'corregir'
+      ? '<div class="estado-box bad"><div><h3>A2 pidió correcciones</h3><p>Hacé los cambios y volvé a enviar tu registro desde el último paso.</p><blockquote>' + esc(p.observaciones || '') + '</blockquote></div></div>'
+      : (p.codigo_validado_at ? '<div class="estado-box"><div><h3>Completá tu registro</h3><p>Seguí los pasos. Podés salir y volver cuando quieras: entrás con tu correo y contraseña y continuás donde te quedaste.</p></div></div>'
+                              : '<div class="estado-box"><div><h3>¡Tu solicitud fue autorizada!</h3><p>Tu código de proveedor es <b>' + esc(p.codigo) + '</b>. Para empezar, validá el código de acceso que te enviamos por correo.</p></div></div>');
+    var est = A.pasosProveedor(X), primero = PASOS.map(function(x){ return x[0]; }).filter(function(k){ return !est[CLAVE[k]]; })[0] || 'enviar';
+    var lim = PASOS.map(function(x){ return x[0]; }).indexOf(primero);
+    $('#wiz').hidden = false;
+    $('#wiz').innerHTML = PASOS.map(function(x, i){
+      var ok = est[CLAVE[x[0]]], dis = i > lim || (x[0] === 'codigo' && ok);
+      return '<button type="button" data-p="' + x[0] + '"' + (dis ? ' disabled' : '') + ' class="' + (ok ? 'ok' : '') + '"><span>' + (i + 1) + '</span><b>' + x[1] + '</b><small>' + x[2] + '</small></button>';
+    }).join('');
+    $$('#wiz button').forEach(function(b){ b.addEventListener('click', function(){ if (!b.disabled) paso(b.dataset.p); }); });
+    var destino = ir && PASOS.map(function(x){ return x[0]; }).indexOf(ir) <= lim && !(ir === 'codigo' && est.codigo) ? ir : primero;
+    paso(destino);
+  }
+
+  function paso(k){ VISTA = k; $$('#wiz button').forEach(function(b){ b.classList.toggle('on', b.dataset.p === k); }); render(k); mostrar(k); }
+  function tab(k){ VISTA = k; $$('#tabs button').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.s === k); }); render(k); mostrar(k); }
+  $$('#tabs button').forEach(function(b){ b.addEventListener('click', function(){ tab(b.dataset.s); }); });
+  function mostrar(k){ $$('.sec').forEach(function(s){ s.hidden = s.id !== 's-' + k; }); }
+  function render(k){
+    if (k === 'codigo') renderCodigo(); if (k === 'datos') renderDatos(); if (k === 'terminos') renderTerminos();
+    if (k === 'docs') renderDocs(); if (k === 'cuentas') renderCuentas(); if (k === 'enviar') renderEnviar();
+  }
+  function siguiente(desde){ var orden = PASOS.map(function(x){ return x[0]; }); return cargar(orden[orden.indexOf(desde) + 1]); }
+  var aprobado = function(){ return X.proveedor.estado === 'aprobado'; };
+
+  /* ---------- 1. Código ---------- */
+  function renderCodigo(){
+    $('#cod-demo').hidden = !(A.demo && X.demoCode);
+    if (A.demo && X.demoCode) $('#cod-demo').innerHTML = '<p class="note"><b>Demo:</b> el código de acceso es <b>' + esc(X.demoCode) + '</b>.</p>';
+  }
+  $('#f-cod').addEventListener('submit', function(e){
+    e.preventDefault(); var f = this, c = $('#cod').value.trim();
+    $('#cod').closest('.field').classList.toggle('err', !c); if (!c) return;
+    UI.busy(f, true); $('#cod-out').hidden = true;
+    A.provAccion('validar_codigo', {codigo:c}).then(function(){ UI.flash('Código validado.'); return cargar('datos'); }, function(m){ UI.err($('#cod-out'), m); }).finally(function(){ UI.busy(f, false); });
+  });
+
+  /* ---------- 2. Datos ---------- */
+  function refRow(r){ var d = document.createElement('div'); d.className = 'ref-row';
+    d.innerHTML = '<input data-k="nombre" placeholder="Empresa o persona" value="' + esc((r && r.nombre) || '') + '"><input data-k="telefono" type="tel" placeholder="Teléfono" value="' + esc((r && r.telefono) || '') + '"><button class="link danger" type="button" aria-label="Quitar">Quitar</button>';
+    d.querySelector('button').addEventListener('click', function(){ if ($$('#refs .ref-row').length > 1) d.remove(); else $$('input', d).forEach(function(i){ i.value = ''; }); });
+    $('#refs').appendChild(d); }
+  $('#ref-add').addEventListener('click', function(){ if ($$('#refs .ref-row').length < 6) refRow(); });
+  function renderDatos(){
+    var p = X.proveedor, e = X.expediente || {}, c = p.contacto || {}, r = e.representante || {};
+    $$('#s-datos [name]').forEach(function(i){ var n = i.name, v;
+      if (n.indexOf('c.') === 0) v = c[n.slice(2)]; else if (n.indexOf('r.') === 0) v = r[n.slice(2)];
+      else if (n === 'fecha_constitucion') v = e.fecha_constitucion; else v = p[n];
+      i.value = v == null ? '' : v; i.closest('.field').classList.remove('err');
+      if (i.hasAttribute('data-lock')) i.readOnly = aprobado(); });
+    $('#dat-lock').textContent = aprobado() ? 'La razón social y el NIT solo los puede cambiar A2. Escribinos a info@a2desarrollos.com si cambiaron.' : '';
+    $('#dat-ok').textContent = aprobado() ? 'Guardar cambios' : 'Guardar y continuar';
+    $('#refs').innerHTML = ''; var refs = e.referencias && e.referencias.length ? e.referencias : [{}, {}]; refs.forEach(refRow);
+    $('#dat-out').hidden = true;
+  }
+  $('#s-datos').addEventListener('submit', function(e){
+    e.preventDefault(); var f = this;
+    var ok = UI.requeridos(f), mailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    ['c.correo','r.correo'].forEach(function(n){ var i = $('[name="' + n + '"]', f); if (!mailRe.test(i.value.trim())) { i.closest('.field').classList.add('err'); ok = false; } });
+    var dpi = $('[name="r.dpi"]', f); if (dpi.value.replace(/\D/g, '').length !== 13) { dpi.closest('.field').classList.add('err'); ok = false; }
+    var refs = $$('#refs .ref-row').map(function(rw){ return {nombre: $('[data-k=nombre]', rw).value.trim(), telefono: $('[data-k=telefono]', rw).value.trim()}; });
+    if (!refs.some(function(x){ return x.nombre && x.telefono; })) { UI.err($('#dat-out'), 'Agregá al menos una referencia con nombre y teléfono.'); ok = false; }
+    if (!ok) { var first = $('.field.err', f); if (first) first.scrollIntoView({behavior:'smooth', block:'center'}); return; }
+    var d = {contacto:{}, representante:{}, referencias:refs};
+    $$('[name]', f).forEach(function(i){ var n = i.name, v = i.value.trim();
+      if (n.indexOf('c.') === 0) d.contacto[n.slice(2)] = v; else if (n.indexOf('r.') === 0) d.representante[n.slice(2)] = v; else d[n] = v; });
+    UI.busy(f, true); $('#dat-out').hidden = true;
+    A.provAccion('guardar_datos', {datos:d}).then(function(){ UI.flash('Datos guardados.'); return aprobado() ? cargar('datos') : siguiente('datos'); }, function(m){ UI.err($('#dat-out'), m); }).finally(function(){ UI.busy(f, false); });
+  });
+
+  /* ---------- 3. Términos ---------- */
+  function renderTerminos(){ var p = X.proveedor; $('#ter-ok').checked = !!p.terminos_at; $('#ter-ya').textContent = p.terminos_at ? 'Aceptados el ' + UI.fecha(p.terminos_at, true) + '.' : ''; $('#ter-out').hidden = true; }
+  $('#ter-btn').addEventListener('click', function(){ var b = this;
+    if (!$('#ter-ok').checked) { UI.err($('#ter-out'), 'Marcá la casilla para aceptar los términos y condiciones.'); return; }
+    UI.busy(b, true); A.provAccion('aceptar_terminos', {acepto:true, version:T.terminos.version}).then(function(){ return siguiente('terminos'); }, function(m){ UI.err($('#ter-out'), m); }).finally(function(){ UI.busy(b, false); });
+  });
+
+  /* ---------- 4. Documentos ---------- */
+  function ultimo(tipo, cuenta){ return (X.documentos || []).filter(function(d){ return d.tipo === tipo && (!cuenta || d.cuenta_id === cuenta); })[0]; }
+  function verDoc(a){ a.addEventListener('click', function(e){ e.preventDefault();
+    if (A.demo) { UI.flash('Demo: los archivos no se guardan.'); return; }
+    var w = window.open('', '_blank'); A.urlAdjunto(a.dataset.r).then(function(u){ if (w) w.location = u; else location.href = u; }, function(m){ if (w) w.close(); UI.flash(m, true); }); }); }
+  function subir(tipo, cuenta, file){
+    if (!file) return Promise.resolve();
+    if (!/\.(pdf|jpe?g|png)$/i.test(file.name)) return Promise.reject('Usá un archivo PDF, JPG o PNG.');
+    return A.subirDocProveedor(X.proveedor.id, tipo, file, cuenta);
+  }
+  function renderDocs(){
+    $('#docs').innerHTML = A.DOCS_PROVEEDOR.map(function(d){ var u = ultimo(d.id);
+      return '<li><div><b>' + esc(d.n) + '</b>' + (d.req ? '' : ' <span class="pill">Si aplica</span>') + '<small>' + esc(d.d) + '</small>' +
+        (u ? '<div class="d-file"><span class="pill ok">Cargado</span> <a href="#" data-r="' + esc(u.ruta) + '">' + esc(u.nombre) + '</a> <small style="display:inline">· ' + UI.fecha(u.subido_at) + '</small></div>' : (d.req ? '<div class="d-file"><span class="pill warn">Pendiente</span></div>' : '')) + '</div>' +
+        '<label class="btn' + (u ? '' : ' dark') + '">' + (u ? 'Reemplazar' : 'Subir') + '<input type="file" hidden data-t="' + d.id + '" accept=".pdf,.jpg,.jpeg,.png,image/*,application/pdf"></label></li>';
+    }).join('');
+    $$('#docs a[data-r]').forEach(verDoc);
+    $$('#docs input[type=file]').forEach(function(i){ i.addEventListener('change', function(){ var lab = i.closest('label'); UI.busy(lab, true);
+      subir(i.dataset.t, null, i.files[0]).then(function(){ UI.flash('Documento cargado.'); return cargar('docs'); }, function(m){ UI.flash(m, true); }).finally(function(){ UI.busy(lab, false); }); }); });
+    var falta = A.DOCS_PROVEEDOR.filter(function(d){ return d.req && !ultimo(d.id); });
+    $('#docs-nav').hidden = aprobado();
+    $('#docs-falta').textContent = falta.length ? 'Falta: ' + falta.map(function(d){ return d.n; }).join(', ') + '.' : '';
+    $('#docs-btn').disabled = !!falta.length;
+  }
+  $('#docs-btn').addEventListener('click', function(){ cargar('cuentas'); });
+
+  /* ---------- 5. Cuentas ---------- */
+  function renderCuentas(){
+    var cs = X.cuentas || [];
+    $('#cta-sub').textContent = aprobado() ? 'Si agregás o cambiás una cuenta, A2 la tiene que verificar antes de pagarte en ella.' : 'A2 paga únicamente a cuentas a nombre de tu empresa. Podés registrar más de una cuenta.';
+    $('#ctas').innerHTML = cs.map(function(c){ var d = ultimo('cuenta', c.id);
+      return '<div class="cta' + (c.principal ? ' principal' : '') + '"><h4>' + esc(c.banco) + '</h4><div class="num">' + esc(c.numero_cuenta) + '</div>' +
+        '<p>' + esc(c.tipo_cuenta) + ' · ' + (c.moneda === 'USD' ? 'Dólares' : 'Quetzales') + '<br>A nombre de ' + esc(c.nombre_cuenta) + '<br>Notificaciones: ' + esc(c.correo_notificacion || '—') + '</p>' +
+        '<p>' + (c.principal ? '<span class="pill dark">Principal</span> ' : '') + (aprobado() ? (c.verificada === false ? '<span class="pill warn">Pendiente de verificación</span>' : '<span class="pill ok">Verificada</span>') : '') +
+        (d ? ' <a href="#" data-r="' + esc(d.ruta) + '" style="text-decoration:underline">' + esc(d.nombre) + '</a>' : ' <span class="pill bad">Falta cheque o encabezado</span>') + '</p>' +
+        '<div class="row-between"><span><button class="link" type="button" data-e="' + esc(c.id) + '">Editar</button></span><button class="link danger" type="button" data-x="' + esc(c.id) + '">Eliminar</button></div></div>';
+    }).join('') || '<p class="sub">Todavía no registrás ninguna cuenta.</p>';
+    $$('#ctas a[data-r]').forEach(verDoc);
+    $$('#ctas [data-e]').forEach(function(b){ b.addEventListener('click', function(){ abrirCta(cs.filter(function(c){ return c.id === b.dataset.e; })[0]); }); });
+    $$('#ctas [data-x]').forEach(function(b){ b.addEventListener('click', function(){ UI.confirmar(b, '¿Seguro? Tocá de nuevo', function(){
+      A.provAccion('eliminar_cuenta', {id:b.dataset.x}).then(function(){ UI.flash('Cuenta eliminada.'); return cargar('cuentas'); }, function(m){ UI.flash(m, true); b.textContent = 'Eliminar'; b.classList.remove('warn'); }); }); }); });
+    if (!cs.length && !aprobado()) abrirCta(null); else $('#f-cta').hidden = true;
+    var sinDoc = cs.filter(function(c){ return !ultimo('cuenta', c.id); });
+    $('#ctas-nav').hidden = aprobado();
+    $('#ctas-falta').textContent = !cs.length ? 'Registrá al menos una cuenta.' : sinDoc.length ? 'Falta el cheque anulado o encabezado de ' + sinDoc.map(function(c){ return c.numero_cuenta; }).join(', ') + '.' : '';
+    $('#ctas-btn').disabled = !cs.length || !!sinDoc.length;
+  }
+  function abrirCta(c){
+    var f = $('#f-cta'); f.hidden = false; f.dataset.id = c ? c.id : '';
+    UI.llenar(f, c || {moneda:'GTQ', nombre_cuenta: X.proveedor.razon_social, correo_notificacion: X.proveedor.correo, principal: !(X.cuentas || []).length});
+    $('#cta-ft').textContent = c ? 'Editar cuenta ' + c.numero_cuenta : 'Nueva cuenta';
+    $('#cta-file').value = ''; $('#cta-fh').textContent = c && ultimo('cuenta', c.id) ? 'Ya cargaste un documento; subí otro solo si querés reemplazarlo.' : 'Imagen o PDF donde se vea el nombre y número de la cuenta.';
+    $$('.field', f).forEach(function(x){ x.classList.remove('err'); }); $('#cta-out').hidden = true;
+    f.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+  $('#cta-new').addEventListener('click', function(){ abrirCta(null); });
+  $('#cta-cancel').addEventListener('click', function(){ $('#f-cta').hidden = true; });
+  $('#f-cta').addEventListener('submit', function(e){
+    e.preventDefault(); var f = this, id = f.dataset.id, file = $('#cta-file').files[0];
+    var ok = UI.requeridos(f), mail = $('[name=correo_notificacion]', f);
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail.value.trim())) { mail.closest('.field').classList.add('err'); ok = false; }
+    var necesita = !id || !ultimo('cuenta', id); $('#cta-file').closest('.field').classList.toggle('err', necesita && !file); if (necesita && !file) ok = false;
+    if (!ok) return;
+    var d = UI.datos(f); if (id) d.id = id;
+    UI.busy(f, true); $('#cta-out').hidden = true;
+    A.provAccion('guardar_cuenta', {cuenta:d}).then(function(r){ return subir('cuenta', r.id || id, file); })
+      .then(function(){ UI.flash('Cuenta guardada.'); return cargar('cuentas'); }, function(m){ UI.err($('#cta-out'), m); }).finally(function(){ UI.busy(f, false); });
+  });
+  $('#ctas-btn').addEventListener('click', function(){ cargar('enviar'); });
+
+  /* ---------- 6. Enviar ---------- */
+  function renderEnviar(){
+    var est = A.pasosProveedor(X);
+    $('#chk').innerHTML = [['datos', 'Datos de la empresa, contactos y referencias'], ['terminos', 'Términos y condiciones aceptados'], ['documentos', 'Documentos legales y fiscales cargados', 'docs'], ['cuentas', 'Cuentas bancarias con su cheque anulado o encabezado']]
+      .map(function(x){ return '<li class="' + (est[x[0]] ? 'ok' : '') + '">' + (est[x[0]] ? esc(x[1]) : '<a href="#" data-go="' + (x[2] || x[0]) + '">' + esc(x[1]) + '</a>') + '</li>'; }).join('');
+    $$('#chk [data-go]').forEach(function(a){ a.addEventListener('click', function(e){ e.preventDefault(); paso(a.dataset.go); }); });
+    $('#env-btn').disabled = !(est.datos && est.terminos && est.documentos && est.cuentas);
+    $('#dil-ok').checked = false; $('#env-out').hidden = true;
+  }
+  $('#env-btn').addEventListener('click', function(){ var b = this;
+    if (!$('#dil-ok').checked) { UI.err($('#env-out'), 'Marcá la casilla para aceptar la declaración.'); return; }
+    UI.busy(b, true); A.provAccion('enviar', {acepto:true, version:T.diligencia.version}).then(function(){ UI.flash('Registro enviado a A2.'); window.scrollTo({top:0, behavior:'smooth'}); return cargar(); }, function(m){ UI.err($('#env-out'), m); }).finally(function(){ UI.busy(b, false); });
+  });
+
+  /* ---------- Resumen ---------- */
+  function resumen(){
+    var p = X.proveedor, c = p.contacto || {}, docs = A.DOCS_PROVEEDOR.filter(function(d){ return ultimo(d.id); }).length;
+    var filas = [['Código de proveedor', p.codigo || 'Se asigna al autorizar tu solicitud'], ['Estado', (A.ESTADOS_PROVEEDOR[p.estado] || {}).n], ['Razón social', p.razon_social], ['NIT', p.nit], ['Correo de acceso', p.correo], ['Teléfonos', p.telefono],
+      ['Dirección', p.direccion], ['Contacto directo', c.nombre ? [c.titulo, c.nombre, c.apellido].filter(Boolean).join(' ') + ' · ' + (c.puesto || '') : ''], ['Servicio', p.rubro], ['Régimen ISR', p.regimen_isr],
+      ['Documentos', p.datos_at ? docs + ' de ' + A.DOCS_PROVEEDOR.length + ' cargados' : ''], ['Cuentas bancarias', (X.cuentas || []).length ? String((X.cuentas || []).length) : ''],
+      ['Solicitado', UI.fecha(p.solicitado_at)], ['Aprobado', p.aprobado_at ? UI.fecha(p.aprobado_at) : '']];
+    $('#res').innerHTML = filas.filter(function(f){ return f[1]; }).map(function(f){ return '<div><dt>' + f[0] + '</dt><dd>' + esc(f[1]) + '</dd></div>'; }).join('');
+  }
+
+  /* ---------- Contraseña ---------- */
+  $('#b-pw').addEventListener('click', function(){ PREV = VISTA; $$('.sec').forEach(function(s){ s.hidden = s.id !== 's-pw'; }); $('#pw1').value = $('#pw2').value = ''; $('#pw-out').hidden = true; });
+  $('#pw-cancel').addEventListener('click', function(){ pintar(PREV); });
+  $('#s-pw').addEventListener('submit', function(e){
+    e.preventDefault(); var f = this, a = $('#pw1').value;
+    var ok1 = a.length >= 8 && /[A-Za-z]/.test(a) && /\d/.test(a), ok2 = a === $('#pw2').value;
+    $('#pw1').closest('.field').classList.toggle('err', !ok1); $('#pw2').closest('.field').classList.toggle('err', !ok2); if (!ok1 || !ok2) return;
+    UI.busy(f, true); A.setNewPassword(a).then(function(){ UI.flash('Contraseña actualizada.'); pintar(PREV); }, function(m){ UI.err($('#pw-out'), m); }).finally(function(){ UI.busy(f, false); });
+  });
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/portal.js"></script>
+<script src="js/datos.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/site.js"></script>
+<script src="js/textos-proveedor.js"></script>
+</body>
+</html>

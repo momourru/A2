@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function(){
     var mods = [];
     if (A.inArea(me, 'admin') || flujo || A.can(me, 'solicitar_pago')) mods.push({h:'pagos.html', t:'Compras y pagos', d:'Cotizaciones, solicitudes de pago, órdenes de compra y saldos.', k:'pagos'});
     if (A.inArea(me, 'admin') || A.inArea(me, 'proyectos') || A.can(me, 'gestionar_proyectos') || A.inArea(me, 'ventas') || A.inArea(me, 'mercadeo')) mods.push({h:'proyectos.html', t:'Proyectos', d:'Tus proyectos, su equipo y sus proveedores.'});
-    if (A.inArea(me, 'admin') || A.can(me, 'gestionar_proveedores') || A.can(me, 'solicitar_pago') || A.inArea(me, 'proyectos') || A.inArea(me, 'mercadeo')) mods.push({h:'proveedores.html', t:'Proveedores', d:'Directorio con código, contactos y proyectos de cada proveedor.'});
+    if (A.inArea(me, 'admin') || A.can(me, 'gestionar_proveedores') || A.can(me, 'aprobar_proveedores') || A.can(me, 'ver_expediente_proveedor') || A.can(me, 'solicitar_pago') || A.inArea(me, 'proyectos') || A.inArea(me, 'mercadeo')) mods.push({h:'proveedores.html', t:'Proveedores', d:'Directorio con código, contactos y proyectos; registro y aprobación de nuevos proveedores.', k:'prov'});
     if (A.inArea(me, 'admin') || A.can(me, 'gestionar_proyectos')) mods.push({h:'empresas.html', t:'Empresas internas', d:'Las sociedades de A2 y su información legal.'});
     if (A.inArea(me, 'ventas')) mods.push({t:'Ventas y alquileres', d:'Propiedades, disponibilidad e inquilinos. Llega en la Fase 2.', soon:true});
     if (A.inArea(me, 'mercadeo')) mods.push({t:'Material de mercadeo', d:'Logos, línea gráfica y documentos por proyecto. Llega en la Fase 2.', soon:true});
@@ -174,6 +174,10 @@ document.addEventListener('DOMContentLoaded', function(){
     if (mods.some(function(m){ return m.k === 'pagos'; }) && A.listSolicitudes) A.listSolicitudes().then(function(l){
       var n = (l || []).filter(function(s){ var f = A.fase(s.fase); return f.permiso && A.can(me, f.permiso); }).length;
       var b = document.getElementById('badge-pagos'); if (b && n) { b.hidden = false; b.textContent = n + ' para tu firma'; }
+    }, function(){});
+    if (A.can(me, 'aprobar_proveedores') && A.listProveedores) A.listProveedores().then(function(l){
+      var n = (l || []).filter(function(p){ return p.estado === 'solicitado' || p.estado === 'en_revision'; }).length;
+      var b = document.getElementById('badge-prov'); if (b && n) { b.hidden = false; b.textContent = n + ' por aprobar'; b.closest('a').href = 'proveedores.html?f=proc'; }
     }, function(){});
     if (me.rol === 'owner' || me.rol === 'gerente') $('#go-users').hidden = false;
     if (me.rol === 'owner') setupComposer();

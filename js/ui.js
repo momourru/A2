@@ -61,6 +61,7 @@
   U.sesion = function(cb){
     A2Portal.me().then(function(me){
       if (!me) { location.href = 'login.html?next=' + encodeURIComponent(location.pathname.split('/').pop() + location.search); return; }
+      if (me.tipo === 'proveedor') { location.href = 'proveedor.html'; return; }
       if (me.sinPerfil) { document.body.innerHTML = '<p style="padding:40px">Tu perfil no está completo. Contactá a Gerencia.</p>'; return; }
       return A2Portal.getFx().then(function(v){ U.setFx(v); }, function(){}).then(function(){ cb(me); });
     }).catch(function(m){ var b = U.$('#c-err'); if (b) { b.hidden = false; b.textContent = String(m); } });

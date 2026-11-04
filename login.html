@@ -24,7 +24,7 @@
       <li><a href="portafolio.html">Portafolio</a></li>
       <li><a href="index.html#contacto">Contacto</a></li>
       <li class="nav-sep" aria-hidden="true"></li>
-      <li><a href="login.html" class="nav-login active" aria-current="page">Log In</a></li>
+      <li><a href="login.html" class="nav-login">Log In</a></li>
     </ul>
   </div>
 </header>
@@ -42,16 +42,15 @@
         <h2>Registrate como proveedor</h2>
         <p>Formá parte de la red de proveedores de A2 Desarrollos.</p>
       </div>
-      <a class="btn dark" href="#proveedor" id="prov-btn">Registrarme
+      <a class="btn dark" href="registro-proveedor.html" id="prov-btn">Registrarme
         <svg class="arr" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 7h12M8 2l5 5-5 5"/></svg></a>
-      <div class="soon" role="status">El registro de proveedores se habilita en la siguiente etapa.</div>
     </div>
 
     <div>
       <div class="card">
         <section class="panel">
           <h3>Ingresá a tu cuenta</h3>
-          <p class="sub">Usá el correo y la contraseña con los que activaste tu usuario.</p>
+          <p class="sub">Equipo A2 y proveedores: usá tu correo y tu contraseña.</p>
           <form class="form" id="f-login" novalidate>
             <div class="field full"><label for="l-mail">Correo</label><input id="l-mail" type="email" autocomplete="username" required placeholder="nombre@a2desarrollos.com"><div class="msg">Ingresá un correo válido.</div></div>
             <div class="field full"><label for="l-pw">Contraseña</label><input id="l-pw" type="password" autocomplete="current-password" required><div class="msg">Ingresá tu contraseña.</div></div>
@@ -80,9 +79,7 @@ document.addEventListener('DOMContentLoaded', function(){
   function check(i, ok){ i.closest('.field').classList.toggle('err', !ok); return ok; }
   function say(html, bad){ var o = $('#l-out'); o.hidden = false; o.className = 'full ' + (bad ? 'err-box' : 'note'); o.innerHTML = html; }
 
-  $('#prov-btn').addEventListener('click', function(e){ e.preventDefault(); $('#prov').classList.add('show-soon'); });
-
-  A2Portal.me().then(function(me){ if (me && !me.sinPerfil) say('Ya tenés una sesión abierta. <a href="portal.html" style="text-decoration:underline">Ir al portal</a>'); });
+  A2Portal.me().then(function(me){ if (me && !me.sinPerfil) say('Ya tenés una sesión abierta. <a href="' + A2Portal.inicio(me) + '" style="text-decoration:underline">Ir a mi portal</a>'); }, function(){});
 
   $('#f-login').addEventListener('submit', function(e){
     e.preventDefault();
@@ -90,9 +87,10 @@ document.addEventListener('DOMContentLoaded', function(){
     var b = check($('#l-pw'), $('#l-pw').value.length > 0);
     if (!a || !b) return;
     var f = this; f.classList.add('loading');
-    A2Portal.login($('#l-mail').value.trim().toLowerCase(), $('#l-pw').value).then(function(){
+    A2Portal.login($('#l-mail').value.trim().toLowerCase(), $('#l-pw').value).then(function(){ return A2Portal.me(); }).then(function(me){
+      if (me && me.tipo === 'proveedor') { location.href = 'proveedor.html'; return; }
       var next = new URLSearchParams(location.search).get('next');
-      location.href = next && /^[a-z]+\.html(\?[\w=&-]*)?$/.test(next) ? next : 'portal.html';
+      location.href = next && /^[a-z-]+\.html(\?[\w=&-]*)?$/.test(next) && next.indexOf('proveedor.html') !== 0 ? next : 'portal.html';
     }, function(m){ say(m, true); }).finally(function(){ f.classList.remove('loading'); });
   });
   $('#l-forgot').addEventListener('click', function(){
@@ -106,6 +104,8 @@ document.addEventListener('DOMContentLoaded', function(){
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/config.js"></script>
 <script src="js/portal.js"></script>
+<script src="js/datos.js"></script>
+<script src="js/ui.js"></script>
 <script src="js/site.js"></script>
 </body>
 </html>
