@@ -510,3 +510,9 @@ button.btn{cursor:pointer;font-family:var(--fb)}
   .steps-mini div:nth-child(3){padding-left:0;border-left:0}
   .steps-mini div{padding-bottom:12px}
 }
+
+/* Encabezado a lo ancho: logo a la izquierda, menú y Log In hacia la esquina derecha */
+header.site .wrap{max-width:none;padding-left:clamp(20px,3.5vw,56px);padding-right:clamp(20px,3.5vw,56px)}
+
+/* El atributo hidden siempre gana (barra demo, botones ocultos) */
+[hidden]{display:none!important}

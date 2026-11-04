@@ -122,6 +122,7 @@
 
   window.A2Portal = Object.assign({ live: LIVE, demo: !LIVE, areas: AREAS, puestos: C.puestos || [], dominio: C.dominioCorporativo || 'a2desarrollos.com', areaName: areaName }, LIVE ? live : demo);
 
+  if (window.console) console.info('[Portal A2] modo: ' + (LIVE ? 'REAL (Supabase conectado)' : 'DEMO') + (C.supabaseUrl && !LIVE ? ' — falta cargar la librería de Supabase' : ''));
   /* Barra de "modo demostración" solo cuando aplica */
   document.addEventListener('DOMContentLoaded', function(){
     var bar = document.querySelector('.demo-bar'); if (bar) bar.hidden = LIVE;
