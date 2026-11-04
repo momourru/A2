@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compras y pagos — Área Cuadrada</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="img/iso.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+
+<header class="site site-portal">
+  <div class="wrap nav">
+    <a href="portal.html" class="brand" aria-label="Portal A2"><img src="img/logo-sd.png" alt="Área Cuadrada"></a>
+    <ul class="nav-portal">
+      <li><button type="button" class="nav-login" id="hdr-logout">Cerrar sesión</button></li>
+    </ul>
+  </div>
+</header>
+
+
+<div class="demo-bar"><b>Modo demostración</b><span>Todavía no está conectado a Supabase: no se crean cuentas ni se envían correos.</span></div>
+
+<main class="portal">
+  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="portal-col wide" style="max-width:1160px">
+    <a class="back" href="portal.html" id="back">← Volver al portal</a>
+    <div class="dash-head">
+      <div>
+        <span class="tag">Compras y pagos</span>
+        <h1 id="h-title">Compras y pagos</h1>
+        <div class="who" id="h-sub">Cotizaciones, solicitudes de pago, órdenes de compra y saldos.</div>
+      </div>
+      <div class="dash-actions">
+        <div class="mtoggle" id="mt"></div>
+        <a class="btn dark" href="pagos.html?nueva=1" id="b-new" hidden>Nueva solicitud</a>
+      </div>
+    </div>
+    <div class="err-box" id="c-err" hidden></div>
+    <div class="card" id="c-load"><div class="panel"><p class="sub" style="margin:0">Cargando…</p></div></div>
+
+    <!-- ================= LISTA ================= -->
+    <section id="v-list" hidden>
+      <div class="kpis" id="kpis"></div>
+      <div class="tabs2" role="tablist">
+        <button role="tab" aria-selected="true" data-t="sol">Solicitudes de pago</button>
+        <button role="tab" aria-selected="false" data-t="cot">Cotizaciones y saldos</button>
+      </div>
+
+      <div id="t-sol">
+        <div class="toolbar">
+          <div class="filtros" id="f-fase"></div>
+          <div class="field"><input id="q" placeholder="Buscar proveedor, número o concepto"></div>
+        </div>
+        <div class="tbl-wrap"><table class="tbl" id="tbl-sol">
+          <thead><tr><th>Número</th><th>Proveedor</th><th>Proyecto</th><th>Concepto</th><th class="r">Monto</th><th>Fase</th><th>Fecha</th></tr></thead>
+          <tbody></tbody></table></div>
+      </div>
+
+      <div id="t-cot" hidden>
+        <div class="toolbar">
+          <div class="filtros"><button aria-pressed="true" data-c="pend">Con saldo pendiente</button><button aria-pressed="false" data-c="todas">Todas</button></div>
+          <div class="field"><input id="q2" placeholder="Buscar proveedor o cotización"></div>
+        </div>
+        <div class="tbl-wrap"><table class="tbl" id="tbl-cot">
+          <thead><tr><th>Proveedor</th><th>Cotización</th><th>Proyecto</th><th class="r">Total</th><th class="r">Pagado</th><th class="r">En proceso</th><th class="r">Saldo pendiente</th></tr></thead>
+          <tbody></tbody></table></div>
+      </div>
+
+      <div class="fx-box" id="fx-box" hidden>
+        <label for="fx">Tipo de cambio (US$ 1 = Q)</label>
+        <input id="fx" type="number" step="0.01" min="1">
+        <button class="btn" type="button" id="fx-save">Guardar</button>
+        <span class="hint">Solo para ver montos convertidos. Cada documento conserva su moneda original.</span>
+      </div>
+    </section>
+
+    <!-- ================= NUEVA SOLICITUD ================= -->
+    <section id="v-new" hidden>
+      <form class="card" id="f-new" novalidate><div class="panel">
+        <h3>Nueva solicitud de pago</h3>
+        <p class="sub">El proveedor ya tiene que estar registrado con su código. Adjuntá la cotización y la solicitud pasa a revisión.</p>
+        <div class="form">
+          <div class="field full"><label for="n-prv">Proveedor</label><select id="n-prv" required></select><div class="msg">Elegí el proveedor.</div>
+            <div class="hint" id="n-prv-hint"></div></div>
+          <div class="field"><label for="n-pry">Proyecto</label><select id="n-pry"></select></div>
+          <div class="field"><label for="n-area">Departamento que solicita</label><select id="n-area"></select></div>
+
+          <div class="field full"><label>Cotización</label>
+            <div class="seg" id="n-modo"><button type="button" data-m="nueva" aria-pressed="true">Cargar cotización nueva</button><button type="button" data-m="existente" aria-pressed="false">Usar una cotización con saldo</button></div></div>
+
+          <div class="full sub-form" id="m-nueva">
+            <div class="form">
+              <div class="field"><label for="c-ref">No. de cotización del proveedor</label><input id="c-ref" placeholder="Opcional"></div>
+              <div class="field"><label for="c-mon">Moneda</label><select id="c-mon"><option value="GTQ">Quetzales (Q)</option><option value="USD">Dólares (US$)</option></select></div>
+              <div class="field full"><label for="c-desc">Descripción</label><input id="c-desc" placeholder="Ej. Concreto 4000 PSI, niveles 3 al 6"><div class="msg">Describí la cotización.</div></div>
+              <div class="field"><label for="c-tot">Monto total de la cotización</label><input id="c-tot" type="number" step="0.01" min="0.01"><div class="msg">Indicá el monto total.</div></div>
+              <div class="field"><label for="c-file">Archivo de la cotización</label><input id="c-file" type="file" accept=".pdf,.jpg,.jpeg,.png,.xlsx,.xls,.doc,.docx"><div class="msg">Adjuntá la cotización.</div></div>
+            </div>
+          </div>
+          <div class="full sub-form" id="m-existente" hidden>
+            <div class="field"><label for="c-ex">Cotización</label><select id="c-ex"></select><div class="msg">Elegí una cotización.</div><div class="hint" id="c-ex-hint"></div></div>
+          </div>
+
+          <div class="field full"><label for="n-con">Concepto del pago</label><input id="n-con" maxlength="300" placeholder="Ej. Anticipo 50 %" required><div class="msg">Indicá el concepto.</div></div>
+          <div class="field"><label for="n-mon">Monto a solicitar</label><input id="n-mon" type="number" step="0.01" min="0.01" required><div class="msg">Indicá el monto.</div><div class="hint" id="n-mon-hint"></div></div>
+          <div class="field"><label for="n-nota">Nota para quien revisa <span class="opt">(opcional)</span></label><input id="n-nota" maxlength="500"></div>
+          <div class="full" id="n-out" hidden></div>
+          <div class="full row-between"><a class="link" href="pagos.html">Cancelar</a>
+            <button class="btn dark" type="submit">Enviar a revisión <svg class="arr" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 7h12M8 2l5 5-5 5"/></svg></button></div>
+        </div>
+      </div></form>
+    </section>
+
+    <!-- ================= DETALLE ================= -->
+    <section id="v-det" hidden>
+      <div class="steps-pago" id="d-steps"></div>
+      <div class="det-grid">
+        <div>
+          <div class="card"><div class="panel">
+            <h3 class="det-h">Datos de la solicitud</h3>
+            <dl class="summary" id="d-datos"></dl>
+          </div></div>
+          <div class="card" id="d-banco-c" hidden><div class="panel">
+            <h3 class="det-h">Datos bancarios del proveedor</h3>
+            <dl class="summary" id="d-banco"></dl>
+          </div></div>
+          <div class="card"><div class="panel">
+            <h3 class="det-h">Firmas digitales internas</h3>
+            <p class="sub" style="margin-bottom:14px">Cada paso queda firmado con quién lo hizo, cuándo y una huella única encadenada a la firma anterior.</p>
+            <ol class="firmas" id="d-firmas"></ol>
+          </div></div>
+        </div>
+        <div>
+          <div class="card accion" id="d-accion" hidden><div class="panel">
+            <span class="tag">Te toca a vos</span>
+            <h3 id="a-t" style="margin-top:10px"></h3>
+            <p class="sub" id="a-s"></p>
+            <form class="form" id="f-acc" novalidate>
+              <div class="full" id="a-ret" hidden>
+                <div class="form">
+                  <div class="field full"><label for="r-tipo">Retención</label><select id="r-tipo">
+                    <option value="ninguna">Sin retención</option><option value="isr">ISR</option><option value="iva">IVA</option><option value="isr_iva">ISR e IVA</option></select></div>
+                  <div class="field" data-r="isr"><label for="r-isr">Monto retención ISR</label><input id="r-isr" type="number" step="0.01" min="0" value="0"></div>
+                  <div class="field" data-r="iva"><label for="r-iva">Monto retención IVA</label><input id="r-iva" type="number" step="0.01" min="0" value="0"></div>
+                  <div class="field full"><label for="r-nota">Detalle de la retención <span class="opt">(opcional)</span></label><input id="r-nota" maxlength="500" placeholder="Ej. Constancia ISR No. 1234"></div>
+                  <div class="full neto" id="r-neto"></div>
+                </div>
+              </div>
+              <div class="full" id="a-req"></div>
+              <div class="field full"><label for="a-nota">Comentario <span class="opt">(obligatorio si rechazás)</span></label><textarea id="a-nota" maxlength="1000"></textarea></div>
+              <div class="full" id="a-out" hidden></div>
+              <div class="full row-between"><button type="button" class="link danger" id="a-rej">Rechazar</button>
+                <button class="btn dark" type="submit" id="a-ok"></button></div>
+            </form>
+          </div></div>
+
+          <div class="card"><div class="panel">
+            <h3 class="det-h">Documentos</h3>
+            <ul class="docs" id="d-docs"></ul>
+            <form class="up" id="f-up" hidden novalidate>
+              <select id="u-tipo"></select>
+              <input id="u-file" type="file">
+              <button class="btn" type="submit">Subir</button>
+            </form>
+          </div></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  var $ = UI.$, $$ = UI.$$, esc = UI.esc, A = A2Portal;
+  var ME, sols = [], cots = [], prvs = [], prys = [], filtro = 'mias', tabCot = 'pend';
+
+  UI.sesion(function(me){
+    ME = me;
+    var acceso = A.inArea(me, 'admin') || A.can(me, 'solicitar_pago') || ['revisar_solicitud','vobo_contable','aprobar_pago','registrar_pago'].some(function(p){ return A.can(me, p); });
+    if (!acceso) { $('#c-load').hidden = true; UI.err($('#c-err'), 'No tenés acceso a Compras y pagos. Pedile a Gerencia que te asigne el permiso.'); return; }
+    $('#b-new').hidden = !A.can(me, 'solicitar_pago');
+    UI.monedaToggle($('#mt'), function(){ if (!$('#v-list').hidden) { pintarSol(); pintarCot(); kpis(); } if (!$('#v-det').hidden && DET) pintarDet(DET); });
+    var id = UI.param('id');
+    if (id) return detalle(id);
+    if (UI.param('nueva')) return nueva();
+    lista();
+  });
+
+  /* ---------------- LISTA ---------------- */
+  function misPendientes(s){ var f = A.fase(s.fase); return f.permiso && A.can(ME, f.permiso); }
+  function lista(){
+    Promise.all([A.listSolicitudes(), A.listCotizaciones()]).then(function(r){
+      sols = r[0] || []; cots = A.saldos(r[1] || [], sols);
+      $('#c-load').hidden = true; $('#v-list').hidden = false;
+      if (ME.rol === 'owner') { $('#fx-box').hidden = false; $('#fx').value = UI.getFx(); }
+      if (!sols.some(misPendientes)) filtro = 'todas';
+      armarFiltros(); kpis(); pintarSol(); pintarCot();
+    }).catch(function(m){ $('#c-load').hidden = true; UI.err($('#c-err'), m); });
+  }
+  function kpis(){
+    var porMi = sols.filter(misPendientes).length;
+    var proceso = sols.filter(function(s){ return ['pagada','rechazada'].indexOf(s.fase) < 0; });
+    var mes = new Date().toISOString().slice(0,7);
+    var pagadoMes = sols.filter(function(s){ return s.fase === 'pagada' && (s.actualizado_at || s.creado_at || '').slice(0,7) === mes; });
+    var saldo = cots.filter(function(c){ return c.estado !== 'anulada'; });
+    function suma(lista, campo){ var g = 0, u = 0; lista.forEach(function(x){ if (x.moneda === 'USD') u += Number(x[campo]); else g += Number(x[campo]); }); return {g:g, u:u}; }
+    function txt(t){ if (UI.vista() === 'orig') return [t.g ? 'Q ' + UI.num(t.g) : '', t.u ? 'US$ ' + UI.num(t.u) : ''].filter(Boolean).join(' + ') || 'Q 0.00';
+      var v = UI.vista(); return UI.dinero(UI.convertir(t.g, 'GTQ', v) + UI.convertir(t.u, 'USD', v), v); }
+    $('#kpis').innerHTML =
+      '<div class="kpi hl"><b>' + porMi + '</b><span>Pendientes de tu firma</span></div>' +
+      '<div class="kpi"><b>' + proceso.length + '</b><span>Solicitudes en proceso</span></div>' +
+      '<div class="kpi"><b class="m">' + txt(suma(proceso, 'monto')) + '</b><span>Monto en proceso</span></div>' +
+      '<div class="kpi"><b class="m">' + txt(suma(saldo, 'pendiente')) + '</b><span>Saldo pendiente de cotizaciones</span></div>';
+    void pagadoMes;
+  }
+  function armarFiltros(){
+    var cnt = function(f){ return sols.filter(function(s){ return f === 'todas' || s.fase === f; }).length; };
+    var opts = [['mias','Pendientes de mi firma', sols.filter(misPendientes).length],['todas','Todas', sols.length]]
+      .concat(A.fases.map(function(f){ return [f.id, f.corto, cnt(f.id)]; }));
+    $('#f-fase').innerHTML = opts.map(function(o){ return '<button type="button" data-f="' + o[0] + '" aria-pressed="' + (o[0] === filtro) + '">' + esc(o[1]) + ' <em>' + o[2] + '</em></button>'; }).join('');
+    $$('#f-fase button').forEach(function(b){ b.addEventListener('click', function(){ filtro = b.dataset.f; $$('#f-fase button').forEach(function(x){ x.setAttribute('aria-pressed', x === b); }); pintarSol(); }); });
+  }
+  function badge(f){ var x = A.fase(f); return '<span class="fase f-' + f + '">' + esc(x.corto) + '</span>'; }
+  function pintarSol(){
+    var q = $('#q').value.trim().toLowerCase();
+    var l = sols.filter(function(s){
+      if (filtro === 'mias' && !misPendientes(s)) return false;
+      if (filtro !== 'mias' && filtro !== 'todas' && s.fase !== filtro) return false;
+      if (!q) return true;
+      return [s.numero, s.oc_numero, s.concepto, s.proveedor && s.proveedor.razon_social, s.proveedor && s.proveedor.codigo].join(' ').toLowerCase().indexOf(q) > -1;
+    });
+    $('#tbl-sol tbody').innerHTML = l.length ? l.map(function(s){
+      return '<tr data-id="' + esc(s.id) + '"><td><b>' + esc(s.numero) + '</b>' + (s.oc_numero ? '<small>' + esc(s.oc_numero) + '</small>' : '') + '</td>' +
+        '<td>' + esc(s.proveedor ? s.proveedor.razon_social : '—') + '<small>' + esc(s.proveedor ? s.proveedor.codigo : '') + '</small></td>' +
+        '<td>' + esc(s.proyecto ? s.proyecto.nombre : 'General') + '</td><td>' + esc(s.concepto) + '</td>' +
+        '<td class="r">' + UI.dinero(s.monto, s.moneda) + '</td><td>' + badge(s.fase) + '</td><td>' + UI.fecha(s.creado_at) + '</td></tr>';
+    }).join('') : '<tr><td colspan="7" class="empty">No hay solicitudes con ese filtro.</td></tr>';
+    $$('#tbl-sol tbody tr[data-id]').forEach(function(tr){ tr.addEventListener('click', function(){ location.href = 'pagos.html?id=' + tr.dataset.id; }); });
+  }
+  function pintarCot(){
+    var q = $('#q2').value.trim().toLowerCase();
+    var l = cots.filter(function(c){ if (tabCot === 'pend' && !(c.pendiente > 0.005)) return false;
+      return !q || [c.referencia, c.descripcion, c.proveedor && c.proveedor.razon_social, c.proveedor && c.proveedor.codigo].join(' ').toLowerCase().indexOf(q) > -1; });
+    $('#tbl-cot tbody').innerHTML = l.length ? l.map(function(c){
+      return '<tr><td>' + esc(c.proveedor ? c.proveedor.razon_social : '—') + '<small>' + esc(c.proveedor ? c.proveedor.codigo : '') + '</small></td>' +
+        '<td>' + esc(c.descripcion) + '<small>' + esc(c.referencia ? 'No. ' + c.referencia : '') + ' · ' + UI.fecha(c.creado_at) + '</small></td>' +
+        '<td>' + esc(c.proyecto ? c.proyecto.nombre : 'General') + '</td>' +
+        '<td class="r">' + UI.dinero(c.monto_total, c.moneda) + '</td><td class="r">' + UI.dinero(c.pagado, c.moneda) + '</td>' +
+        '<td class="r">' + UI.dinero(c.en_proceso, c.moneda) + '</td><td class="r"><b>' + UI.dinero(c.pendiente, c.moneda) + '</b></td></tr>';
+    }).join('') : '<tr><td colspan="7" class="empty">No hay cotizaciones con ese filtro.</td></tr>';
+  }
+  $('#q').addEventListener('input', pintarSol); $('#q2').addEventListener('input', pintarCot);
+  $$('.tabs2 button').forEach(function(b){ b.addEventListener('click', function(){ $$('.tabs2 button').forEach(function(x){ x.setAttribute('aria-selected', x === b); }); $('#t-sol').hidden = b.dataset.t !== 'sol'; $('#t-cot').hidden = b.dataset.t !== 'cot'; }); });
+  $$('#t-cot .filtros button').forEach(function(b){ b.addEventListener('click', function(){ tabCot = b.dataset.c; $$('#t-cot .filtros button').forEach(function(x){ x.setAttribute('aria-pressed', x === b); }); pintarCot(); }); });
+  $('#fx-save').addEventListener('click', function(){ var v = Number($('#fx').value); if (!(v > 0)) return; A.setFx(v).then(function(){ UI.setFx(v); kpis(); pintarSol(); pintarCot(); UI.flash('Tipo de cambio guardado.'); }, function(m){ UI.flash(m, true); }); });
+
+  /* ---------------- NUEVA ---------------- */
+  var modo = 'nueva';
+  function nueva(){
+    if (!A.can(ME, 'solicitar_pago')) { $('#c-load').hidden = true; UI.err($('#c-err'), 'No tenés permiso para solicitar pagos.'); return; }
+    $('#back').href = 'pagos.html'; $('#back').textContent = '← Volver a compras y pagos'; $('#b-new').hidden = true;
+    $('#h-title').textContent = 'Nueva solicitud de pago';
+    Promise.all([A.listProveedores(), A.listProyectos(), A.listCotizaciones(), A.listSolicitudes()]).then(function(r){
+      prvs = (r[0] || []).filter(function(p){ return p.activo !== false; }); prys = r[1] || []; cots = A.saldos(r[2] || [], r[3] || []);
+      UI.opciones($('#n-prv'), prvs, 'id', function(p){ return p.codigo + ' · ' + p.razon_social; }, 'Seleccioná el proveedor…');
+      if (!prvs.length) $('#n-prv-hint').innerHTML = 'Todavía no hay proveedores registrados.' + (A.can(ME, 'gestionar_proveedores') ? ' <a href="proveedores.html?nuevo=1" class="link">Registrar uno</a>' : '');
+      UI.opciones($('#n-pry'), prys, 'id', function(p){ return (p.codigo ? p.codigo + ' · ' : '') + p.nombre; }, 'Sin proyecto (gasto general)');
+      UI.opciones($('#n-area'), A.areas, 'id', 'n');
+      $('#n-area').value = ME.area || (ME.areas || [])[0] || 'admin';
+      var pq = UI.param('proveedor'); if (pq) $('#n-prv').value = pq;
+      $('#c-load').hidden = true; $('#v-new').hidden = false; refrescarCot();
+    }).catch(function(m){ $('#c-load').hidden = true; UI.err($('#c-err'), m); });
+  }
+  function cotsDelProveedor(){ var p = $('#n-prv').value; return cots.filter(function(c){ return c.proveedor_id === p && c.estado === 'vigente' && c.disponible > 0.005; }); }
+  function refrescarCot(){
+    var l = cotsDelProveedor();
+    UI.opciones($('#c-ex'), l, 'id', function(c){ return (c.referencia ? 'No. ' + c.referencia + ' · ' : '') + c.descripcion + ' · disponible ' + (c.moneda === 'USD' ? 'US$ ' : 'Q ') + UI.num(c.disponible); }, l.length ? 'Seleccioná la cotización…' : 'Este proveedor no tiene cotizaciones con saldo');
+    hintMonto();
+  }
+  function hintMonto(){
+    if (modo === 'existente') { var c = cots.filter(function(x){ return x.id === $('#c-ex').value; })[0];
+      $('#c-ex-hint').textContent = c ? 'Total ' + (c.moneda === 'USD' ? 'US$ ' : 'Q ') + UI.num(c.monto_total) + ' · pagado ' + UI.num(c.pagado) + ' · en proceso ' + UI.num(c.en_proceso) : '';
+      $('#n-mon-hint').textContent = c ? 'Máximo disponible: ' + (c.moneda === 'USD' ? 'US$ ' : 'Q ') + UI.num(c.disponible) : '';
+      if (c && !$('#n-mon').value) $('#n-mon').value = c.disponible.toFixed(2);
+    } else { $('#n-mon-hint').textContent = $('#c-tot').value ? 'Máximo: el total de la cotización.' : ''; }
+  }
+  $('#n-prv').addEventListener('change', refrescarCot);
+  $('#c-ex').addEventListener('change', function(){ $('#n-mon').value = ''; hintMonto(); });
+  $('#c-tot').addEventListener('input', function(){ if (modo === 'nueva') { $('#n-mon').value = $('#c-tot').value; hintMonto(); } });
+  $$('#n-modo button').forEach(function(b){ b.addEventListener('click', function(){ modo = b.dataset.m; $$('#n-modo button').forEach(function(x){ x.setAttribute('aria-pressed', x === b); }); $('#m-nueva').hidden = modo !== 'nueva'; $('#m-existente').hidden = modo !== 'existente'; $('#n-mon').value = ''; hintMonto(); }); });
+
+  $('#f-new').addEventListener('submit', function(e){
+    e.preventDefault();
+    var f = this, out = $('#n-out'); out.hidden = true;
+    var ok = UI.requeridos(f);
+    if (modo === 'nueva') {
+      [['#c-desc', $('#c-desc').value.trim()], ['#c-tot', Number($('#c-tot').value) > 0], ['#c-file', $('#c-file').files.length]].forEach(function(x){ $(x[0]).closest('.field').classList.toggle('err', !x[1]); if (!x[1]) ok = false; });
+      if (Number($('#n-mon').value) > Number($('#c-tot').value)) { ok = false; UI.err(out, 'El monto a solicitar no puede ser mayor al total de la cotización.'); }
+    } else { var okc = !!$('#c-ex').value; $('#c-ex').closest('.field').classList.toggle('err', !okc); if (!okc) ok = false; }
+    if (!(Number($('#n-mon').value) > 0)) { $('#n-mon').closest('.field').classList.add('err'); ok = false; }
+    if (!ok) return;
+    UI.busy(f, true);
+    var cot = modo === 'existente' ? Promise.resolve({id: $('#c-ex').value}) :
+      A.createCotizacion({proveedor_id: $('#n-prv').value, proyecto_id: $('#n-pry').value || null, area: $('#n-area').value, referencia: $('#c-ref').value.trim() || null,
+        descripcion: $('#c-desc').value.trim(), moneda: $('#c-mon').value, monto_total: Number($('#c-tot').value)}, $('#c-file').files[0]);
+    cot.then(function(c){ return A.crearSolicitud({cotizacion_id: c.id, concepto: $('#n-con').value.trim(), monto: Number($('#n-mon').value), nota: $('#n-nota').value.trim()}); })
+      .then(function(r){ location.href = 'pagos.html?id=' + encodeURIComponent(r.id) + '&creada=1'; },
+            function(m){ UI.err(out, m); })
+      .finally(function(){ UI.busy(f, false); });
+  });
+
+  /* ---------------- DETALLE ---------------- */
+  var DET = null;
+  function detalle(id){
+    $('#back').href = 'pagos.html'; $('#back').textContent = '← Volver a compras y pagos'; $('#b-new').hidden = true;
+    A.getSolicitud(id).then(function(s){
+      $('#c-load').hidden = true;
+      if (!s) { UI.err($('#c-err'), 'No encontramos esta solicitud o no tenés acceso.'); return; }
+      DET = s; $('#v-det').hidden = false; pintarDet(s);
+      if (UI.param('creada')) UI.flash('Solicitud ' + s.numero + ' enviada a revisión.');
+    }).catch(function(m){ $('#c-load').hidden = true; UI.err($('#c-err'), m); });
+  }
+  function pintarDet(s){
+    $('#h-title').textContent = s.numero + (s.oc_numero ? ' · ' + s.oc_numero : '');
+    $('#h-sub').innerHTML = esc(s.concepto) + ' · ' + esc(s.proveedor ? s.proveedor.razon_social : '') + ' ' + badge(s.fase);
+
+    var orden = ['solicitada','oc_emitida','vobo_contable','aprobada','pagada'], i = orden.indexOf(s.fase === 'rechazada' ? s.rechazada_en : s.fase);
+    $('#d-steps').innerHTML = orden.map(function(f, k){
+      var cls = s.fase === 'rechazada' ? (k < i ? 'ok' : k === i ? 'bad' : '') : (k < i || s.fase === 'pagada' ? 'ok' : k === i ? 'on' : '');
+      var firma = (s.firmas || []).filter(function(x){ return x.fase === f; }).slice(-1)[0];
+      return '<div class="' + cls + '"><span>' + (k + 1) + '</span><b>' + esc(A.fase(f).n) + '</b><small>' + (firma ? esc(firma.nombre) : '&nbsp;') + '</small></div>';
+    }).join('');
+
+    var c = s.cotizacion || {}, sal = c.id ? A.saldos([c], s.hermanas || [])[0] : null;
+    var filas = [
+      ['Proveedor', esc(s.proveedor ? s.proveedor.razon_social : '—') + '<small>' + esc((s.proveedor && s.proveedor.codigo) || '') + (s.proveedor && s.proveedor.nit ? ' · NIT ' + esc(s.proveedor.nit) : '') + '</small>'],
+      ['Proyecto', esc(s.proyecto ? s.proyecto.nombre : 'Gasto general')],
+      ['Departamento', esc(A.areaName(s.area) || '—')],
+      ['Cotización', esc(c.descripcion || '—') + '<small>' + (c.referencia ? 'No. ' + esc(c.referencia) + ' · ' : '') + 'total ' + UI.dinero(c.monto_total, c.moneda) + '</small>'],
+      ['Saldo de la cotización', sal ? UI.dinero(sal.pendiente, c.moneda) + '<small>pagado ' + UI.dinero(sal.pagado, c.moneda) + '</small>' : '—'],
+      ['Monto solicitado', '<b>' + UI.dinero(s.monto, s.moneda) + '</b>']
+    ];
+    if (s.oc_numero) filas.push(['Orden de compra', esc(s.oc_numero)]);
+    if (s.retencion_tipo && s.retencion_tipo !== 'ninguna') filas.push(['Retenciones', (Number(s.retencion_isr) ? 'ISR ' + UI.dinero(s.retencion_isr, s.moneda) + ' ' : '') + (Number(s.retencion_iva) ? 'IVA ' + UI.dinero(s.retencion_iva, s.moneda) : '') + (s.retencion_nota ? '<small>' + esc(s.retencion_nota) + '</small>' : '')]);
+    if (s.monto_a_pagar != null) filas.push(['Monto a transferir', '<b>' + UI.dinero(s.monto_a_pagar, s.moneda) + '</b>']);
+    if (s.fase === 'rechazada') filas.push(['Motivo del rechazo', esc(s.rechazo_motivo || '')]);
+    $('#d-datos').innerHTML = filas.map(function(f){ return '<div><dt>' + f[0] + '</dt><dd>' + f[1] + '</dd></div>'; }).join('');
+
+    if (s.banco) { $('#d-banco-c').hidden = false; var b = s.banco;
+      $('#d-banco').innerHTML = [['Banco', b.banco], ['Tipo de cuenta', b.tipo_cuenta], ['Número de cuenta', b.numero_cuenta], ['A nombre de', b.nombre_cuenta], ['Moneda', b.moneda === 'USD' ? 'Dólares' : b.moneda === 'GTQ' ? 'Quetzales' : '']]
+        .filter(function(x){ return x[1]; }).map(function(x){ return '<div><dt>' + x[0] + '</dt><dd>' + esc(x[1]) + '</dd></div>'; }).join(''); }
+
+    $('#d-firmas').innerHTML = (s.firmas || []).map(function(f){
+      return '<li class="' + (f.fase === 'rechazada' ? 'bad' : '') + '"><div class="f-who"><b>' + esc(f.nombre) + '</b>' + (f.puesto ? '<small>' + esc(f.puesto) + '</small>' : '') + '</div>' +
+        '<div class="f-what">' + esc(f.accion) + (f.nota ? '<q>' + esc(f.nota) + '</q>' : '') + '</div>' +
+        '<div class="f-when">' + UI.fecha(f.creado_at, true) + '<code title="' + esc(f.huella) + '">' + esc(String(f.huella || '').slice(0, 12)) + '</code></div></li>';
+    }).join('') || '<li class="empty">Sin firmas todavía.</li>';
+
+    $('#d-docs').innerHTML = (s.adjuntos || []).map(function(a){
+      return '<li><span class="d-tipo">' + esc(A.TIPOS_ADJUNTO[a.tipo] || a.tipo) + '</span><a href="#" data-r="' + esc(a.ruta) + '">' + esc(a.nombre) + '</a><small>' + UI.fecha(a.subido_at) + '</small></li>';
+    }).join('') || '<li class="empty">Sin documentos.</li>';
+    $$('#d-docs a[data-r]').forEach(function(a){ a.addEventListener('click', function(e){ e.preventDefault();
+      if (A.demo) { UI.flash('Demo: los archivos no se guardan.'); return; }
+      var w = window.open('', '_blank'); A.urlAdjunto(a.dataset.r).then(function(u){ if (w) w.location = u; else location.href = u; }, function(m){ if (w) w.close(); UI.flash(m, true); }); }); });
+
+    var enFlujo = ['revisar_solicitud','vobo_contable','aprobar_pago','registrar_pago'].some(function(p){ return A.can(ME, p); });
+    var abierta = ['pagada','rechazada'].indexOf(s.fase) < 0;
+    $('#f-up').hidden = !(abierta && (enFlujo || s.creado_por === ME.id));
+    UI.opciones($('#u-tipo'), Object.keys(A.TIPOS_ADJUNTO).map(function(k){ return {id:k, n:A.TIPOS_ADJUNTO[k]}; }), 'id', 'n');
+    $('#u-tipo').value = s.fase === 'oc_emitida' ? 'factura' : s.fase === 'aprobada' ? 'comprobante' : 'otro';
+
+    var fase = A.fase(s.fase), mio = fase.permiso && A.can(ME, fase.permiso);
+    $('#d-accion').hidden = !mio;
+    if (mio) {
+      var textos = {
+        solicitada: ['Revisar solicitud', 'Verificá que la cotización o factura coincida con lo solicitado. Al autorizar se genera la orden de compra.'],
+        oc_emitida: ['VoBo contable', 'Revisá la factura, indicá si lleva retención y adjuntá los documentos emitidos o relacionados.'],
+        vobo_contable: ['Aprobar para transferir', 'Confirmá que todo fue aprobado, verificado y validado para cargar la transferencia en el banco.'],
+        aprobada: ['Cerrar el pago', 'Hacé la transferencia en la banca en línea, subí el comprobante y cerrá la orden. Se le avisará al proveedor por correo.']
+      }[s.fase];
+      $('#a-t').textContent = textos[0]; $('#a-s').textContent = textos[1]; $('#a-ok').textContent = fase.boton;
+      $('#a-ret').hidden = s.fase !== 'oc_emitida';
+      var tipos = (s.adjuntos || []).filter(function(a){ return a.solicitud_id === s.id; }).map(function(a){ return a.tipo; });
+      var falta = s.fase === 'oc_emitida' && tipos.indexOf('factura') < 0 ? 'Falta adjuntar la factura (abajo, en Documentos).' :
+                  s.fase === 'aprobada' && tipos.indexOf('comprobante') < 0 ? 'Falta adjuntar el comprobante de pago (abajo, en Documentos).' : '';
+      $('#a-req').innerHTML = falta ? '<p class="note warn-note">' + esc(falta) + '</p>' : '';
+      retencion();
+    }
+  }
+  function retencion(){
+    if (!DET) return; var t = $('#r-tipo').value;
+    $$('#a-ret [data-r]').forEach(function(f){ f.hidden = t === 'ninguna' || (t !== 'isr_iva' && t !== f.dataset.r); });
+    var isr = (t === 'isr' || t === 'isr_iva') ? Number($('#r-isr').value || 0) : 0, iva = (t === 'iva' || t === 'isr_iva') ? Number($('#r-iva').value || 0) : 0;
+    $('#r-neto').innerHTML = 'Monto a transferir: <b>' + (DET.moneda === 'USD' ? 'US$ ' : 'Q ') + UI.num(Number(DET.monto) - isr - iva) + '</b>';
+  }
+  ['#r-tipo','#r-isr','#r-iva'].forEach(function(s){ $(s).addEventListener('input', retencion); });
+
+  $('#f-up').addEventListener('submit', function(e){
+    e.preventDefault(); var file = $('#u-file').files[0]; if (!file) { UI.flash('Elegí un archivo.', true); return; }
+    var f = this; UI.busy(f, true);
+    A.uploadAdjunto({solicitud_id: DET.id}, $('#u-tipo').value, file).then(function(){ $('#u-file').value = ''; UI.flash('Documento subido.'); return A.getSolicitud(DET.id); })
+      .then(function(s){ if (s) { DET = s; pintarDet(s); } }, function(m){ UI.flash(m, true); }).finally(function(){ UI.busy(f, false); });
+  });
+  $('#f-acc').addEventListener('submit', function(e){
+    e.preventDefault(); var f = this, out = $('#a-out'); out.hidden = true; UI.busy(f, true);
+    var d = {nota: $('#a-nota').value.trim()};
+    if (DET.fase === 'oc_emitida') { d.retencion_tipo = $('#r-tipo').value; d.retencion_isr = Number($('#r-isr').value || 0); d.retencion_iva = Number($('#r-iva').value || 0); d.retencion_nota = $('#r-nota').value.trim(); }
+    A.avanzar(DET.id, d).then(function(){ UI.flash('Listo, quedó firmado.'); $('#a-nota').value = ''; return A.getSolicitud(DET.id); })
+      .then(function(s){ if (s) { DET = s; pintarDet(s); } }, function(m){ UI.err(out, m); }).finally(function(){ UI.busy(f, false); });
+  });
+  $('#a-rej').addEventListener('click', function(){
+    var b = this, motivo = $('#a-nota').value.trim(), out = $('#a-out');
+    if (!motivo) { UI.err(out, 'Escribí el motivo del rechazo en el comentario.'); $('#a-nota').focus(); return; }
+    UI.confirmar(b, '¿Seguro? Tocá de nuevo para rechazar', function(){
+      UI.busy($('#f-acc'), true);
+      A.rechazar(DET.id, motivo).then(function(){ UI.flash('Solicitud rechazada.'); return A.getSolicitud(DET.id); })
+        .then(function(s){ if (s) { DET = s; pintarDet(s); } }, function(m){ UI.err(out, m); }).finally(function(){ UI.busy($('#f-acc'), false); b.textContent = 'Rechazar'; b.classList.remove('warn'); });
+    });
+  });
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/portal.js"></script>
+<script src="js/datos.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/site.js"></script>
+</body>
+</html>

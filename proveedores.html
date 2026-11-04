@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Proveedores — Área Cuadrada</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="img/iso.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+
+<header class="site site-portal">
+  <div class="wrap nav">
+    <a href="portal.html" class="brand" aria-label="Portal A2"><img src="img/logo-sd.png" alt="Área Cuadrada"></a>
+    <ul class="nav-portal">
+      <li><button type="button" class="nav-login" id="hdr-logout">Cerrar sesión</button></li>
+    </ul>
+  </div>
+</header>
+
+
+<div class="demo-bar"><b>Modo demostración</b><span>Todavía no está conectado a Supabase: no se crean cuentas ni se envían correos.</span></div>
+
+<main class="portal">
+  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="portal-col wide" style="max-width:1160px">
+    <a class="back" href="portal.html" id="back">← Volver al portal</a>
+    <div class="dash-head">
+      <div>
+        <span class="tag">Proveedores</span>
+        <h1 id="h-title">Proveedores</h1>
+        <div class="who" id="h-sub">Directorio de proveedores con su código, contactos y proyectos.</div>
+      </div>
+      <div class="dash-actions"><div class="mtoggle" id="mt" hidden></div><button class="btn dark" type="button" id="b-new" hidden>Nuevo proveedor</button></div>
+    </div>
+    <div class="err-box" id="c-err" hidden></div>
+    <div class="card" id="c-load"><div class="panel"><p class="sub" style="margin:0">Cargando…</p></div></div>
+
+    <form class="card" id="f-prv" hidden novalidate><div class="panel">
+      <h3 id="f-t">Nuevo proveedor</h3>
+      <p class="sub">El código (PRV-0001, PRV-0002…) se asigna solo al guardar.</p>
+      <div class="form">
+        <div class="field"><label>Razón social</label><input name="razon_social" required><div class="msg">Requerido.</div></div>
+        <div class="field"><label>Nombre comercial</label><input name="nombre_comercial"></div>
+        <div class="field"><label>NIT</label><input name="nit"></div>
+        <div class="field"><label>Rubro</label><input name="rubro" placeholder="Ej. Concreto, imprenta, electricidad"></div>
+        <div class="field"><label>Contacto</label><input name="contacto_nombre"></div>
+        <div class="field"><label>Correo</label><input name="correo" type="email"><div class="hint">Aquí le llega la confirmación de cada pago.</div></div>
+        <div class="field"><label>Teléfono</label><input name="telefono"></div>
+        <div class="field"><label>Dirección</label><input name="direccion"></div>
+        <div class="field full"><label>Notas</label><textarea name="notas"></textarea></div>
+      </div>
+      <h3 style="margin-top:26px;font-size:17px">Datos bancarios</h3>
+      <div class="form" id="f-banco" style="margin-top:12px">
+        <div class="field"><label>Banco</label><input name="banco"></div>
+        <div class="field"><label>Tipo de cuenta</label><select name="tipo_cuenta"><option value="">—</option><option>Monetaria</option><option>Ahorro</option></select></div>
+        <div class="field"><label>Número de cuenta</label><input name="numero_cuenta"></div>
+        <div class="field"><label>A nombre de</label><input name="nombre_cuenta"></div>
+        <div class="field"><label>Moneda de la cuenta</label><select name="moneda"><option value="">—</option><option value="GTQ">Quetzales</option><option value="USD">Dólares</option></select></div>
+        <div class="field"><label>Estado</label><label class="check" style="margin-top:12px"><input type="checkbox" id="f-act" checked> Proveedor activo</label></div>
+      </div>
+      <div class="form" style="margin-top:16px">
+        <div class="full" id="f-out" hidden></div>
+        <div class="full row-between"><button type="button" class="link" id="f-cancel">Cancelar</button><button class="btn dark" type="submit">Guardar proveedor</button></div>
+      </div>
+    </div></form>
+
+    <section id="v-list" hidden>
+      <div class="toolbar"><div class="filtros"><button aria-pressed="true" data-a="1">Activos</button><button aria-pressed="false" data-a="0">Inactivos</button></div>
+        <div class="field"><input id="q" placeholder="Buscar por nombre, código, NIT o rubro"></div></div>
+      <div class="tbl-wrap"><table class="tbl" id="tbl">
+        <thead><tr><th>Código</th><th>Proveedor</th><th>Rubro</th><th>Contacto</th><th>Teléfono</th></tr></thead><tbody></tbody></table></div>
+    </section>
+
+    <section id="v-det" hidden>
+      <div class="det-grid">
+        <div>
+          <div class="card"><div class="panel">
+            <div class="row-between"><h3 class="det-h" style="margin:0">Datos del proveedor</h3><button class="link" type="button" id="d-edit" hidden>Editar</button></div>
+            <dl class="summary" id="d-datos" style="margin-top:14px"></dl>
+          </div></div>
+          <div class="card" id="d-banco-c" hidden><div class="panel"><h3 class="det-h">Datos bancarios</h3><dl class="summary" id="d-banco"></dl></div></div>
+        </div>
+        <div>
+          <div class="card"><div class="panel"><h3 class="det-h">Proyectos</h3><ul class="people" id="d-pry"></ul></div></div>
+          <div class="card" id="d-cot-c" hidden><div class="panel">
+            <div class="row-between"><h3 class="det-h" style="margin:0">Cotizaciones y saldos</h3><a class="link" id="d-sol" hidden>Nueva solicitud de pago</a></div>
+            <ul class="mini-list" id="d-cot" style="margin-top:12px"></ul>
+          </div></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  var $ = UI.$, $$ = UI.$$, esc = UI.esc, A = A2Portal;
+  var ME, prvs = [], activos = '1', DET = null, GEST = false;
+
+  UI.sesion(function(me){
+    ME = me; GEST = A.can(me, 'gestionar_proveedores');
+    var acceso = A.inArea(me, 'admin') || GEST || A.can(me, 'solicitar_pago') || A.inArea(me, 'proyectos') || A.inArea(me, 'mercadeo');
+    if (!acceso) { $('#c-load').hidden = true; UI.err($('#c-err'), 'No tenés acceso a Proveedores.'); return; }
+    $('#b-new').hidden = !GEST;
+    var id = UI.param('id'); if (id) detalle(id); else { lista(); if (UI.param('nuevo') && GEST) abrirForm(null); }
+  });
+
+  function lista(){
+    A.listProveedores().then(function(l){ prvs = l || []; $('#c-load').hidden = true; $('#v-list').hidden = false; pintar(); })
+      .catch(function(m){ $('#c-load').hidden = true; UI.err($('#c-err'), m); });
+  }
+  function pintar(){
+    var q = $('#q').value.trim().toLowerCase();
+    var l = prvs.filter(function(p){ return String(p.activo !== false ? 1 : 0) === activos && (!q || [p.codigo, p.razon_social, p.nombre_comercial, p.nit, p.rubro].join(' ').toLowerCase().indexOf(q) > -1); });
+    $('#tbl tbody').innerHTML = l.length ? l.map(function(p){
+      return '<tr data-id="' + esc(p.id) + '"><td><b>' + esc(p.codigo) + '</b></td><td>' + esc(p.razon_social) + (p.nombre_comercial ? '<small>' + esc(p.nombre_comercial) + '</small>' : '') + '</td>' +
+        '<td>' + esc(p.rubro || '—') + '</td><td>' + esc(p.contacto_nombre || '—') + '<small>' + esc(p.correo || '') + '</small></td><td>' + esc(p.telefono || '—') + '</td></tr>';
+    }).join('') : '<tr><td colspan="5" class="empty">' + (prvs.length ? 'No hay proveedores con ese filtro.' : 'Todavía no hay proveedores registrados.') + '</td></tr>';
+    $$('#tbl tbody tr[data-id]').forEach(function(tr){ tr.addEventListener('click', function(){ location.href = 'proveedores.html?id=' + tr.dataset.id; }); });
+  }
+  $('#q').addEventListener('input', pintar);
+  $$('#v-list .filtros button').forEach(function(b){ b.addEventListener('click', function(){ activos = b.dataset.a; $$('#v-list .filtros button').forEach(function(x){ x.setAttribute('aria-pressed', x === b); }); pintar(); }); });
+
+  function abrirForm(p){
+    $('#f-prv').hidden = false; $('#f-t').textContent = p ? 'Editar ' + p.codigo : 'Nuevo proveedor';
+    UI.llenar($('#f-prv'), Object.assign({}, p || {}, (p && p.banco) || {}));
+    $('#f-act').checked = !p || p.activo !== false; $('#f-prv').dataset.id = p ? p.id : ''; $('#f-out').hidden = true; window.scrollTo({top:0, behavior:'smooth'});
+  }
+  $('#b-new').addEventListener('click', function(){ abrirForm(null); });
+  $('#f-cancel').addEventListener('click', function(){ $('#f-prv').hidden = true; });
+  $('#f-prv').addEventListener('submit', function(e){
+    e.preventDefault(); var f = this; if (!UI.requeridos(f)) return;
+    var todo = UI.datos(f), banco = {}, prv = {};
+    ['banco','tipo_cuenta','numero_cuenta','nombre_cuenta','moneda'].forEach(function(k){ banco[k] = todo[k]; delete todo[k]; });
+    prv = todo; prv.activo = $('#f-act').checked; if (f.dataset.id) prv.id = f.dataset.id;
+    var hayBanco = Object.keys(banco).some(function(k){ return banco[k]; });
+    UI.busy(f, true);
+    A.saveProveedor(prv, hayBanco ? banco : null).then(function(r){ location.href = 'proveedores.html?id=' + encodeURIComponent((r && r.id) || prv.id) + (r && r.codigo ? '&nuevo_codigo=' + encodeURIComponent(r.codigo) : ''); },
+      function(m){ UI.err($('#f-out'), m); }).finally(function(){ UI.busy(f, false); });
+  });
+
+  function detalle(id){
+    $('#back').href = 'proveedores.html'; $('#back').textContent = '← Volver a proveedores'; $('#b-new').hidden = true;
+    A.getProveedor(id).then(function(p){
+      $('#c-load').hidden = true;
+      if (!p) { UI.err($('#c-err'), 'No encontramos este proveedor o no tenés acceso.'); return; }
+      DET = p; $('#v-det').hidden = false;
+      if (UI.param('nuevo_codigo')) UI.flash('Proveedor registrado con el código ' + UI.param('nuevo_codigo') + '.');
+      $('#h-title').textContent = p.razon_social; $('#h-sub').innerHTML = '<b>' + esc(p.codigo) + '</b>' + (p.activo === false ? ' · Inactivo' : '');
+      $('#d-edit').hidden = !GEST;
+      var filas = [['Código', p.codigo], ['Nombre comercial', p.nombre_comercial], ['NIT', p.nit], ['Rubro', p.rubro], ['Contacto', p.contacto_nombre], ['Correo', p.correo], ['Teléfono', p.telefono], ['Dirección', p.direccion], ['Notas', p.notas]];
+      $('#d-datos').innerHTML = filas.filter(function(f){ return f[1]; }).map(function(f){ return '<div><dt>' + f[0] + '</dt><dd>' + esc(f[1]) + '</dd></div>'; }).join('');
+      if (p.banco) { $('#d-banco-c').hidden = false; var b = p.banco;
+        $('#d-banco').innerHTML = [['Banco', b.banco], ['Tipo de cuenta', b.tipo_cuenta], ['Número', b.numero_cuenta], ['A nombre de', b.nombre_cuenta], ['Moneda', b.moneda === 'USD' ? 'Dólares' : b.moneda === 'GTQ' ? 'Quetzales' : '']]
+          .filter(function(x){ return x[1]; }).map(function(x){ return '<div><dt>' + x[0] + '</dt><dd>' + esc(x[1]) + '</dd></div>'; }).join(''); }
+      $('#d-pry').innerHTML = (p.proyectos || []).map(function(x){ return '<li><div><b><a href="proyectos.html?id=' + encodeURIComponent(x.id) + '">' + esc(x.nombre) + '</a></b><small>' + esc([x.codigo, x.servicio].filter(Boolean).join(' · ')) + '</small></div></li>'; }).join('') || '<li class="empty">No está asignado a ningún proyecto.</li>';
+      var vePagos = A.inArea(ME, 'admin') || A.can(ME, 'solicitar_pago') || ['revisar_solicitud','vobo_contable','aprobar_pago','registrar_pago'].some(function(x){ return A.can(ME, x); });
+      if (vePagos) {
+        $('#mt').hidden = false; UI.monedaToggle($('#mt'), cargarCot);
+        if (A.can(ME, 'solicitar_pago')) { $('#d-sol').hidden = false; $('#d-sol').href = 'pagos.html?nueva=1&proveedor=' + encodeURIComponent(p.id); }
+        cargarCot();
+      }
+    }).catch(function(m){ $('#c-load').hidden = true; UI.err($('#c-err'), m); });
+  }
+  function cargarCot(){
+    Promise.all([A.listCotizaciones(), A.listSolicitudes()]).then(function(r){
+      var c = A.saldos((r[0] || []).filter(function(x){ return x.proveedor_id === DET.id; }), r[1] || []);
+      $('#d-cot-c').hidden = false;
+      $('#d-cot').innerHTML = c.length ? c.map(function(x){ return '<li><span>' + esc(x.descripcion) + '<small>' + (x.referencia ? 'No. ' + esc(x.referencia) + ' · ' : '') + 'total ' + UI.dinero(x.monto_total, x.moneda) + '</small></span><b>' + UI.dinero(x.pendiente, x.moneda) + '<small>saldo</small></b></li>'; }).join('') : '<li class="empty">Sin cotizaciones.</li>';
+    });
+  }
+  $('#d-edit').addEventListener('click', function(){ abrirForm(DET); });
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/portal.js"></script>
+<script src="js/datos.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/site.js"></script>
+</body>
+</html>

@@ -71,9 +71,8 @@
       </section>
 
       <section style="margin-top:48px">
-        <h2 class="h2" style="font-size:24px;margin:0 0 14px">Tu información</h2>
-        <div class="tiles" id="tiles"></div>
-        <p class="note" style="margin-top:18px">El contenido de cada área lo definimos en la siguiente etapa.</p>
+        <h2 class="h2" style="font-size:24px;margin:0 0 14px">Tus módulos</h2>
+        <div class="tiles mods" id="tiles"></div>
       </section>
     </div>
   </div>
@@ -161,7 +160,21 @@ document.addEventListener('DOMContentLoaded', function(){
     $('#d-rol').textContent = roles[me.rol] || 'Portal A2';
     $('#d-hola').textContent = 'Hola, ' + (me.nombres || '').split(' ')[0];
     $('#d-who').textContent = [me.puesto, A2Portal.areaName(me.area), me.correo].filter(Boolean).join(' · ');
-    $('#tiles').innerHTML = (me.areas || []).map(function(a){ return '<div class="tile"><h3>' + esc(A2Portal.areaName(a)) + '</h3><p>Contenido por definir.</p></div>'; }).join('') || '<div class="tile"><h3>Sin áreas asignadas</h3><p>Pedile a Gerencia que te asigne acceso.</p></div>';
+    var A = A2Portal, flujo = ['revisar_solicitud','vobo_contable','aprobar_pago','registrar_pago'].some(function(x){ return A.can(me, x); });
+    var mods = [];
+    if (A.inArea(me, 'admin') || flujo || A.can(me, 'solicitar_pago')) mods.push({h:'pagos.html', t:'Compras y pagos', d:'Cotizaciones, solicitudes de pago, órdenes de compra y saldos.', k:'pagos'});
+    if (A.inArea(me, 'admin') || A.inArea(me, 'proyectos') || A.can(me, 'gestionar_proyectos') || A.inArea(me, 'ventas') || A.inArea(me, 'mercadeo')) mods.push({h:'proyectos.html', t:'Proyectos', d:'Tus proyectos, su equipo y sus proveedores.'});
+    if (A.inArea(me, 'admin') || A.can(me, 'gestionar_proveedores') || A.can(me, 'solicitar_pago') || A.inArea(me, 'proyectos') || A.inArea(me, 'mercadeo')) mods.push({h:'proveedores.html', t:'Proveedores', d:'Directorio con código, contactos y proyectos de cada proveedor.'});
+    if (A.inArea(me, 'admin') || A.can(me, 'gestionar_proyectos')) mods.push({h:'empresas.html', t:'Empresas internas', d:'Las sociedades de A2 y su información legal.'});
+    if (A.inArea(me, 'ventas')) mods.push({t:'Ventas y alquileres', d:'Propiedades, disponibilidad e inquilinos. Llega en la Fase 2.', soon:true});
+    if (A.inArea(me, 'mercadeo')) mods.push({t:'Material de mercadeo', d:'Logos, línea gráfica y documentos por proyecto. Llega en la Fase 2.', soon:true});
+    $('#tiles').innerHTML = mods.map(function(m){
+      return (m.soon ? '<div class="tile soon">' : '<a class="tile" href="' + m.h + '">') + '<h3>' + esc(m.t) + (m.k ? ' <em class="t-badge" id="badge-' + m.k + '" hidden></em>' : '') + '</h3><p>' + esc(m.d) + '</p>' + (m.soon ? '<span class="t-soon">Próximamente</span></div>' : '<span class="t-go">Entrar →</span></a>');
+    }).join('') || '<div class="tile"><h3>Sin módulos asignados</h3><p>Pedile a Gerencia que te asigne un área o permisos.</p></div>';
+    if (mods.some(function(m){ return m.k === 'pagos'; }) && A.listSolicitudes) A.listSolicitudes().then(function(l){
+      var n = (l || []).filter(function(s){ var f = A.fase(s.fase); return f.permiso && A.can(me, f.permiso); }).length;
+      var b = document.getElementById('badge-pagos'); if (b && n) { b.hidden = false; b.textContent = n + ' para tu firma'; }
+    }, function(){});
     if (me.rol === 'owner' || me.rol === 'gerente') $('#go-users').hidden = false;
     if (me.rol === 'owner') setupComposer();
     loadNotices();
@@ -172,6 +185,8 @@ document.addEventListener('DOMContentLoaded', function(){
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/config.js"></script>
 <script src="js/portal.js"></script>
+<script src="js/datos.js"></script>
+<script src="js/ui.js"></script>
 <script src="js/site.js"></script>
 </body>
 </html>

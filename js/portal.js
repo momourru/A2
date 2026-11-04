@@ -73,10 +73,10 @@
     completeProfile: function(id, code, perfil, password){ return invoke('activar', {id:id, codigo:code, accion:'completar', perfil:perfil, password:password}); },
 
     listUsers: function(){
-      return sb.from('perfiles').select('id,correo,nombres,apellidos,puesto,rol,area,areas,activo,creado_at').order('nombres')
+      return sb.from('perfiles').select('id,correo,nombres,apellidos,puesto,rol,area,areas,permisos,activo,creado_at').order('nombres')
         .then(function(r){ if (r.error) throw r.error.message; return r.data || []; });
     },
-    updateUser: function(id, d){ return invoke('usuarios', {accion:'actualizar', id:id, rol:d.rol, areas:d.areas, area:d.area}); },
+    updateUser: function(id, d){ return invoke('usuarios', {accion:'actualizar', id:id, rol:d.rol, areas:d.areas, area:d.area, permisos:d.permisos}); },
     setActive: function(id, on){ return invoke('usuarios', {accion: on ? 'reactivar' : 'desactivar', id:id}); },
     deleteUser: function(id){ return invoke('usuarios', {accion:'eliminar', id:id}); },
 
@@ -112,7 +112,7 @@
     forgot: function(){ return P(); },
     setNewPassword: function(){ return P(); },
     onRecovery: function(){},
-    me: function(){ var db = load(); if (location.search.indexOf('demo=owner')>-1) return P({id:'u0', correo:'muc@a2desarrollos.com', nombres:'Mauricio', rol:'owner', areas:AREAS.map(function(a){return a.id}), activo:true}); return P(db.session && db.request ? Object.assign({}, db.request, {rol: db.request.rol || 'colaborador'}) : null); },
+    me: function(){ var db = load(); var dm = (location.search.match(/demo=(\w+)/) || [])[1]; try { if (dm) sessionStorage.setItem('a2-demo-as', dm); else dm = sessionStorage.getItem('a2-demo-as'); } catch(e){} if (dm && window.A2Demo && A2Demo.me(dm)) return P(A2Demo.me(dm)); return P(db.session && db.request ? Object.assign({}, db.request, {rol: db.request.rol || 'colaborador'}) : null); },
     getRequest: function(){ return P(load().request || null); },
     listPending: function(){ var r = load().request; return P(r && r.status==='pendiente' ? [r] : []); },
     approve: function(id, o){
@@ -135,6 +135,7 @@
     },
     listUsers: function(){
       var db = load();
+      if (!db.users && window.A2Demo) { db.users = JSON.parse(JSON.stringify(A2Demo.users)); save(db); }
       if (!db.users) { db.users = [
         {id:'u0', correo:'muc@a2desarrollos.com', nombres:'Mauricio', apellidos:'Urruela', puesto:'Gerente general', rol:'owner', area:null, areas:AREAS.map(function(a){return a.id}), activo:true},
         {id:'u1', correo:'ana.perez@a2desarrollos.com', nombres:'Ana Lucía', apellidos:'Pérez', puesto:'Asesor(a) de ventas', rol:'colaborador', area:'ventas', areas:['ventas','mercadeo'], activo:true},
@@ -142,7 +143,7 @@
       ]; save(db); }
       return P(db.users.slice());
     },
-    updateUser: function(id, d){ var db = load(); db.users.forEach(function(u){ if (u.id===id){ u.rol=d.rol; u.areas=d.areas; u.area=d.area; } }); save(db); return P({ok:true}); },
+    updateUser: function(id, d){ var db = load(); db.users.forEach(function(u){ if (u.id===id){ u.rol=d.rol; u.areas=d.areas; u.area=d.area; if (d.permisos) u.permisos=d.permisos; } }); save(db); return P({ok:true}); },
     setActive: function(id, on){ var db = load(); db.users.forEach(function(u){ if (u.id===id) u.activo=on; }); save(db); return P({ok:true}); },
     deleteUser: function(id){ var db = load(); db.users = db.users.filter(function(u){ return u.id!==id; }); save(db); return P({ok:true}); },
     listNotices: function(){
@@ -162,7 +163,12 @@
     reset: function(){ save({}); }
   };
 
-  window.A2Portal = Object.assign({ live: LIVE, demo: !LIVE, areas: AREAS, puestos: C.puestos || [], dominio: C.dominioCorporativo || 'a2desarrollos.com', areaName: areaName }, LIVE ? live : demo);
+  window.A2Portal = Object.assign({ live: LIVE, demo: !LIVE, areas: AREAS, puestos: C.puestos || [], dominio: C.dominioCorporativo || 'a2desarrollos.com', areaName: areaName,
+    permisos: C.permisos || [],
+    /* ¿El usuario tiene el permiso? (Owner tiene todos) */
+    can: function(me, p){ return !!me && me.activo !== false && (me.rol === 'owner' || (me.permisos || []).indexOf(p) > -1); },
+    inArea: function(me, a){ return !!me && (me.rol === 'owner' || me.rol === 'gerente' || me.area === a || (me.areas || []).indexOf(a) > -1); },
+    _sb: sb, _invoke: LIVE ? invoke : null, _load: load, _save: save }, LIVE ? live : demo);
 
   if (window.console) console.info('[Portal A2] modo: ' + (LIVE ? 'REAL (Supabase conectado)' : 'DEMO') + (C.supabaseUrl && !LIVE ? ' — falta cargar la librería de Supabase' : ''));
   /* Barra de "modo demostración" solo cuando aplica */

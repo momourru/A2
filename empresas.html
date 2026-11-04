@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Empresas internas — Área Cuadrada</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="img/iso.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+
+<header class="site site-portal">
+  <div class="wrap nav">
+    <a href="portal.html" class="brand" aria-label="Portal A2"><img src="img/logo-sd.png" alt="Área Cuadrada"></a>
+    <ul class="nav-portal">
+      <li><button type="button" class="nav-login" id="hdr-logout">Cerrar sesión</button></li>
+    </ul>
+  </div>
+</header>
+
+
+<div class="demo-bar"><b>Modo demostración</b><span>Todavía no está conectado a Supabase: no se crean cuentas ni se envían correos.</span></div>
+
+<main class="portal">
+  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="portal-col wide" style="max-width:1100px">
+    <a class="back" href="portal.html">← Volver al portal</a>
+    <div class="dash-head">
+      <div>
+        <span class="tag">Administración</span>
+        <h1>Empresas internas</h1>
+        <div class="who">Las sociedades de A2 y su información legal.</div>
+      </div>
+      <div class="dash-actions"><button class="btn dark" type="button" id="b-new" hidden>Nueva empresa</button></div>
+    </div>
+    <div class="err-box" id="c-err" hidden></div>
+    <div class="card" id="c-load"><div class="panel"><p class="sub" style="margin:0">Cargando…</p></div></div>
+
+    <form class="card" id="f-emp" hidden novalidate><div class="panel">
+      <h3 id="f-t">Nueva empresa</h3>
+      <div class="form" style="margin-top:18px">
+        <div class="field"><label>Razón social</label><input name="razon_social" required><div class="msg">Requerido.</div></div>
+        <div class="field"><label>Nombre comercial</label><input name="nombre_comercial"></div>
+        <div class="field"><label>NIT</label><input name="nit"></div>
+        <div class="field"><label>Representante legal</label><input name="representante_legal"></div>
+        <div class="field"><label>Teléfono</label><input name="telefono"></div>
+        <div class="field"><label>Correo</label><input name="correo" type="email"></div>
+        <div class="field full"><label>Dirección fiscal</label><input name="direccion"></div>
+        <div class="field full"><label>Información legal adicional</label><textarea name="notas" placeholder="Escritura constitutiva, inscripción en el Registro Mercantil, patente de comercio, etc."></textarea></div>
+        <div class="full" id="f-out" hidden></div>
+        <div class="full row-between"><button type="button" class="link" id="f-cancel">Cancelar</button><button class="btn dark" type="submit">Guardar empresa</button></div>
+      </div>
+    </div></form>
+
+    <div class="emp-grid" id="list" hidden></div>
+  </div>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  var $ = UI.$, $$ = UI.$$, esc = UI.esc, A = A2Portal, emps = [], prys = [], GEST = false;
+  UI.sesion(function(me){
+    GEST = A.can(me, 'gestionar_proyectos');
+    if (!(A.inArea(me, 'admin') || GEST)) { $('#c-load').hidden = true; UI.err($('#c-err'), 'No tenés acceso a Empresas internas.'); return; }
+    $('#b-new').hidden = !GEST; cargar();
+  });
+  function cargar(){
+    Promise.all([A.listEmpresas(), A.listProyectos()]).then(function(r){ emps = r[0] || []; prys = r[1] || []; $('#c-load').hidden = true; $('#list').hidden = false; pintar(); })
+      .catch(function(m){ $('#c-load').hidden = true; UI.err($('#c-err'), m); });
+  }
+  function pintar(){
+    $('#list').innerHTML = emps.length ? emps.map(function(e){
+      var pj = prys.filter(function(p){ return p.empresa_id === e.id; });
+      var filas = [['NIT', e.nit], ['Representante legal', e.representante_legal], ['Dirección', e.direccion], ['Teléfono', e.telefono], ['Correo', e.correo]].filter(function(f){ return f[1]; });
+      return '<div class="card emp"><div class="panel"><div class="row-between"><h3>' + esc(e.razon_social) + '</h3>' + (GEST ? '<button class="link" data-e="' + esc(e.id) + '">Editar</button>' : '') + '</div>' +
+        (e.nombre_comercial ? '<p class="sub" style="margin:2px 0 12px">' + esc(e.nombre_comercial) + '</p>' : '') +
+        '<dl class="summary">' + filas.map(function(f){ return '<div><dt>' + f[0] + '</dt><dd>' + esc(f[1]) + '</dd></div>'; }).join('') + '</dl>' +
+        (e.notas ? '<p class="emp-notas">' + esc(e.notas).replace(/\n/g, '<br>') + '</p>' : '') +
+        '<p class="emp-pj"><b>Proyectos:</b> ' + (pj.length ? pj.map(function(p){ return '<a href="proyectos.html?id=' + encodeURIComponent(p.id) + '">' + esc(p.nombre) + '</a>'; }).join(', ') : 'ninguno') + '</p></div></div>';
+    }).join('') : '<p class="empty">Todavía no hay empresas registradas.</p>';
+    $$('#list [data-e]').forEach(function(b){ b.addEventListener('click', function(){ abrir(emps.filter(function(x){ return x.id === b.dataset.e; })[0]); }); });
+  }
+  function abrir(e){ $('#f-emp').hidden = false; $('#f-t').textContent = e ? 'Editar empresa' : 'Nueva empresa'; UI.llenar($('#f-emp'), e || {}); $('#f-emp').dataset.id = e ? e.id : ''; $('#f-out').hidden = true; window.scrollTo({top:0, behavior:'smooth'}); }
+  $('#b-new').addEventListener('click', function(){ abrir(null); });
+  $('#f-cancel').addEventListener('click', function(){ $('#f-emp').hidden = true; });
+  $('#f-emp').addEventListener('submit', function(ev){
+    ev.preventDefault(); var f = this; if (!UI.requeridos(f)) return;
+    var d = UI.datos(f); if (f.dataset.id) d.id = f.dataset.id; UI.busy(f, true);
+    A.saveEmpresa(d).then(function(){ f.hidden = true; UI.flash('Empresa guardada.'); cargar(); }, function(m){ UI.err($('#f-out'), m); }).finally(function(){ UI.busy(f, false); });
+  });
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/portal.js"></script>
+<script src="js/datos.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/site.js"></script>
+</body>
+</html>

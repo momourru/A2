@@ -17,7 +17,8 @@ window.A2_CONFIG = {
     aprobar:   'bright-task',
     activar:   'smart-action',
     usuarios:  'usuarios',
-    comunicados: 'comunicados'
+    comunicados: 'comunicados',
+    pagos:     'pagos'
   },
 
   /* Puestos que puede elegir quien solicita usuario. Editá esta lista libremente. */
@@ -39,11 +40,20 @@ window.A2_CONFIG = {
 
   /* Áreas o departamentos. El "id" no se debe cambiar una vez haya usuarios. */
   areas: [
-    {id:'finanzas',  n:'Contabilidad y finanzas'},
-    {id:'admin',     n:'Administración y RR. HH.'},
-    {id:'legal',     n:'Legal'},
+    {id:'admin',     n:'Administración, contabilidad y finanzas', corto:'Administración'},
     {id:'proyectos', n:'Proyectos y obra'},
     {id:'ventas',    n:'Ventas'},
     {id:'mercadeo',  n:'Mercadeo'}
+  ],
+
+  /* Permisos especiales que asigna el Owner a cada usuario (Usuarios → Editar) */
+  permisos: [
+    {id:'gestionar_proyectos',   n:'Gestionar proyectos',        d:'Crea proyectos y empresas internas, y asigna el equipo.'},
+    {id:'gestionar_proveedores', n:'Gestionar proveedores',      d:'Crea y edita proveedores, sus datos bancarios y a qué proyecto pertenecen.'},
+    {id:'solicitar_pago',        n:'Cargar cotizaciones y solicitar pagos', d:'Carga cotizaciones y crea solicitudes de pago.'},
+    {id:'revisar_solicitud',     n:'Revisar solicitudes y emitir OC', d:'Revisa que la cotización o factura coincida y emite la orden de compra.'},
+    {id:'vobo_contable',         n:'VoBo contable',              d:'Autoriza la orden de compra, detalla retenciones y adjunta documentos.'},
+    {id:'aprobar_pago',          n:'Aprobar para transferir',    d:'Valida que todo está aprobado para cargar la transferencia en el banco.'},
+    {id:'registrar_pago',        n:'Registrar pagos',            d:'Sube el comprobante de transferencia y cierra la orden.'}
   ]
 };

@@ -74,6 +74,7 @@
       </select><div class="hint f-rol-hint"></div></div>
       <div class="field"><label>Área o departamento</label><select class="f-area"><option value="">Sin área</option></select></div>
       <div class="field full"><label>Información que puede ver</label><div class="chips f-areas"></div></div>
+      <div class="field full"><label>Permisos especiales</label><div class="perms f-perms"></div><div class="hint f-perm-hint"></div></div>
       <div class="full u-out" hidden></div>
       <div class="full u-actions">
         <div class="u-danger">
@@ -152,6 +153,8 @@ document.addEventListener('DOMContentLoaded', function(){
     $('.u-areas', li).innerHTML = (u.areas||[]).map(function(a){ return '<span></span>'; }).join('');
     $$('.u-areas span', li).forEach(function(s, i){ s.textContent = A2Portal.areaName(u.areas[i]); });
     if (!(u.areas||[]).length) $('.u-areas', li).innerHTML = '<em>Sin áreas</em>';
+    var np = u.rol === 'owner' ? 'Todos los permisos' : ((u.permisos||[]).length ? (u.permisos.length + ' permiso' + (u.permisos.length === 1 ? '' : 's') + ' especial' + (u.permisos.length === 1 ? '' : 'es')) : '');
+    if (np) $('.u-meta', li).insertAdjacentHTML('beforeend', '<span class="u-perm" title="' + esc((u.permisos||[]).map(function(x){ var q = A2Portal.permisos.filter(function(y){ return y.id === x; })[0]; return q ? q.n : x; }).join(', ')) + '">' + esc(np) + '</span>');
 
     var edit = $('.u-edit', li), form = $('.u-form', li);
     if (!puedeEditar(u)) { edit.disabled = true; edit.title = 'Solo el Owner puede editar a otros gerentes u owners.'; }
@@ -168,6 +171,10 @@ document.addEventListener('DOMContentLoaded', function(){
     A2Portal.areas.forEach(function(a){ fa.add(new Option(a.n, a.id)); }); fa.value = u.area || '';
     $('.f-areas', form).innerHTML = A2Portal.areas.map(function(a){ return '<label class="chip"><input type="checkbox" value="'+a.id+'"><span>'+a.n+'</span></label>'; }).join('');
     $$('.f-areas input', form).forEach(function(i){ i.checked = (u.areas||[]).indexOf(i.value) > -1; });
+    var permOwner = u.rol === 'owner', puedoPerm = me.rol === 'owner';
+    $('.f-perms', form).innerHTML = A2Portal.permisos.map(function(p){ return '<label class="perm"><input type="checkbox" value="' + p.id + '"><span><b>' + esc(p.n) + '</b><small>' + esc(p.d) + '</small></span></label>'; }).join('');
+    $$('.f-perms input', form).forEach(function(i){ i.checked = permOwner || (u.permisos||[]).indexOf(i.value) > -1; i.disabled = permOwner || !puedoPerm; });
+    $('.f-perm-hint', form).textContent = permOwner ? 'El Owner tiene todos los permisos.' : (puedoPerm ? '' : 'Solo el Owner asigna permisos especiales.');
 
     var tg = $('.f-toggle', form), del = $('.f-del', form);
     tg.textContent = activo ? 'Desactivar acceso' : 'Reactivar acceso';
@@ -182,7 +189,8 @@ document.addEventListener('DOMContentLoaded', function(){
       e.preventDefault();
       var areas = $$('.f-areas input:checked', form).map(function(i){ return i.value; });
       busy(true);
-      A2Portal.updateUser(u.id, {rol: sel.value, area: fa.value || null, areas: areas})
+      var permisos = $$('.f-perms input:checked', form).map(function(i){ return i.value; });
+      A2Portal.updateUser(u.id, {rol: sel.value, area: fa.value || null, areas: areas, permisos: (u.rol === 'owner' || me.rol !== 'owner') ? undefined : permisos})
         .then(function(){ return done('Cambios guardados.'); }, function(m){ out(m, true); }).finally(function(){ busy(false); });
     });
     function confirmar(btn, texto, accion){
@@ -218,6 +226,8 @@ document.addEventListener('DOMContentLoaded', function(){
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/config.js"></script>
 <script src="js/portal.js"></script>
+<script src="js/datos.js"></script>
+<script src="js/ui.js"></script>
 <script src="js/site.js"></script>
 </body>
 </html>
