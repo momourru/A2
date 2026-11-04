@@ -78,7 +78,14 @@
     },
     updateUser: function(id, d){ return invoke('usuarios', {accion:'actualizar', id:id, rol:d.rol, areas:d.areas, area:d.area}); },
     setActive: function(id, on){ return invoke('usuarios', {accion: on ? 'reactivar' : 'desactivar', id:id}); },
-    deleteUser: function(id){ return invoke('usuarios', {accion:'eliminar', id:id}); }
+    deleteUser: function(id){ return invoke('usuarios', {accion:'eliminar', id:id}); },
+
+    listNotices: function(){
+      return sb.from('comunicados').select('id,titulo,cuerpo,categoria,destinatarios,autor_nombre,enviados,creado_at').order('creado_at',{ascending:false}).limit(30)
+        .then(function(r){ if (r.error) throw r.error.message; return r.data || []; });
+    },
+    publishNotice: function(d){ return invoke('comunicados', {accion:'publicar', titulo:d.titulo, cuerpo:d.cuerpo, categoria:d.categoria, destinatarios:d.destinatarios, correo:d.correo}); },
+    deleteNotice: function(id){ return invoke('comunicados', {accion:'eliminar', id:id}); }
   };
 
   /* ======================= MODO DEMO ======================= */
@@ -138,6 +145,20 @@
     updateUser: function(id, d){ var db = load(); db.users.forEach(function(u){ if (u.id===id){ u.rol=d.rol; u.areas=d.areas; u.area=d.area; } }); save(db); return P({ok:true}); },
     setActive: function(id, on){ var db = load(); db.users.forEach(function(u){ if (u.id===id) u.activo=on; }); save(db); return P({ok:true}); },
     deleteUser: function(id){ var db = load(); db.users = db.users.filter(function(u){ return u.id!==id; }); save(db); return P({ok:true}); },
+    listNotices: function(){
+      var db = load();
+      if (!db.notices) { db.notices = [
+        {id:'n1', titulo:'Asueto del 1 de noviembre', cuerpo:'Les recordamos que el sábado 1 de noviembre la oficina permanecerá cerrada.\nRetomamos labores el lunes.', categoria:'vacaciones', destinatarios:[], autor_nombre:'Mauricio Urruela', enviados:12, creado_at:new Date(Date.now()-3*864e5).toISOString()},
+        {id:'n2', titulo:'Cierre contable de octubre', cuerpo:'Favor enviar facturas y liquidaciones pendientes antes del viernes.', categoria:'aviso', destinatarios:['finanzas','proyectos'], autor_nombre:'Mauricio Urruela', enviados:5, creado_at:new Date(Date.now()-6*864e5).toISOString()}
+      ]; save(db); }
+      return P(db.notices.slice());
+    },
+    publishNotice: function(d){
+      var db = load(); db.notices = db.notices || [];
+      db.notices.unshift({id:'n'+Date.now(), titulo:d.titulo, cuerpo:d.cuerpo, categoria:d.categoria, destinatarios:d.destinatarios, autor_nombre:'Mauricio Urruela', enviados:0, creado_at:new Date().toISOString()});
+      save(db); return P({ok:true, enviados:0, demo:true});
+    },
+    deleteNotice: function(id){ var db = load(); db.notices = (db.notices||[]).filter(function(n){ return n.id!==id; }); save(db); return P({ok:true}); },
     reset: function(){ save({}); }
   };
 

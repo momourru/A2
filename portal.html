@@ -40,8 +40,37 @@
         <div class="dash-actions"><a class="btn dark" href="usuarios.html" id="go-users" hidden>Usuarios</a></div>
       </div>
 
+      <section class="cm" id="cm">
+        <div class="cm-head">
+          <h2 class="h2">Comunicados</h2>
+          <button class="btn dark" type="button" id="cm-new" hidden>Nuevo comunicado</button>
+        </div>
 
-      <section style="margin-top:40px">
+        <form class="card cm-form" id="cm-form" hidden novalidate><div class="panel">
+          <h3>Nuevo comunicado</h3>
+          <div class="form" style="margin-top:18px">
+            <div class="field full"><label for="cm-t">Título</label><input id="cm-t" maxlength="140" placeholder="Ej. Asueto del 15 de septiembre"><div class="msg">Escribí un título.</div></div>
+            <div class="field"><label for="cm-c">Tipo</label><select id="cm-c">
+              <option value="aviso">Aviso general</option><option value="vacaciones">Vacaciones y asuetos</option>
+              <option value="evento">Evento</option><option value="rrhh">Recursos humanos</option><option value="urgente">Urgente</option>
+            </select></div>
+            <div class="field"><label>Correo</label><label class="check" style="margin-top:12px"><input type="checkbox" id="cm-mail" checked> Enviar también por correo</label></div>
+            <div class="field full"><label>¿Para quién?</label>
+              <div class="chips" id="cm-to"><label class="chip"><input type="checkbox" value="__todos" checked><span>Todo el equipo</span></label></div>
+              <div class="hint">Elegí uno o varios departamentos, o “Todo el equipo”.</div><div class="msg">Elegí al menos un destinatario.</div></div>
+            <div class="field full"><label for="cm-b">Mensaje</label><textarea id="cm-b" maxlength="5000" style="min-height:140px" placeholder="Escribí el comunicado…"></textarea><div class="msg">Escribí el mensaje.</div></div>
+            <div class="full" id="cm-out" hidden></div>
+            <div class="full row-between"><button type="button" class="link" id="cm-cancel">Cancelar</button>
+              <button class="btn dark" type="submit">Publicar comunicado
+                <svg class="arr" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 7h12M8 2l5 5-5 5"/></svg></button></div>
+          </div>
+        </div></form>
+
+        <ul class="cm-list" id="cm-list"><li class="empty">Cargando comunicados…</li></ul>
+        <button class="link" type="button" id="cm-more" hidden style="margin-top:12px">Ver comunicados anteriores</button>
+      </section>
+
+      <section style="margin-top:48px">
         <h2 class="h2" style="font-size:24px;margin:0 0 14px">Tu información</h2>
         <div class="tiles" id="tiles"></div>
         <p class="note" style="margin-top:18px">El contenido de cada área lo definimos en la siguiente etapa.</p>
@@ -53,8 +82,79 @@
 document.addEventListener('DOMContentLoaded', function(){
   var $ = function(s){return document.querySelector(s)};
   function esc(s){ var d = document.createElement('div'); d.textContent = s == null ? '' : s; return d.innerHTML; }
+
+  /* ---------- Comunicados ---------- */
+  var CAT = {aviso:'Aviso general', vacaciones:'Vacaciones y asuetos', evento:'Evento', rrhh:'Recursos humanos', urgente:'Urgente'};
+  var notices = [], showAll = false, ME = null;
+  function fecha(iso){ var d = new Date(iso); return d.toLocaleDateString('es-GT', {day:'numeric', month:'long', year:'numeric'}); }
+  function paraTxt(arr){ return (arr && arr.length) ? arr.map(A2Portal.areaName).join(' · ') : 'Todo el equipo'; }
+  function renderNotices(){
+    var ul = $('#cm-list'), list = showAll ? notices : notices.slice(0, 5);
+    $('#cm-more').hidden = showAll || notices.length <= 5;
+    if (!list.length) { ul.innerHTML = '<li class="empty">Todavía no hay comunicados.</li>'; return; }
+    ul.innerHTML = list.map(function(n){
+      var owner = ME && ME.rol === 'owner';
+      return '<li class="cm-item c-' + esc(n.categoria) + '">' +
+        '<div class="cm-meta"><span class="cm-cat">' + esc(CAT[n.categoria] || 'Comunicado') + '</span><span>' + esc(fecha(n.creado_at)) + '</span></div>' +
+        '<h3>' + esc(n.titulo) + '</h3>' +
+        '<div class="cm-to">Para: ' + esc(paraTxt(n.destinatarios)) + (owner && n.enviados ? ' · Enviado por correo a ' + n.enviados : '') + '</div>' +
+        '<div class="cm-body">' + esc(n.cuerpo).replace(/\n/g, '<br>') + '</div>' +
+        '<div class="cm-foot"><button type="button" class="link cm-expand">Ver completo</button>' +
+        (owner ? '<button type="button" class="link cm-del" data-id="' + esc(n.id) + '">Eliminar</button>' : '') + '</div></li>';
+    }).join('');
+    Array.prototype.forEach.call(ul.querySelectorAll('.cm-item'), function(li){
+      var body = li.querySelector('.cm-body'), ex = li.querySelector('.cm-expand');
+      if (body.scrollHeight <= body.clientHeight + 2) ex.hidden = true;
+      ex.addEventListener('click', function(){ var o = li.classList.toggle('open'); ex.textContent = o ? 'Ver menos' : 'Ver completo'; });
+    });
+    Array.prototype.forEach.call(ul.querySelectorAll('.cm-del'), function(b){
+      b.addEventListener('click', function(){
+        if (!b.dataset.sure) { b.dataset.sure = '1'; b.textContent = '¿Seguro? Tocá de nuevo'; b.classList.add('warn'); setTimeout(function(){ delete b.dataset.sure; b.textContent = 'Eliminar'; b.classList.remove('warn'); }, 4000); return; }
+        A2Portal.deleteNotice(b.dataset.id).then(loadNotices, function(m){ alertBox(m); });
+      });
+    });
+  }
+  function loadNotices(){ return A2Portal.listNotices().then(function(l){ notices = l; renderNotices(); }, function(m){ $('#cm-list').innerHTML = '<li class="empty">No se pudieron cargar los comunicados.</li>'; }); }
+  function alertBox(m){ var o = $('#cm-out'); o.hidden = false; o.className = 'full err-box'; o.textContent = m; }
+  $('#cm-more').addEventListener('click', function(){ showAll = true; renderNotices(); });
+
+  function setupComposer(){
+    $('#cm-new').hidden = false;
+    A2Portal.areas.forEach(function(a){ $('#cm-to').insertAdjacentHTML('beforeend', '<label class="chip"><input type="checkbox" value="' + a.id + '"><span>' + esc(a.n) + '</span></label>'); });
+    var todos = $('#cm-to input[value="__todos"]');
+    Array.prototype.forEach.call($('#cm-to').querySelectorAll('input'), function(i){
+      i.addEventListener('change', function(){
+        if (i === todos && i.checked) Array.prototype.forEach.call($('#cm-to').querySelectorAll('input'), function(x){ if (x !== todos) x.checked = false; });
+        if (i !== todos && i.checked) todos.checked = false;
+      });
+    });
+    function close(){ $('#cm-form').hidden = true; $('#cm-new').hidden = false; }
+    $('#cm-new').addEventListener('click', function(){ $('#cm-form').hidden = false; $('#cm-new').hidden = true; $('#cm-out').hidden = true; $('#cm-t').focus(); });
+    $('#cm-cancel').addEventListener('click', close);
+    $('#cm-form').addEventListener('submit', function(e){
+      e.preventDefault();
+      var t = $('#cm-t').value.trim(), b = $('#cm-b').value.trim();
+      var sel = Array.prototype.filter.call($('#cm-to').querySelectorAll('input:checked'), function(){ return true; }).map(function(i){ return i.value; });
+      $('#cm-t').closest('.field').classList.toggle('err', !t);
+      $('#cm-b').closest('.field').classList.toggle('err', !b);
+      $('#cm-to').closest('.field').classList.toggle('err', !sel.length);
+      if (!t || !b || !sel.length) return;
+      var dest = sel.indexOf('__todos') > -1 ? [] : sel;
+      var f = this; f.classList.add('loading');
+      A2Portal.publishNotice({titulo:t, cuerpo:b, categoria:$('#cm-c').value, destinatarios:dest, correo:$('#cm-mail').checked}).then(function(r){
+        f.reset(); todos.checked = true; close(); loadNotices();
+        var msg = r && r.demo ? 'Comunicado publicado (demo: sin correos).' : 'Comunicado publicado' + ($('#cm-mail').checked !== false && r && r.enviados != null ? ' y enviado a ' + r.enviados + ' persona' + (r.enviados === 1 ? '' : 's') : '') + '.';
+        if (r && r.fallidos) msg += ' ' + r.fallidos + ' correos no se pudieron enviar.';
+        flash(msg);
+      }, function(m){ alertBox(m); }).finally(function(){ f.classList.remove('loading'); });
+    });
+  }
+  function flash(m){ var f = document.createElement('div'); f.className = 'u-flash'; f.textContent = m; document.body.appendChild(f);
+    setTimeout(function(){ f.classList.add('show'); }, 10); setTimeout(function(){ f.classList.remove('show'); setTimeout(function(){ f.remove(); }, 300); }, 3200); }
+
   A2Portal.me().then(function(me){
     if (!me) { location.href = 'login.html?next=portal.html'; return; }
+    ME = me;
     $('#c-load').hidden = true; $('#dash').hidden = false;
     if (me.sinPerfil) { $('#d-hola').textContent = 'Tu perfil no está completo'; $('#d-who').textContent = me.correo + ' · Contactá a Gerencia.'; return; }
     var roles = {owner:'Owner', gerente:'Gerente', colaborador:'Colaborador'};
@@ -63,6 +163,8 @@ document.addEventListener('DOMContentLoaded', function(){
     $('#d-who').textContent = [me.puesto, A2Portal.areaName(me.area), me.correo].filter(Boolean).join(' · ');
     $('#tiles').innerHTML = (me.areas || []).map(function(a){ return '<div class="tile"><h3>' + esc(A2Portal.areaName(a)) + '</h3><p>Contenido por definir.</p></div>'; }).join('') || '<div class="tile"><h3>Sin áreas asignadas</h3><p>Pedile a Gerencia que te asigne acceso.</p></div>';
     if (me.rol === 'owner' || me.rol === 'gerente') $('#go-users').hidden = false;
+    if (me.rol === 'owner') setupComposer();
+    loadNotices();
   }).catch(function(m){ $('#c-load').innerHTML = '<div class="panel"><p class="err-box">' + esc(m) + '</p></div>'; });
 });
 </script>

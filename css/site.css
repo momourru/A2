@@ -569,3 +569,25 @@ header.site-portal .nav-portal .nav-login:hover{background:var(--negro);color:va
 .u-h2{margin-top:44px}
 .u-pend .req-list li{padding:16px 14px}
 .u-pend .req-list b{font-family:var(--fh);font-weight:500;font-size:15.5px}
+
+/* ---------- Comunicados ---------- */
+.cm{margin-top:36px}
+.cm-head{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:14px;flex-wrap:wrap}
+.cm-head .h2{font-size:24px;margin:0}
+.cm-form{margin-bottom:18px;border-top:3px solid var(--amarillo)}
+.cm-form h3{font-size:20px}
+.cm-list{list-style:none;border-top:1px solid var(--negro)}
+.cm-item{padding:20px 16px 18px 20px;border-bottom:1px solid #e6e5e0;position:relative;background:var(--blanco)}
+.cm-item::before{content:"";position:absolute;left:0;top:20px;bottom:18px;width:3px;background:var(--amarillo)}
+.cm-item.c-urgente::before{background:#b3261e}
+.cm-item.c-vacaciones::before,.cm-item.c-evento::before{background:var(--negro)}
+.cm-meta{display:flex;gap:14px;align-items:center;font-size:12px;color:var(--acero);flex-wrap:wrap}
+.cm-cat{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;background:var(--concreto);color:var(--negro);padding:4px 8px}
+.c-urgente .cm-cat{background:#b3261e;color:#fff}
+.cm-item h3{font-family:var(--fh);font-weight:500;font-size:18px;margin:10px 0 4px}
+.cm-to{font-size:12px;color:var(--cemento);margin-bottom:10px}
+.cm-body{font-size:14.5px;color:var(--grafito);line-height:1.6;max-height:4.8em;overflow:hidden;max-width:760px}
+.cm-item.open .cm-body{max-height:none}
+.cm-foot{display:flex;gap:20px;margin-top:10px}
+.cm-foot .cm-del{color:#8a2a22}
+.field label.check{font-size:14px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--grafito);display:flex}
