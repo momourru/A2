@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Activar usuario — Área Cuadrada</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="img/iso.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <a href="index.html" class="brand" aria-label="Área Cuadrada — inicio"><img src="img/logo-sd.png" alt="Área Cuadrada"></a>
+    <button class="menu-btn" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span></button>
+    <ul>
+      <li><a href="index.html#nosotros">Nosotros</a></li>
+      <li><a href="index.html#historia">Historia</a></li>
+      <li><a href="index.html#proyectos">Proyectos</a></li>
+      <li><a href="portafolio.html">Portafolio</a></li>
+      <li><a href="index.html#contacto">Contacto</a></li>
+      <li class="nav-sep" aria-hidden="true"></li>
+      <li><a href="login.html" class="nav-login">Log In</a></li>
+    </ul>
+  </div>
+</header>
+
+<div class="demo-bar"><b>Modo demostración</b><span>Todavía no está conectado a Supabase: no se crean cuentas ni se envían correos.</span></div>
+
+<main class="portal">
+  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="portal-col wide">
+    <div class="portal-logo"><img src="img/logo-full.png" alt="Área Cuadrada — Innovación + Desarrollo" style="width:min(220px,60vw)"></div>
+    <div class="portal-title">
+      <span class="tag">Equipo A2</span>
+      <h1>Activá tu usuario</h1>
+      <p>Gerencia ya autorizó tu acceso. Validá tu código y completá tu perfil para entrar al Portal A2.</p>
+    </div>
+
+    <div class="card"><div class="panel">
+      <div class="stepper" id="stepper"><div>Código</div><div>Tus datos</div><div>Datos internos</div><div>Acceso</div></div>
+
+      <section data-step="0">
+        <h3>Ingresá tu código</h3>
+        <p class="sub">Es el código de 6 caracteres que te llegó por correo de A2.</p>
+        <form id="f-code" novalidate>
+          <div class="code-in" id="code-in">
+            <input maxlength="1" autocomplete="one-time-code" aria-label="Carácter 1"><input maxlength="1" aria-label="Carácter 2"><input maxlength="1" aria-label="Carácter 3"><input maxlength="1" aria-label="Carácter 4"><input maxlength="1" aria-label="Carácter 5"><input maxlength="1" aria-label="Carácter 6">
+          </div>
+          <p class="err-box" id="code-err" style="margin-top:16px" hidden></p>
+          <div class="btns"><button class="btn dark" type="submit">Validar código
+            <svg class="arr" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 7h12M8 2l5 5-5 5"/></svg></button></div>
+        </form>
+      </section>
+
+      <section data-step="1" hidden>
+        <h3>Verificá tus datos</h3>
+        <p class="sub">Son los que ingresaste al solicitar tu usuario. Corregí lo que haga falta.</p>
+        <form class="form" id="f-datos" novalidate>
+          <div class="field"><label for="d-nom">Nombres</label><input id="d-nom" required><div class="msg">Requerido.</div></div>
+          <div class="field"><label for="d-ape">Apellidos</label><input id="d-ape" required><div class="msg">Requerido.</div></div>
+          <div class="field full"><label for="d-mail">Correo corporativo</label><input id="d-mail" readonly><div class="hint">El correo no se puede cambiar: es tu usuario.</div></div>
+          <div class="field"><label for="d-cel">Celular</label><input id="d-cel" type="tel" required><div class="msg">Requerido.</div></div>
+          <div class="field"><label for="d-pue">Puesto</label><select id="d-pue" required></select><div class="msg">Requerido.</div></div>
+          <div class="full row-between"><span></span><button class="btn dark" type="submit">Continuar
+            <svg class="arr" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 7h12M8 2l5 5-5 5"/></svg></button></div>
+        </form>
+      </section>
+
+      <section data-step="2" hidden>
+        <h3>Datos internos</h3>
+        <p class="sub">Tu información dentro de A2.</p>
+        <form class="form" id="f-int" novalidate>
+          <div class="field full"><label for="i-area">Área o departamento</label><select id="i-area" required><option value="">Seleccioná…</option></select><div class="msg">Elegí tu área.</div></div>
+          <div class="field full"><label>Información autorizada por Gerencia</label><div class="chips" id="i-perm"></div><div class="hint">La define Gerencia. Si necesitás ver algo más, pedíselo.</div></div>
+          <div class="field"><label for="i-ext">Extensión</label><input id="i-ext" inputmode="numeric" placeholder="Opcional"></div>
+          <div class="field"><label for="i-ing">Fecha de ingreso</label><input id="i-ing" type="date"></div>
+          <div class="field"><label for="i-tel">Teléfono directo</label><input id="i-tel" type="tel" placeholder="Opcional"></div>
+          <div class="field"><label for="i-emer">Contacto de emergencia</label><input id="i-emer" placeholder="Nombre y teléfono"></div>
+          <div class="full row-between"><button type="button" class="link" data-back>← Volver</button><button class="btn dark" type="submit">Continuar
+            <svg class="arr" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 7h12M8 2l5 5-5 5"/></svg></button></div>
+        </form>
+      </section>
+
+      <section data-step="3" hidden>
+        <h3>Creá tu contraseña</h3>
+        <p class="sub">Mínimo 10 caracteres, con mayúsculas, minúsculas y un número.</p>
+        <form class="form" id="f-pw" novalidate>
+          <div class="field full"><label for="p-1">Contraseña</label><input id="p-1" type="password" autocomplete="new-password" required><div class="pw-meter"><i id="meter"></i></div><div class="msg">La contraseña no cumple los requisitos.</div></div>
+          <div class="field full"><label for="p-2">Confirmá la contraseña</label><input id="p-2" type="password" autocomplete="new-password" required><div class="msg">Las contraseñas no coinciden.</div></div>
+          <div class="field full"><label>Términos y políticas de A2</label>
+            <div class="terms" tabindex="0"><h4>Políticas de uso del Portal A2</h4><p>Contenido pendiente de definir por Gerencia: confidencialidad de la información, uso aceptable, manejo de datos de clientes y proveedores, y responsabilidades del usuario.</p></div></div>
+          <div class="full field" id="t-wrap"><label class="check"><input type="checkbox" id="p-t"> Leí y acepto los términos y políticas de Área Cuadrada.</label><div class="msg">Tenés que aceptar las políticas para continuar.</div></div>
+          <div class="full" id="p-out" hidden></div>
+          <div class="full row-between"><button type="button" class="link" data-back>← Volver</button><button class="btn dark" type="submit">Activar usuario
+            <svg class="arr" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 7h12M8 2l5 5-5 5"/></svg></button></div>
+        </form>
+      </section>
+
+      <section data-step="4" hidden class="done">
+        <div class="ok"><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.4"><path d="M4 12l5 5L20 6"/></svg></div>
+        <h3>Tu usuario está activo</h3>
+        <p class="sub">Ya podés ingresar al Portal A2 con tu correo y contraseña.</p>
+        <dl class="summary" id="fin"></dl>
+        <div class="btns"><a class="btn dark" href="login.html">Ir a Log In
+          <svg class="arr" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 7h12M8 2l5 5-5 5"/></svg></a>
+          <button class="btn" type="button" id="reset" hidden style="color:var(--acero)">Reiniciar demo</button></div>
+      </section>
+    </div></div>
+  </div>
+</main>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  var $ = function(s){return document.querySelector(s)}, $$ = function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
+  var id = new URLSearchParams(location.search).get('id') || '', code = '', req = null;
+  var steps = $$('[data-step]'), marks = $$('#stepper div');
+  function go(n){
+    steps.forEach(function(s){ s.hidden = +s.dataset.step !== n; });
+    marks.forEach(function(m,i){ m.className = i<n ? 'ok' : (i===n ? 'on' : ''); });
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+  $$('[data-back]').forEach(function(b){ b.addEventListener('click', function(){ var c = steps.filter(function(s){return !s.hidden})[0]; go(+c.dataset.step - 1); }); });
+  function check(i, ok){ i.closest('.field').classList.toggle('err', !ok); return ok; }
+  go(0);
+
+  A2Portal.puestos.forEach(function(p){ $('#d-pue').add(new Option(p, p)); });
+  A2Portal.areas.forEach(function(a){ $('#i-area').add(new Option(a.n, a.id)); });
+
+  var boxes = $$('#code-in input');
+  boxes.forEach(function(b,i){
+    b.addEventListener('input', function(){ b.value = b.value.replace(/[^a-z0-9]/gi,'').toUpperCase(); if (b.value && boxes[i+1]) boxes[i+1].focus(); });
+    b.addEventListener('keydown', function(e){ if (e.key==='Backspace' && !b.value && boxes[i-1]) boxes[i-1].focus(); });
+    b.addEventListener('paste', function(e){
+      var t = (e.clipboardData || window.clipboardData).getData('text').replace(/[^a-z0-9]/gi,'').toUpperCase().slice(0,6);
+      if (!t) return; e.preventDefault(); t.split('').forEach(function(c,j){ if (boxes[j]) boxes[j].value = c; }); (boxes[t.length] || boxes[5]).focus();
+    });
+  });
+
+  $('#f-code').addEventListener('submit', function(e){
+    e.preventDefault();
+    var c = boxes.map(function(b){return b.value}).join(''), err = $('#code-err');
+    if (c.length < 6){ err.hidden = false; err.textContent = 'Ingresá los 6 caracteres del código.'; return; }
+    var f = this; f.classList.add('loading');
+    A2Portal.verifyCode(id, c).then(function(r){
+      req = r; code = c; err.hidden = true;
+      $('#d-nom').value = r.nombres; $('#d-ape').value = r.apellidos; $('#d-mail').value = r.correo; $('#d-cel').value = r.celular;
+      if (A2Portal.puestos.indexOf(r.puesto) < 0) $('#d-pue').add(new Option(r.puesto, r.puesto));
+      $('#d-pue').value = r.puesto;
+      if (r.areas && r.areas.length === 1) $('#i-area').value = r.areas[0];
+      $('#i-perm').innerHTML = (r.areas||[]).map(function(a){ return '<label class="chip"><input type="checkbox" checked disabled><span>'+A2Portal.areaName(a)+'</span></label>'; }).join('');
+      go(1);
+    }, function(m){ err.hidden = false; err.textContent = m; }).finally(function(){ f.classList.remove('loading'); });
+  });
+  $('#f-datos').addEventListener('submit', function(e){
+    e.preventDefault(); var ok = true;
+    ['#d-nom','#d-ape','#d-cel'].forEach(function(i){ ok = check($(i), $(i).value.trim().length > 1) && ok; });
+    if (ok) go(2);
+  });
+  $('#f-int').addEventListener('submit', function(e){ e.preventDefault(); if (check($('#i-area'), !!$('#i-area').value)) go(3); });
+
+  function strong(p){ return p.length>=10 && /[a-z]/.test(p) && /[A-Z]/.test(p) && /\d/.test(p); }
+  $('#p-1').addEventListener('input', function(){
+    var p = this.value, s = 0; if (p.length>=10) s++; if (/[a-z]/.test(p)&&/[A-Z]/.test(p)) s++; if (/\d/.test(p)) s++; if (/[^a-zA-Z0-9]/.test(p)) s++;
+    $('#meter').style.width = (s*25)+'%'; $('#meter').style.background = s>=3 ? 'var(--negro)' : 'var(--cemento)';
+  });
+  $('#f-pw').addEventListener('submit', function(e){
+    e.preventDefault();
+    var a = check($('#p-1'), strong($('#p-1').value));
+    var b = check($('#p-2'), $('#p-2').value === $('#p-1').value && $('#p-2').value.length > 0);
+    var t = $('#p-t').checked; $('#t-wrap').classList.toggle('err', !t);
+    if (!a || !b || !t) return;
+    var perfil = {
+      nombres: $('#d-nom').value.trim(), apellidos: $('#d-ape').value.trim(), celular: $('#d-cel').value.trim(), puesto: $('#d-pue').value,
+      area: $('#i-area').value, extension: $('#i-ext').value.trim(), fecha_ingreso: $('#i-ing').value || null,
+      tel_directo: $('#i-tel').value.trim(), contacto_emergencia: $('#i-emer').value.trim(), acepta_politicas: true
+    };
+    var f = this, o = $('#p-out'); f.classList.add('loading'); o.hidden = true;
+    A2Portal.completeProfile(id, code, perfil, $('#p-1').value).then(function(){
+      var rows = [['Usuario', req.correo], ['Rol', req.rol === 'gerente' ? 'Gerente' : 'Colaborador'], ['Área', A2Portal.areaName(perfil.area)], ['Ve información de', (req.areas||[]).map(A2Portal.areaName).join(', ')]];
+      $('#fin').innerHTML = rows.map(function(){ return '<div><dt></dt><dd></dd></div>'; }).join('');
+      $$('#fin dt').forEach(function(d,i){ d.textContent = rows[i][0]; }); $$('#fin dd').forEach(function(d,i){ d.textContent = rows[i][1]; });
+      $('#reset').hidden = !A2Portal.demo; go(4);
+    }, function(m){ o.hidden = false; o.className = 'full err-box'; o.textContent = m; }).finally(function(){ f.classList.remove('loading'); });
+  });
+  $('#reset').addEventListener('click', function(){ A2Portal.reset(); location.href = 'solicitud.html'; });
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/config.js"></script>
+<script src="js/portal.js"></script>
+<script src="js/site.js"></script>
+</body>
+</html>

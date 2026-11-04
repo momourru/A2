@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Área Cuadrada — Innovación + Desarrollo</title>
+<meta name="description" content="Área Cuadrada (A2) es una desarrolladora inmobiliaria guatemalteca. Concebimos, estructuramos, construimos y entregamos proyectos. 40 años de trayectoria desde Arqs. M. Urruela.">
+<link rel="icon" type="image/png" href="img/iso.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <a href="#inicio" class="brand" aria-label="Área Cuadrada — inicio"><img src="img/logo-sd.png" alt="Área Cuadrada"></a>
+    <button class="menu-btn" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span></button>
+    <ul>
+      <li><a href="#nosotros">Nosotros</a></li>
+      <li><a href="#historia">Historia</a></li>
+      <li><a href="#proyectos">Proyectos</a></li>
+      <li><a href="portafolio.html">Portafolio</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+      <li class="nav-sep" aria-hidden="true"></li>
+      <li><a href="login.html" class="nav-login">Log In</a></li>
+    </ul>
+  </div>
+</header>
+
+<nav class="dots dark" aria-label="Secciones">
+  <a href="#inicio"><span>Inicio</span><i></i></a>
+  <a href="#nosotros"><span>Qué hacemos</span><i></i></a>
+  <a href="#adn"><span>Mismo ADN</span><i></i></a>
+  <a href="#historia"><span>De dónde venimos</span><i></i></a>
+  <a href="#esencia"><span>Esencia</span><i></i></a>
+  <a href="#proyectos"><span>Primer proyecto</span><i></i></a>
+  <a href="#contacto"><span>Contacto</span><i></i></a>
+</nav>
+
+<!-- 01 · INICIO -->
+<section class="hero on-dark" id="inicio" data-theme="dark">
+  <div class="grid-bg" aria-hidden="true"></div>
+
+  <div class="plan" aria-hidden="true">
+    <svg viewBox="0 0 1000 760" preserveAspectRatio="xMidYMid meet" fill="none">
+      <defs>
+        <pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <line x1="0" y1="0" x2="0" y2="7" stroke="#fff" stroke-width="1" opacity=".55"/>
+        </pattern>
+        <pattern id="hatchY" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">
+          <line x1="0" y1="0" x2="0" y2="9" stroke="#DFE700" stroke-width="1" opacity=".35"/>
+        </pattern>
+        <linearGradient id="strokeGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#9A9893"/>
+          <stop offset=".55" stop-color="#F3F2EE"/>
+          <stop offset="1" stop-color="#ffffff"/>
+        </linearGradient>
+        <radialGradient id="fadeGrad" cx="68%" cy="42%" r="62%">
+          <stop offset="0" stop-color="#fff"/>
+          <stop offset=".55" stop-color="#fff" stop-opacity=".75"/>
+          <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="fadeLeft" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+          <stop offset=".32" stop-color="#fff" stop-opacity=".35"/>
+          <stop offset=".6" stop-color="#fff"/>
+        </linearGradient>
+        <mask id="fade" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="760">
+          <rect width="1000" height="760" fill="url(#fadeGrad)"/>
+        </mask>
+        <mask id="fade2" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="760">
+          <rect width="1000" height="760" fill="url(#fadeLeft)"/>
+        </mask>
+        <filter id="toYellow" x="0" y="0" width="100%" height="100%">
+          <feColorMatrix type="matrix" values="0 0 0 0 .875  0 0 0 0 .906  0 0 0 0 0  0 0 0 1.4 0"/>
+        </filter>
+        <clipPath id="scanClip">
+          <rect class="scan" x="-160" y="0" width="140" height="760">
+            <animate attributeName="x" values="-160;1020" dur="7s" begin="2.6s" repeatCount="indefinite"/>
+          </rect>
+        </clipPath>
+        <linearGradient id="scanGlow" x1="0" x2="1">
+          <stop offset="0" stop-color="#DFE700" stop-opacity="0"/>
+          <stop offset=".85" stop-color="#DFE700" stop-opacity=".10"/>
+          <stop offset="1" stop-color="#DFE700" stop-opacity=".0"/>
+        </linearGradient>
+      </defs>
+
+      <g mask="url(#fade)"><g mask="url(#fade2)">
+        <g id="plan" stroke="url(#strokeGrad)" stroke-width="1.4" stroke-linecap="square">
+          <!-- ejes -->
+          <g class="fade" stroke="#9A9893" stroke-width="1" stroke-dasharray="14 6 3 6" opacity=".7">
+            <line x1="180" y1="64" x2="180" y2="712"/><line x1="500" y1="64" x2="500" y2="712"/>
+            <line x1="700" y1="64" x2="700" y2="712"/><line x1="880" y1="64" x2="880" y2="712"/>
+            <line x1="104" y1="120" x2="956" y2="120"/><line x1="104" y1="400" x2="956" y2="400"/>
+            <line x1="104" y1="640" x2="956" y2="640"/>
+          </g>
+          <g class="fade" stroke="#9A9893" stroke-width="1">
+            <circle cx="180" cy="44" r="16"/><circle cx="500" cy="44" r="16"/><circle cx="700" cy="44" r="16"/><circle cx="880" cy="44" r="16"/>
+            <circle cx="84" cy="120" r="16"/><circle cx="84" cy="400" r="16"/><circle cx="84" cy="640" r="16"/>
+          </g>
+          <g class="fade" fill="#9A9893" stroke="none" font-family="Inter,Arial" font-size="13" font-weight="500" text-anchor="middle">
+            <text x="180" y="49">A</text><text x="500" y="49">B</text><text x="700" y="49">C</text><text x="880" y="49">D</text>
+            <text x="84" y="125">1</text><text x="84" y="405">2</text><text x="84" y="645">3</text>
+          </g>
+
+          <!-- muros exteriores -->
+          <g class="g1">
+            <path class="ln" pathLength="1" d="M172 112H888V648H172Z M188 128V632H872V128Z" fill-rule="evenodd"/>
+            <path class="fade" d="M172 112H888V648H172Z M188 128V632H872V128Z" fill="url(#hatch)" fill-rule="evenodd" stroke="none"/>
+          </g>
+          <!-- muros interiores -->
+          <g class="g2">
+            <rect class="ln" pathLength="1" x="495" y="128" width="10" height="172"/>
+            <rect class="ln" pathLength="1" x="495" y="360" width="10" height="40"/>
+            <rect class="ln" pathLength="1" x="188" y="395" width="112" height="10"/>
+            <rect class="ln" pathLength="1" x="360" y="395" width="240" height="10"/>
+            <rect class="ln" pathLength="1" x="650" y="395" width="222" height="10"/>
+            <rect class="ln" pathLength="1" x="695" y="405" width="10" height="75"/>
+            <rect class="ln" pathLength="1" x="695" y="540" width="10" height="92"/>
+            <g class="fade" fill="url(#hatch)" stroke="none">
+              <rect x="495" y="128" width="10" height="172"/><rect x="495" y="360" width="10" height="40"/>
+              <rect x="188" y="395" width="112" height="10"/><rect x="360" y="395" width="240" height="10"/>
+              <rect x="650" y="395" width="222" height="10"/><rect x="695" y="405" width="10" height="75"/>
+              <rect x="695" y="540" width="10" height="92"/>
+            </g>
+            <!-- columnas -->
+            <g class="fade" fill="#F3F2EE" stroke="none" opacity=".9">
+              <rect x="172" y="112" width="18" height="18"/><rect x="491" y="112" width="18" height="18"/>
+              <rect x="691" y="112" width="18" height="18"/><rect x="870" y="112" width="18" height="18"/>
+              <rect x="172" y="391" width="18" height="18"/><rect x="491" y="391" width="18" height="18"/>
+              <rect x="691" y="391" width="18" height="18"/><rect x="870" y="391" width="18" height="18"/>
+              <rect x="172" y="630" width="18" height="18"/><rect x="491" y="630" width="18" height="18"/>
+              <rect x="691" y="630" width="18" height="18"/><rect x="870" y="630" width="18" height="18"/>
+            </g>
+          </g>
+          <!-- ventanas -->
+          <g class="g3">
+            <g fill="#000">
+              <rect class="ln" pathLength="1" x="260" y="112" width="150" height="16"/>
+              <rect class="ln" pathLength="1" x="560" y="112" width="110" height="16"/>
+              <rect class="ln" pathLength="1" x="172" y="200" width="16" height="120"/>
+              <rect class="ln" pathLength="1" x="872" y="450" width="16" height="110"/>
+              <rect class="ln" pathLength="1" x="260" y="632" width="170" height="16"/>
+              <rect class="ln" pathLength="1" x="775" y="632" width="70" height="16"/>
+            </g>
+            <g stroke-width="1">
+              <line class="ln" pathLength="1" x1="260" y1="120" x2="410" y2="120"/>
+              <line class="ln" pathLength="1" x1="560" y1="120" x2="670" y2="120"/>
+              <line class="ln" pathLength="1" x1="180" y1="200" x2="180" y2="320"/>
+              <line class="ln" pathLength="1" x1="880" y1="450" x2="880" y2="560"/>
+              <line class="ln" pathLength="1" x1="260" y1="640" x2="430" y2="640"/>
+            </g>
+            <!-- puertas -->
+            <g stroke-width="1">
+              <line class="ln" pathLength="1" x1="505" y1="300" x2="565" y2="300"/>
+              <path class="ln" pathLength="1" d="M565 300A60 60 0 0 1 505 360" opacity=".7"/>
+              <line class="ln" pathLength="1" x1="300" y1="405" x2="300" y2="465"/>
+              <path class="ln" pathLength="1" d="M300 465A60 60 0 0 0 360 405" opacity=".7"/>
+              <line class="ln" pathLength="1" x1="650" y1="395" x2="650" y2="345"/>
+              <path class="ln" pathLength="1" d="M650 345A50 50 0 0 0 600 395" opacity=".7"/>
+              <line class="ln" pathLength="1" x1="705" y1="540" x2="765" y2="540"/>
+              <path class="ln" pathLength="1" d="M765 540A60 60 0 0 0 705 480" opacity=".7"/>
+              <line class="ln" pathLength="1" x1="775" y1="632" x2="775" y2="572"/>
+              <path class="ln" pathLength="1" d="M775 572A60 60 0 0 1 845 632" opacity=".7"/>
+            </g>
+          </g>
+          <!-- mobiliario -->
+          <g class="g4" stroke-width="1" opacity=".8">
+            <rect class="ln" pathLength="1" x="225" y="320" width="170" height="44" rx="3"/>
+            <rect class="ln" pathLength="1" x="225" y="320" width="170" height="12" rx="2"/>
+            <circle class="ln" pathLength="1" cx="345" cy="215" r="38"/>
+            <rect class="ln" pathLength="1" x="331" y="161" width="28" height="10" rx="2"/>
+            <rect class="ln" pathLength="1" x="331" y="259" width="28" height="10" rx="2"/>
+            <rect class="ln" pathLength="1" x="291" y="201" width="10" height="28" rx="2"/>
+            <rect class="ln" pathLength="1" x="389" y="201" width="10" height="28" rx="2"/>
+            <rect class="ln" pathLength="1" x="690" y="160" width="160" height="200" rx="3"/>
+            <rect class="ln" pathLength="1" x="702" y="172" width="62" height="34" rx="3"/>
+            <rect class="ln" pathLength="1" x="776" y="172" width="62" height="34" rx="3"/>
+            <line class="ln" pathLength="1" x1="690" y1="222" x2="850" y2="222"/>
+            <rect class="ln" pathLength="1" x="200" y="420" width="46" height="200"/>
+            <circle class="ln" pathLength="1" cx="223" cy="460" r="12"/>
+            <circle class="ln" pathLength="1" cx="223" cy="500" r="12"/>
+            <rect class="ln" pathLength="1" x="380" y="480" width="170" height="54"/>
+            <!-- escalera -->
+            <g>
+              <line class="ln" pathLength="1" x1="720" y1="420" x2="860" y2="420"/>
+              <line class="ln" pathLength="1" x1="720" y1="434" x2="860" y2="434"/>
+              <line class="ln" pathLength="1" x1="720" y1="448" x2="860" y2="448"/>
+              <line class="ln" pathLength="1" x1="720" y1="462" x2="860" y2="462"/>
+              <line class="ln" pathLength="1" x1="720" y1="476" x2="860" y2="476"/>
+              <line class="ln" pathLength="1" x1="720" y1="490" x2="860" y2="490"/>
+              <line class="ln" pathLength="1" x1="720" y1="504" x2="860" y2="504"/>
+              <line class="ln" pathLength="1" x1="790" y1="510" x2="790" y2="426"/>
+              <path class="ln" pathLength="1" d="M782 438L790 426L798 438"/>
+            </g>
+          </g>
+
+          <!-- área destacada -->
+          <rect class="fade late" x="188" y="128" width="307" height="267" fill="url(#hatchY)" stroke="none"/>
+
+          <!-- cotas -->
+          <g class="fade" stroke="#9A9893" stroke-width="1">
+            <line x1="180" y1="84" x2="880" y2="84"/>
+            <line x1="174" y1="90" x2="186" y2="78"/><line x1="494" y1="90" x2="506" y2="78"/>
+            <line x1="694" y1="90" x2="706" y2="78"/><line x1="874" y1="90" x2="886" y2="78"/>
+            <line x1="128" y1="120" x2="128" y2="640"/>
+            <line x1="122" y1="126" x2="134" y2="114"/><line x1="122" y1="406" x2="134" y2="394"/>
+            <line x1="122" y1="646" x2="134" y2="634"/>
+          </g>
+          <g class="fade" fill="#9A9893" stroke="none" font-family="Inter,Arial" font-size="12" text-anchor="middle" letter-spacing="1">
+            <text x="340" y="78">8.00</text><text x="600" y="78">5.00</text><text x="790" y="78">4.50</text>
+            <text x="120" y="264" transform="rotate(-90 120 264)">7.00</text>
+            <text x="120" y="524" transform="rotate(-90 120 524)">6.00</text>
+          </g>
+
+          <!-- etiquetas de ambientes -->
+          <g class="fade late" fill="#F3F2EE" stroke="none" font-family="Inter,Arial" font-size="10.5" letter-spacing="2.4" text-anchor="middle" opacity=".85">
+            <text x="600" y="386">DORMITORIO</text>
+            <text x="560" y="600">COCINA · SERVICIO</text>
+            <text x="790" y="600">ACCESO</text>
+          </g>
+
+          <!-- corte A–A' -->
+          <g class="fade late" stroke="#DFE700" stroke-width="1.4">
+            <line x1="140" y1="250" x2="930" y2="250" stroke-dasharray="22 6 4 6"/>
+            <path d="M140 250v-22l-10 10M930 250v-22l10 10" fill="none"/>
+            <circle cx="140" cy="214" r="12"/><circle cx="930" cy="214" r="12"/>
+          </g>
+          <g class="fade late" fill="#DFE700" stroke="none" font-family="Inter,Arial" font-size="12" font-weight="600" text-anchor="middle">
+            <text x="140" y="218">A</text><text x="930" y="218">A'</text>
+          </g>
+
+          <!-- norte y rótulo -->
+          <g class="fade late" stroke="#9A9893" stroke-width="1">
+            <circle cx="930" cy="690" r="20"/>
+            <path d="M930 672L938 698L930 692L922 698Z" fill="#9A9893"/>
+          </g>
+          <g class="fade late" fill="#9A9893" stroke="none" font-family="Inter,Arial" font-size="10" letter-spacing="2.4">
+            <text x="560" y="690">PLANTA TIPO · ESC. 1:100</text>
+            <text x="560" y="708">ÁREA CUADRADA · INNOVACIÓN + DESARROLLO</text>
+          </g>
+        </g>
+
+        <!-- escaneo tipo radiografía -->
+        <g class="scan">
+          <use href="#plan" filter="url(#toYellow)" clip-path="url(#scanClip)"/>
+          <rect x="-160" y="0" width="140" height="760" fill="url(#scanGlow)">
+            <animate attributeName="x" values="-160;1020" dur="7s" begin="2.6s" repeatCount="indefinite"/>
+          </rect>
+        </g>
+      </g></g>
+
+      <!-- etiqueta de m² (fuera de la máscara para que se lea) -->
+      <g class="fade late" stroke="none">
+        <text x="342" y="168" text-anchor="middle" fill="#DFE700" font-family="Poppins,Arial" font-weight="300" font-size="34">120<tspan font-size="16" font-weight="500" dy="-16">m²</tspan></text>
+        <text x="342" y="384" text-anchor="middle" fill="#F3F2EE" font-family="Inter,Arial" font-size="10.5" letter-spacing="2.4" opacity=".8">SALA · COMEDOR</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="hero-main">
+    <div class="wrap">
+      <span class="tag in-1">Innovación + Desarrollo</span>
+      <h1 class="in-2">Cada <span class="sup">m<sup>2</sup></span> con <span class="y">propósito.</span></h1>
+      <p class="lead in-3">Área Cuadrada es una desarrolladora inmobiliaria guatemalteca. Concebimos, estructuramos, construimos y entregamos proyectos, con cuatro décadas de experiencia detrás.</p>
+      <div class="btns in-4">
+        <a href="#nosotros" class="btn primary">Conocé A2
+          <svg class="arr" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 7h12M8 2l5 5-5 5"/></svg></a>
+        <a href="portafolio.html" class="btn ghost">Ver portafolio</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-cifras">
+    <div class="wrap">
+      <div class="cifra"><div class="n"><span data-count="40" data-delay="900">0</span></div><div class="l">años de trayectoria</div></div>
+      <div class="cifra"><div class="n">+<span data-count="200" data-delay="1000">0</span></div><div class="l">proyectos propios y de terceros</div></div>
+      <div class="cifra"><div class="n">+<span data-count="40" data-delay="1100">0</span></div><div class="l">desarrollos propios</div></div>
+      <div class="cifra"><div class="n">+<span data-count="750000" data-delay="1200">0</span><span style="font-size:.5em;margin-left:.15em;font-weight:400">m²</span></div><div class="l">construidos</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 · QUÉ HACEMOS -->
+<section class="qh" id="nosotros" data-theme="light">
+  <div class="qh-sticky">
+    <div class="grid-bg" aria-hidden="true"></div>
+    <div class="wrap">
+      <div class="qh-grid">
+        <div class="qh-left">
+          <span class="tag rv">Qué hacemos</span>
+          <h2 class="h2 split">Del suelo a la entrega.</h2>
+          <p class="intro rv" style="--d:.2s">Cada metro cuadrado se planifica con propósito. Acompañamos el proyecto completo: desde la oportunidad hasta la llave en mano.</p>
+          <div class="qh-count rv" style="--d:.3s" aria-hidden="true"><span class="cur">01</span><span class="tot">/ 04</span></div>
+          <div class="qh-bar" aria-hidden="true"><i></i></div>
+        </div>
+        <div>
+          <ol class="steps">
+            <li class="step on"><span class="num">01</span><div><h3>Suelo</h3><p>Identificamos oportunidades de tierra con potencial real de desarrollo.</p><div class="bar"></div></div></li>
+            <li class="step"><span class="num">02</span><div><h3>Producto</h3><p>Diseñamos el producto inmobiliario: qué se construye, para quién y en qué m².</p><div class="bar"></div></div></li>
+            <li class="step"><span class="num">03</span><div><h3>Viabilidad</h3><p>Estructuramos la viabilidad financiera y legal de cada proyecto.</p><div class="bar"></div></div></li>
+            <li class="step"><span class="num">04</span><div><h3>Obra</h3><p>Ejecutamos la construcción hasta la entrega, con rigor técnico en cada fase.</p><div class="bar"></div></div></li>
+          </ol>
+          <div class="no-op rv" style="--d:.2s">
+            <b>Desarrollamos y construimos.</b>
+            <p>A2 no opera los activos una vez entregados. Cuando un proyecto requiere operación, esta queda en manos de un operador independiente con marca propia.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 · MISMO ADN -->
+<section class="block bg-concreto" id="adn" data-theme="light">
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <span class="tag rv">1985 — 2025</span>
+        <h2 class="split">Mismo ADN, nueva etapa.</h2>
+      </div>
+      <p class="rv" style="--d:.2s">A2 no es una empresa nueva: es la evolución natural de Arqs. M. Urruela.</p>
+    </div>
+    <div class="adn-band">
+      <img class="mu" src="img/mu.png" alt="Arquitectos M. Urruela">
+      <div class="adn-line" aria-hidden="true"><div class="stripes"></div><div class="solid"></div>
+        <div class="yrs"><span>1985</span><span>2025</span></div></div>
+      <img class="a2" src="img/logo-sd.png" alt="Área Cuadrada">
+    </div>
+    <div class="adn-rows">
+      <div class="adn-row rv"><h3>Lo que heredamos</h3><p>A2 lleva consigo los 40 años de experiencia de Arqs. M. Urruela: su estructura administrativa, su conocimiento en desarrollo y construcción, y una red de relaciones construida proyecto a proyecto durante cuatro décadas.</p></div>
+      <div class="adn-row rv" style="--d:.1s"><h3>La transición</h3><p>La pausa que impuso la pandemia se convirtió en una oportunidad para mirar hacia adentro. Hacía años que nuestra vocación ya no era diseñar, sino desarrollar, y el nombre «Arquitectos» había dejado de describir lo que éramos. El amarillo que nos identificó por 40 años sigue siendo nuestro color, por decisión propia.</p></div>
+      <div class="adn-row rv" style="--d:.2s"><h3>A2 hoy</h3><p>Área Cuadrada: Innovación + Desarrollo. Una desarrolladora que estructura y ejecuta proyectos inmobiliarios, con una nueva generación de talento y un equipo técnico renovado que suma su visión a la experiencia heredada.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 · DE DÓNDE VENIMOS -->
+<section class="block historia on-dark" id="historia" data-theme="dark">
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <span class="tag rv">De dónde venimos</span>
+        <h2 class="split">Cuarenta años haciendo ciudad.</h2>
+      </div>
+      <p class="rv" style="--d:.2s">La historia de Arqs. M. Urruela, la firma que dio origen a A2.</p>
+    </div>
+    <div class="hist-grid">
+      <div class="hist-text">
+        <div class="block-t rv">
+          <h3>Origen</h3>
+          <p>Arqs. M. Urruela nace en 1985 como el estudio de arquitectura del arquitecto Mauricio Urruela. Durante sus primeros años, la firma se dedicó exclusivamente al diseño, construyendo un criterio técnico y una forma de entender la ciudad que marcarían todo lo que vendría después.</p>
+        </div>
+        <div class="block-t rv" style="--d:.1s">
+          <h3>Trayectoria</h3>
+          <p>A principios de los noventa, la firma dio el salto a desarrollar sus propios proyectos, comenzando con un pequeño condominio de casas. A finales de esa década llegó su primer centro comercial, Plaza San Cristóbal, y con él una nueva identidad: Arqs. M. Urruela se consolidaba como desarrolladora.</p>
+          <p>Durante los años 2000 y 2010, el portafolio creció hasta sumar siete centros comerciales y decenas de proyectos residenciales en distintos puntos del área metropolitana.</p>
+          <p>En plena planificación de su siguiente plaza, la pandemia detuvo todo. Lejos de ser un final, ese alto abrió un periodo de reestructuración y reinvención interna que culminó en 2025 con el nacimiento de A2.</p>
+        </div>
+      </div>
+      <ol class="timeline">
+        <span class="tl-fill" aria-hidden="true"></span>
+        <li><div class="y">1985</div><div class="d">Nace el estudio de arquitectura</div></li>
+        <li><div class="y">Inicios de los 90</div><div class="d">Primer desarrollo propio: un condominio de casas</div></li>
+        <li><div class="y">1997–1998</div><div class="d">Plaza San Cristóbal, el primer centro comercial</div></li>
+        <li><div class="y">2000–2010s</div><div class="d">Centros comerciales y vivienda en paralelo</div></li>
+        <li><div class="y">2018</div><div class="d">Plaza Muxbal, el último centro comercial</div></li>
+        <li><div class="y">2020</div><div class="d">La pandemia frena la siguiente plaza</div></li>
+        <li><div class="y">2020–2025</div><div class="d">Reestructura y reinvención interna</div></li>
+        <li class="now"><div class="y">2025</div><div class="d">Nace A2</div></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- 05 · ESENCIA -->
+<section class="block" id="esencia" data-theme="light">
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <span class="tag rv">Esencia</span>
+        <h2 class="split">Lo que somos antes de lo que mostramos.</h2>
+      </div>
+    </div>
+    <div class="triada">
+      <div class="rv"><h3>Propósito</h3><p>Desarrollar espacios que eleven la forma en que vive y trabaja Guatemala, con rigor técnico y visión de largo plazo.</p></div>
+      <div class="rv" style="--d:.12s"><h3>Visión</h3><p>Ser la desarrolladora de referencia en la región por la calidad de lo que construye y la confianza que genera.</p></div>
+      <div class="rv" style="--d:.24s"><h3>Promesa</h3><p>Innovación + Desarrollo. Pensar distinto cada proyecto y ejecutarlo con precisión.</p></div>
+    </div>
+    <div class="vals">
+      <div class="val rv">
+        <svg class="ico" viewBox="0 0 30 30" fill="none" stroke="#000" stroke-width="2.4"><path d="M3 27V3h24"/><path d="M9 27v-4M15 27v-6M21 27v-4M27 27V9" stroke="#DFE700"/></svg>
+        <h4>Precisión</h4><p>Medimos dos veces. Cada decisión se sustenta en números, planos y datos.</p></div>
+      <div class="val rv" style="--d:.1s">
+        <svg class="ico" viewBox="0 0 30 30" fill="none" stroke-width="2.4"><path d="M3 9v18h18" stroke="#000"/><path d="M11 3h16v16z" stroke="#DFE700"/></svg>
+        <h4>Innovación</h4><p>Buscamos mejores formas de diseñar, financiar y construir, no la forma de siempre.</p></div>
+      <div class="val rv" style="--d:.2s">
+        <svg class="ico" viewBox="0 0 30 30" fill="none" stroke-width="2.4"><rect x="3" y="3" width="24" height="24" stroke="#000"/><path d="M9 15l4 4 8-8" stroke="#DFE700"/></svg>
+        <h4>Integridad</h4><p>Transparencia con inversionistas, compradores, autoridades y comunidades.</p></div>
+      <div class="val rv" style="--d:.3s">
+        <svg class="ico" viewBox="0 0 30 30" fill="none" stroke-width="2.4"><path d="M3 27h24" stroke="#000"/><path d="M6 27V15h6v12M14 27V7h6v20M22 27V11h4" stroke="#000"/><path d="M3 4l24 0" stroke="#DFE700"/></svg>
+        <h4>Visión urbana</h4><p>Cada proyecto debe aportar a su entorno y sostenerse en el tiempo.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 · PRIMER PROYECTO -->
+<section class="block bg-concreto" id="proyectos" data-theme="light">
+  <div class="wrap">
+    <div class="vsm-grid">
+      <div class="vsm-photo encuadre"><div class="ph"><img src="img/vsm-render.jpg" alt="Render de Vistas de San Miguel, Villa Nueva"></div></div>
+      <div class="vsm-info">
+        <span class="tag rv">El primer proyecto de A2</span>
+        <h2 class="split">Vistas de San Miguel</h2>
+        <p class="rv" style="--d:.15s">Marca el inicio de una nueva etapa: la primera obra que desarrollamos como A2, con cuatro décadas de experiencia detrás.</p>
+        <dl class="ficha rv" style="--d:.25s">
+          <div><dt>Ubicación</dt><dd>Villa Nueva</dd></div>
+          <div><dt>Tipo</dt><dd>Residencial · FHA</dd></div>
+          <div><dt>Unidades</dt><dd class="big" data-count="934">934</dd></div>
+        </dl>
+        <div class="firma rv" style="--d:.35s">
+          <img class="proj" src="img/vsm.png" alt="Vistas de San Miguel">
+          <span class="sep" aria-hidden="true"></span>
+          <div class="por"><span>Un desarrollo de</span><img src="img/logo-sd.png" alt="Área Cuadrada"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 07 · CONTACTO -->
+<section class="block contacto on-dark" id="contacto" data-theme="dark">
+  <div class="diagonal" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="c-grid">
+      <div>
+        <span class="tag rv">Contacto</span>
+        <h2 class="split">Cada proyecto empieza con un trazo.</h2>
+        <p class="lead rv" style="--d:.2s">Si tenés un terreno, una oportunidad o querés invertir en nuestro próximo desarrollo, conversemos.</p>
+        <div class="btns rv" style="--d:.3s"><a href="mailto:info@a2desarrollos.com" class="btn primary">Escribinos
+          <svg class="arr" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 7h12M8 2l5 5-5 5"/></svg></a></div>
+      </div>
+      <dl class="c-data rv" style="--d:.2s">
+        <div><dt>Correo</dt><dd><a href="mailto:info@a2desarrollos.com">info@a2desarrollos.com</a></dd></div>
+        <div><dt>Teléfono</dt><dd><a href="tel:+50223040300">+502 2304 0300</a></dd></div>
+        <div><dt>Web</dt><dd>a2desarrollos.com</dd></div>
+        <div><dt>Ubicación</dt><dd>Guatemala</dd></div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <img src="img/logo-neg.png" alt="Área Cuadrada — Innovación + Desarrollo">
+    <ul>
+      <li><a href="#nosotros">Nosotros</a></li>
+      <li><a href="#historia">Historia</a></li>
+      <li><a href="#proyectos">Proyectos</a></li>
+      <li><a href="portafolio.html">Portafolio</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+    <small><span>© 2026 Área Cuadrada. Guatemala.</span><span>Una evolución de Arqs. M. Urruela · desde 1985</span></small>
+  </div>
+</footer>
+
+<script src="js/site.js"></script>
+</body>
+</html>
