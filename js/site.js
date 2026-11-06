@@ -76,7 +76,7 @@
   var sections = dotLinks.map(function(a){ return $(a.getAttribute('href')); });
   var navLinks = $$('.nav ul a[href^="#"]');
   var ticking = false;
-  var introEl = $('#a2-intro'), heroEl = $('.hero');
+  var introEl = $('#a2-intro'), heroEl = $('.hero'), vsmImg = $('.vsm-ph img');
   if (heroEl && introEl && 'IntersectionObserver' in window){
     var ho = new IntersectionObserver(function(en){ if (en[0].isIntersecting){ heroEl.classList.add('hero-in'); ho.disconnect(); } }, {threshold:.35});
     ho.observe(heroEl);
@@ -89,6 +89,9 @@
     var heroTop = heroEl ? heroEl.offsetTop : 0;
     if (plan && !reduce) plan.style.transform = 'translate3d(0,' + (Math.max(y - heroTop, 0)*0.18) + 'px,0)';
     if (dots && introEl) dots.classList.toggle('oculto', y < heroTop - vh*0.4);
+    if (hdr && introEl) hdr.classList.toggle('ver', y >= heroTop - 90);
+    if (vsmImg && !reduce){ var vr = vsmImg.parentNode.getBoundingClientRect();
+      if (vr.bottom > 0 && vr.top < vh) vsmImg.style.setProperty('--py', (-(vr.top + vr.height/2 - vh/2) * 0.12 - vr.height*0.09).toFixed(1) + 'px'); }
 
     if (qh && steps.length && window.innerWidth > 980){
       var r = qh.getBoundingClientRect();

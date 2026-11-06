@@ -14,7 +14,7 @@
   var stage = Q('.intro-stage'), cv = Q('.intro-cv'), logo = Q('.intro-logo'), info = Q('.intro-info');
   var cue = Q('.intro-cue'), skip = Q('.intro-skip'), login = Q('.intro-login'), flash = Q('.intro-flash'), shock = Q('.intro-shock');
   var verbs = Q('.intro-verbs'), vItems = [].slice.call(verbs.children);
-  var m2 = Q('.intro-m2'), m2n = Q('.intro-m2 b'), wipeY = Q('.intro-wipe.y'), wipeK = Q('.intro-wipe.k');
+  var m2 = Q('.intro-m2'), m2n = Q('.intro-m2 b');
   var box = document.getElementById('iso-box');
   document.body.classList.add('has-intro');
 
@@ -113,7 +113,7 @@
   function dibujarScroll(){
     var p = prog, movil = W < 980;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, Hh);
-    var t1 = sm(0.05, 0.28, p), salida = sm(0.86, 0.96, p);
+    var t1 = sm(0.05, 0.28, p), salida = sm(0.86, 0.98, p);
 
     // logo nítido → partículas
     var fl = 1 - sm(0.02, 0.08, p);
@@ -164,11 +164,6 @@
     m2.style.opacity = p > R0 - 0.04 && p < 0.88 ? 1 : 0;
     m2n.textContent = fmt(750000 * inOut(Math.min(Math.max((p - R0) / (R1 - R0), 0), 1)));
 
-    // cortinas de salida
-    var wy = sm(0.88, 0.945, p), wk = sm(0.935, 0.995, p);
-    wipeY.style.transform = 'translateY(' + ((1 - wy) * 101).toFixed(2) + '%)';
-    wipeK.style.transform = 'translateY(' + ((1 - wk) * 101).toFixed(2) + '%)';
-    login.classList.toggle('oscuro', wy > 0.95 && wk < 0.95);
   }
 
   /* ---------- bucle ---------- */
