@@ -816,27 +816,47 @@ header.site-portal .nav-portal .nav-login:hover{background:var(--negro);color:va
 }
 
 /* ===== INTRO · el giro de A2 ===== */
-.intro{position:relative;height:460vh;background:var(--negro);color:var(--blanco)}
+section.intro{position:relative;height:460vh;background:var(--negro);color:var(--blanco)}
 .intro-stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:var(--negro)}
 .intro-grid{position:absolute;inset:0;opacity:.06;background-image:linear-gradient(var(--blanco) 1px,transparent 1px),linear-gradient(90deg,var(--blanco) 1px,transparent 1px);background-size:56px 56px;
   -webkit-mask-image:radial-gradient(ellipse at 50% 45%,#000 20%,transparent 75%);mask-image:radial-gradient(ellipse at 50% 45%,#000 20%,transparent 75%)}
 .intro-cv{position:absolute;inset:0;width:100%;height:100%}
 .intro-flash{position:absolute;inset:0;background:var(--amarillo);opacity:0;pointer-events:none}
-.intro-shock{position:absolute;width:20px;height:20px;margin:-10px 0 0 -10px;border-radius:50%;border:2px solid var(--amarillo);opacity:0;pointer-events:none}
-.intro-shock.go{animation:shock 1s cubic-bezier(.1,.7,.2,1) forwards}
-@keyframes shock{0%{opacity:1;width:20px;height:20px;margin:-10px 0 0 -10px;border-width:3px}100%{opacity:0;width:2600px;height:2600px;margin:-1300px 0 0 -1300px;border-width:1px}}
 .intro-logo{position:absolute;left:50%;top:42%;width:min(480px,72vw);transform:translate(-50%,-50%);will-change:opacity,transform}
 .intro-logo svg{display:block;width:100%;height:auto;overflow:visible}
 .intro-logo text{fill:var(--blanco);font-family:Inter,Arial,sans-serif}
 .intro-logo .il-2{font-family:Poppins,Arial,sans-serif}
-.il-frame{fill:var(--blanco);fill-opacity:0;stroke:var(--blanco);stroke-width:.9;stroke-dasharray:1;stroke-dashoffset:1}
-.il-dot{transform-box:fill-box;transform-origin:center;opacity:0}
-.intro.play .il-dot{animation:ilDot 1.1s var(--ease) forwards}
-.intro.play .il-frame{animation:ilDraw 1.05s cubic-bezier(.65,0,.35,1) .5s forwards}
-@keyframes ilDot{0%{opacity:0;transform:scale(0)}35%{opacity:1;transform:scale(1.8)}60%{transform:scale(1)}100%{opacity:0;transform:scale(.4)}}
+.il-frame{fill:var(--blanco);opacity:0}
+.il-sq{transform-box:view-box;transform-origin:100px 0;opacity:0;transform:rotate(-14deg)}
+/* blueprint: líneas, cotas, ejes, contornos, achurado */
+.bp-l,.bp-o{stroke-dasharray:1;stroke-dashoffset:1}
+.bp-lines{opacity:.6}
+.bp-t > *,.bp-t text{opacity:0}
+.bp-h{opacity:0}
+.intro.play .bp-l{animation:ilDraw .75s cubic-bezier(.65,0,.35,1) var(--d,0s) forwards}
+.intro.play .bp-t > *,.intro.play .bp-t text{animation:ilFade .4s ease var(--d,0s) forwards}
+.intro.play .bp-o{animation:ilDraw 1s cubic-bezier(.65,0,.35,1) 1.05s forwards}
+.intro.play .bp-o.y{animation-delay:1.35s;animation-duration:.8s}
+.intro.play .bp-h{animation:ilFade .45s ease 1.85s forwards}
+.intro.play .bp-h.y{animation-delay:2s}
+.intro.play .il-frame{animation:ilFade .35s ease 2.3s forwards}
+.intro.play .il-sq{animation:ilGiro .7s cubic-bezier(.2,1.35,.35,1) 2.45s forwards}
+.intro.play .bp-all{animation:bpGhost .8s ease 2.7s forwards}
+.intro.play .il-2{animation:ilPop .5s cubic-bezier(.2,1.6,.4,1) 2.75s forwards}
+.intro.play .il-a{animation:ilUp .55s var(--ease) 2.85s forwards}
+.intro.play .il-c{animation:ilUp .55s var(--ease) 2.95s forwards}
+.intro.play .il-g{animation:ilUp .55s var(--ease) 3.1s forwards}
+.intro.play .ii-lead{animation:ilUp .55s var(--ease) 3.3s forwards}
+.intro.play .ii-cifras li{animation:ilUp .55s var(--ease) 3.45s forwards}
+.intro.play .ii-cifras li:nth-child(2){animation-delay:3.55s}
+.intro.play .ii-cifras li:nth-child(3){animation-delay:3.65s}
+.intro.play .ii-cifras li:nth-child(4){animation-delay:3.75s}
 @keyframes ilDraw{to{stroke-dashoffset:0}}
-@keyframes ilFill{from{stroke-dashoffset:0}to{stroke-dashoffset:0;fill-opacity:1;stroke-opacity:0}}
-.il-sq{transform-box:view-box;transform-origin:100px 0;opacity:0;transform:rotate(-120deg) scale(.4)}
+@keyframes ilFade{to{opacity:1}}
+@keyframes bpGhost{to{opacity:.16}}
+.intro.static .bp-all{opacity:.16}
+.intro.static .bp-l,.intro.static .bp-o{stroke-dashoffset:0;animation:none}
+.intro.static .bp-t > *,.intro.static .bp-t text,.intro.static .bp-h{opacity:1;animation:none}
 .il-t{opacity:0;transform:translateY(10px)}
 .intro-info{position:absolute;left:50%;top:calc(42% + min(480px,72vw) * .26 + 34px);transform:translateX(-50%);width:min(1000px,92vw);text-align:center;will-change:opacity}
 .ii-lead{font-size:clamp(11px,1vw,13px);letter-spacing:.32em;text-transform:uppercase;color:#b9b8b3;opacity:0;transform:translateY(10px)}
@@ -867,34 +887,20 @@ header.site-portal .nav-portal .nav-login:hover{background:var(--negro);color:va
 @keyframes cue{0%{transform:scaleY(0)}55%{transform:scaleY(1)}100%{transform:scaleY(1);opacity:0}}
 .intro-skip{position:absolute;right:var(--pad);bottom:30px;font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:#8d8c87;border-bottom:1px solid #3a3a38;padding-bottom:4px;opacity:0;transition:opacity .4s,color .2s;z-index:3}
 .intro-skip:hover{color:var(--amarillo);border-color:var(--amarillo)}
-/* impacto: el logo se completa */
-.intro.impacto .intro-stage{animation:shake .42s cubic-bezier(.36,.07,.19,.97)}
-@keyframes shake{10%,90%{transform:translate(-2px,1px)}20%,80%{transform:translate(4px,-2px)}30%,50%,70%{transform:translate(-7px,3px)}40%,60%{transform:translate(7px,-3px)}100%{transform:none}}
-.intro.impacto .il-frame{animation:ilFill .14s linear forwards}
-.intro.impacto .il-sq{animation:ilGiro .62s cubic-bezier(.2,1.5,.35,1) .05s forwards}
-.intro.impacto .il-2{animation:ilPop .5s cubic-bezier(.2,1.6,.4,1) .45s forwards}
-.intro.impacto .il-a{animation:ilUp .55s var(--ease) .6s forwards}
-.intro.impacto .il-c{animation:ilUp .55s var(--ease) .7s forwards}
-.intro.impacto .il-g{animation:ilUp .55s var(--ease) .85s forwards}
-.intro.impacto .ii-lead{animation:ilUp .55s var(--ease) 1.05s forwards}
-.intro.impacto .ii-cifras li{animation:ilUp .55s var(--ease) 1.2s forwards}
-.intro.impacto .ii-cifras li:nth-child(2){animation-delay:1.3s}
-.intro.impacto .ii-cifras li:nth-child(3){animation-delay:1.4s}
 .intro.listo .intro-cue,.intro.listo .intro-skip{opacity:1}
-@keyframes ilFade{to{opacity:1}}
 @keyframes ilGiro{to{opacity:1;transform:none}}
 @keyframes ilPop{0%{opacity:0;transform:scale(.2) translateY(0)}100%{opacity:1;transform:none}}
 @keyframes ilUp{to{opacity:1;transform:none}}
-.intro.static .il-frame{stroke-dashoffset:0;fill-opacity:1;stroke-opacity:0;animation:none}
+.intro.static .il-frame{opacity:1;animation:none}
 .intro.static .il-sq,.intro.static .il-t,.intro.static .ii-lead,.intro.static .ii-cifras li{opacity:1;transform:none;animation:none}
 .intro.static .intro-cue,.intro.static .intro-skip{opacity:1}
-.intro.reduce{height:100vh}
+section.intro.reduce{height:100vh}
 .intro.reduce .intro-cv,.intro.reduce .intro-verbs,.intro.reduce .intro-m2{display:none}
 body.has-intro .hero .in-1,body.has-intro .hero .in-2,body.has-intro .hero .in-3,body.has-intro .hero .in-4{animation-play-state:paused}
 body.has-intro .hero.hero-in .in-1,body.has-intro .hero.hero-in .in-2,body.has-intro .hero.hero-in .in-3,body.has-intro .hero.hero-in .in-4{animation-play-state:running}
 .dots.oculto{opacity:0;pointer-events:none}
 @media (max-width:980px){
-  .intro{height:420vh}
+  section.intro{height:420vh}
   .intro-logo{top:30%;width:min(480px,74vw)}
   .intro-info{top:calc(30% + min(480px,74vw) * .26 + 26px)}
   .ii-cifras{grid-template-columns:repeat(2,auto);row-gap:18px}
@@ -953,3 +959,4 @@ body.has-intro .hero{padding-top:var(--hdr);min-height:100vh}
   .vsm-ficha > div + div{padding-left:0}
   .vsm-ficha > div:nth-child(even){padding-left:16px;border-left:1px solid #e2e1dc}
 }
+.historia.pagina{padding-top:clamp(96px,11vw,150px)}

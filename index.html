@@ -19,13 +19,52 @@
     <div class="intro-grid" aria-hidden="true"></div>
     <div class="intro-flash" aria-hidden="true"></div>
     <canvas class="intro-cv" aria-hidden="true"></canvas>
-    <div class="intro-shock" aria-hidden="true"></div>
 
     <div class="intro-logo">
       <svg viewBox="0 0 216 112" role="img" aria-label="Área Cuadrada">
+        <defs>
+          <pattern id="bp-h" width="2.6" height="2.6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="2.6" stroke="#F3F2EE" stroke-width=".55"/></pattern>
+          <pattern id="bp-hy" width="2.6" height="2.6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="2.6" stroke="#DFE700" stroke-width=".55"/></pattern>
+        </defs>
         <rect id="iso-box" x="0" y="0" width="100" height="100" fill="none"/>
-        <circle class="il-dot" cx="0" cy="100" r="3.2" fill="#DFE700"/>
-        <path class="il-frame" pathLength="1" d="M0 0H28V11H11V89H89V76H100V100H0Z"/>
+        <g class="bp-all" aria-hidden="true">
+          <g class="bp-lines" fill="none" stroke="#DFE700" stroke-width=".3">
+          <path class="bp-l" pathLength="1" style="--d:0s" d="M-26 0H126"/>
+          <path class="bp-l" pathLength="1" style="--d:0.06s" d="M-26 100H126"/>
+          <path class="bp-l" pathLength="1" style="--d:0.12s" d="M0 -26V126"/>
+          <path class="bp-l" pathLength="1" style="--d:0.18s" d="M100 -26V126"/>
+          <path class="bp-l" pathLength="1" style="--d:0.26s" d="M-18 11H118"/>
+          <path class="bp-l" pathLength="1" style="--d:0.32s" d="M-18 89H118"/>
+          <path class="bp-l" pathLength="1" style="--d:0.38s" d="M11 -18V118"/>
+          <path class="bp-l" pathLength="1" style="--d:0.44s" d="M89 -18V118"/>
+          <path class="bp-l" pathLength="1" style="--d:0.5s" d="M42 -18V30"/>
+          <path class="bp-l" pathLength="1" style="--d:0.54s" d="M28 -10V22"/>
+          <path class="bp-l" pathLength="1" style="--d:0.58s" d="M-10 76H118"/>
+          <path class="bp-l" pathLength="1" style="--d:0.62s" d="M-10 60H118"/>
+          <path class="bp-l" pathLength="1" style="--d:0.7s" d="M30 -4.6L112 75.5"/>
+          </g>
+          <g class="bp-dim" fill="none" stroke="#9A9893" stroke-width=".3">
+            <path class="bp-l" pathLength="1" style="--d:.75s" d="M0 -12H100M-1.5 -10.5L1.5 -13.5M98.5 -10.5L101.5 -13.5"/>
+            <path class="bp-l" pathLength="1" style="--d:.85s" d="M-12 0V100M-13.5 1.5L-10.5 -1.5M-13.5 101.5L-10.5 98.5"/>
+            <path class="bp-l" pathLength="1" style="--d:.95s" d="M42 -6H100M40.5 -4.5L43.5 -7.5M98.5 -4.5L101.5 -7.5"/>
+          </g>
+          <g class="bp-t" font-family="Inter,Arial,sans-serif" font-size="3.6" fill="#9A9893" text-anchor="middle" letter-spacing=".3">
+            <text x="50" y="-13.6" style="--d:1s">100.00</text>
+            <text x="71" y="-7.6" style="--d:1.1s">58.00</text>
+            <text transform="translate(-13.6 50) rotate(-90)" style="--d:1.05s">100.00</text>
+          </g>
+          <g class="bp-t bp-axis" fill="none" stroke="#9A9893" stroke-width=".35" font-family="Inter,Arial,sans-serif" font-size="3.8" text-anchor="middle">
+            <g style="--d:.55s"><circle cx="0" cy="-30" r="4"/><text x="0" y="-28.6" fill="#B9B8B3" stroke="none">A</text></g>
+            <g style="--d:.62s"><circle cx="100" cy="-30" r="4"/><text x="100" y="-28.6" fill="#B9B8B3" stroke="none">B</text></g>
+            <g style="--d:.69s"><circle cx="-30" cy="0" r="4"/><text x="-30" y="1.4" fill="#B9B8B3" stroke="none">1</text></g>
+            <g style="--d:.76s"><circle cx="-30" cy="100" r="4"/><text x="-30" y="101.4" fill="#B9B8B3" stroke="none">2</text></g>
+          </g>
+          <path class="bp-h" d="M0 0H28V11H11V89H89V76H100V100H0Z" fill="url(#bp-h)"/>
+          <path class="bp-h y" fill-rule="evenodd" d="M42 0H100V60H89V53L46 11H42Z M66 11H89V35.8Z" fill="url(#bp-hy)"/>
+          <path class="bp-o" pathLength="1" d="M0 0H28V11H11V89H89V76H100V100H0Z" fill="none" stroke="#F3F2EE" stroke-width=".6"/>
+          <path class="bp-o y" pathLength="1" fill-rule="evenodd" d="M42 0H100V60H89V53L46 11H42Z M66 11H89V35.8Z" fill="none" stroke="#DFE700" stroke-width=".6"/>
+        </g>
+        <path class="il-frame" d="M0 0H28V11H11V89H89V76H100V100H0Z"/>
         <g class="il-sq"><path fill-rule="evenodd" fill="#DFE700" d="M42 0H100V60H89V53L46 11H42Z M66 11H89V35.8Z"/></g>
         <text class="il-t il-2" x="104" y="21" font-size="25" font-weight="600">2</text>
         <text class="il-t il-a" x="103" y="66" font-size="25.5" font-weight="300">área</text>
@@ -65,7 +104,7 @@
     <ul>
       <li><a href="#proyectos">Proyectos</a></li>
       <li><a href="#nosotros">Nosotros</a></li>
-      <li><a href="#historia">Historia</a></li>
+      <li><a href="historia.html">Historia</a></li>
       <li><a href="portafolio.html">Portafolio</a></li>
       <li><a href="#contacto">Contacto</a></li>
       <li class="nav-sep" aria-hidden="true"></li>
@@ -79,7 +118,6 @@
   <a href="#proyectos"><span>Primer proyecto</span><i></i></a>
   <a href="#nosotros"><span>Qué hacemos</span><i></i></a>
   <a href="#adn"><span>Mismo ADN</span><i></i></a>
-  <a href="#historia"><span>De dónde venimos</span><i></i></a>
   <a href="#esencia"><span>Esencia</span><i></i></a>
   <a href="#contacto"><span>Contacto</span><i></i></a>
 </nav>
@@ -339,11 +377,11 @@
   <div class="wrap">
     <dl class="vsm-ficha rv">
       <div><dt>Ubicación</dt><dd>Villa Nueva</dd></div>
-      <div><dt>Tipo</dt><dd>Residencial · FHA</dd></div>
+      <div><dt>Tipo</dt><dd>Residencial</dd></div>
       <div><dt>Unidades</dt><dd><span data-count="934">934</span></dd></div>
       <div class="por"><dt>Un desarrollo de</dt><dd><img src="img/logo-sd.png" alt="Área Cuadrada"></dd></div>
     </dl>
-    <div class="vsm-cta rv"><a href="#contacto" class="btn dark">Quiero información
+    <div class="vsm-cta rv"><a href="https://www.vistasdesanmiguel.com" target="_blank" rel="noopener" class="btn dark">Quiero información
       <svg class="arr" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 7h12M8 2l5 5-5 5"/></svg></a></div>
   </div>
 </section>
@@ -402,45 +440,7 @@
   </div>
 </section>
 
-<!-- 05 · DE DÓNDE VENIMOS -->
-<section class="block historia on-dark" id="historia" data-theme="dark">
-  <div class="wrap">
-    <div class="head">
-      <div>
-        <span class="tag rv">De dónde venimos</span>
-        <h2 class="split">Cuarenta años haciendo ciudad.</h2>
-      </div>
-      <p class="rv" style="--d:.2s">La historia de Arqs. M. Urruela, la firma que dio origen a A2.</p>
-    </div>
-    <div class="hist-grid">
-      <div class="hist-text">
-        <div class="block-t rv">
-          <h3>Origen</h3>
-          <p>Arqs. M. Urruela nace en 1985 como el estudio de arquitectura del arquitecto Mauricio Urruela. Durante sus primeros años, la firma se dedicó exclusivamente al diseño, construyendo un criterio técnico y una forma de entender la ciudad que marcarían todo lo que vendría después.</p>
-        </div>
-        <div class="block-t rv" style="--d:.1s">
-          <h3>Trayectoria</h3>
-          <p>A principios de los noventa, la firma dio el salto a desarrollar sus propios proyectos, comenzando con un pequeño condominio de casas. A finales de esa década llegó su primer centro comercial, Plaza San Cristóbal, y con él una nueva identidad: Arqs. M. Urruela se consolidaba como desarrolladora.</p>
-          <p>Durante los años 2000 y 2010, el portafolio creció hasta sumar siete centros comerciales y decenas de proyectos residenciales en distintos puntos del área metropolitana.</p>
-          <p>En plena planificación de su siguiente plaza, la pandemia detuvo todo. Lejos de ser un final, ese alto abrió un periodo de reestructuración y reinvención interna que culminó en 2025 con el nacimiento de A2.</p>
-        </div>
-      </div>
-      <ol class="timeline">
-        <span class="tl-fill" aria-hidden="true"></span>
-        <li><div class="y">1985</div><div class="d">Nace el estudio de arquitectura</div></li>
-        <li><div class="y">Inicios de los 90</div><div class="d">Primer desarrollo propio: un condominio de casas</div></li>
-        <li><div class="y">1997–1998</div><div class="d">Plaza San Cristóbal, el primer centro comercial</div></li>
-        <li><div class="y">2000–2010s</div><div class="d">Centros comerciales y vivienda en paralelo</div></li>
-        <li><div class="y">2018</div><div class="d">Plaza Muxbal, el último centro comercial</div></li>
-        <li><div class="y">2020</div><div class="d">La pandemia frena la siguiente plaza</div></li>
-        <li><div class="y">2020–2025</div><div class="d">Reestructura y reinvención interna</div></li>
-        <li class="now"><div class="y">2025</div><div class="d">Nace A2</div></li>
-      </ol>
-    </div>
-  </div>
-</section>
-
-<!-- 06 · ESENCIA -->
+<!-- 05 · ESENCIA -->
 <section class="block" id="esencia" data-theme="light">
   <div class="wrap">
     <div class="head">
@@ -471,7 +471,7 @@
   </div>
 </section>
 
-<!-- 07 · CONTACTO -->
+<!-- 06 · CONTACTO -->
 <section class="block contacto on-dark" id="contacto" data-theme="dark">
   <div class="diagonal" aria-hidden="true"></div>
   <div class="wrap">
@@ -498,7 +498,7 @@
     <img src="img/logo-neg.png" alt="Área Cuadrada — Innovación + Desarrollo">
     <ul>
       <li><a href="#nosotros">Nosotros</a></li>
-      <li><a href="#historia">Historia</a></li>
+      <li><a href="historia.html">Historia</a></li>
       <li><a href="#proyectos">Proyectos</a></li>
       <li><a href="portafolio.html">Portafolio</a></li>
       <li><a href="#contacto">Contacto</a></li>

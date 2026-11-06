@@ -1,7 +1,7 @@
 /* =========================================================
    INTRO · el giro de A2
-   Carga:  un punto explota en partículas que vuelven a formar el logo;
-           impacto (onda + vibración) y la escuadra da el giro.
+   Carga:  el logo se arma como un plano: líneas de construcción, ejes,
+           cotas, contornos y achurado; luego queda sólido.
    Scroll: el logo se inclina en 3D, las partículas vuelan a armar el
            edificio y el logo queda como techo; palabras gigantes, contador
            de m²; al final el edificio estalla y una cortina da paso al hero.
@@ -12,7 +12,7 @@
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var Q = function(s){ return intro.querySelector(s); };
   var stage = Q('.intro-stage'), cv = Q('.intro-cv'), logo = Q('.intro-logo'), info = Q('.intro-info');
-  var cue = Q('.intro-cue'), skip = Q('.intro-skip'), login = Q('.intro-login'), flash = Q('.intro-flash'), shock = Q('.intro-shock');
+  var cue = Q('.intro-cue'), skip = Q('.intro-skip'), login = Q('.intro-login'), flash = Q('.intro-flash');
   var verbs = Q('.intro-verbs'), vItems = [].slice.call(verbs.children);
   var m2 = Q('.intro-m2'), m2n = Q('.intro-m2 b');
   var box = document.getElementById('iso-box');
@@ -41,7 +41,6 @@
     var pt = [gx, gy], c = dentro(pt, BLANCO) ? 0 : (dentro(pt, ESCUADRA) && !dentro(pt, HUECO)) ? 1 : -1;
     if (c >= 0) LOGO.push(punto3(gx, gy, 0, {c:c, ang:rnd() * Math.PI * 2, rad:0.35 + rnd() * 0.65, del:rnd() * 0.28}));
   }
-  var CHISPAS = []; for (var n = 0; n < 380; n++) CHISPAS.push({ang:rnd() * Math.PI * 2, rad:0.6 + rnd() * 1.4, y:rnd() < 0.18});
   var EDIF = [], k, t;
   for (k = 1; k < PISOS; k++) { var z = k * ALTO, pk = R0 + (R1 - R0) * (k / PISOS);
     for (t = 0; t < 100; t += 4) [[t, 0], [100, t], [100 - t, 100], [0, 100 - t]].forEach(function(q){
@@ -58,7 +57,6 @@
     var tr = logo.style.transform; logo.style.transform = 'translate(-50%,-50%)';
     var sr = stage.getBoundingClientRect(), br = box.getBoundingClientRect(); logo.style.transform = tr;
     base = {cx:br.left - sr.left + br.width / 2, cy:br.top - sr.top + br.height / 2, s:br.width / 100};
-    shock.style.left = base.cx + 'px'; shock.style.top = base.cy + 'px';
   }
   var sm = function(a, b, x){ x = Math.min(Math.max((x - a) / (b - a), 0), 1); return x * x * (3 - 2 * x); };
   var lerp = function(a, b, t){ return a + (b - a) * t; };
@@ -79,30 +77,14 @@
   function cuadrito(px, py, tam, col, a){ if (a <= 0.003) return; var q = apartar(px, py);
     ctx.globalAlpha = Math.min(a, 1); ctx.fillStyle = col; ctx.fillRect(q[0] - tam / 2, q[1] - tam / 2, tam, tam); }
 
-  /* ---------- 1. carga: el punto dibuja el cuadro → impacto ---------- */
-  var IMPACTO = 1.55, modo = visto ? 'scroll' : 'carga', t0 = 0, impacto = false;
+  /* ---------- 1. carga: el logo se arma como un plano (CSS) ---------- */
+  var modo = visto ? 'scroll' : 'carga', t0 = 0;
   if (visto) intro.classList.add('static'); else intro.classList.add('play');
   function terminarCarga(){
     if (modo !== 'carga') return; modo = 'scroll';
     intro.classList.add('listo'); try { sessionStorage.setItem('a2-intro', '1'); } catch(e){}
   }
-  function dibujarCarga(ms){
-    var T = ms / 1000, i, q;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, Hh);
-    if (!impacto && T > IMPACTO) { impacto = true; intro.classList.add('impacto'); shock.classList.add('go');
-      flash.style.opacity = 0.32; setTimeout(function(){ flash.style.opacity = 0; }, 90); }
-    if (impacto) {                                        // estallido de chispas desde el logo
-      cv.style.opacity = 1;
-      var te = outExpo(sm(IMPACTO, IMPACTO + 1.0, T)), fade = 1 - sm(IMPACTO + 0.35, IMPACTO + 1.25, T);
-      var radio = Math.max(W, Hh) * 0.62, tam = Math.max(1.6, Math.min(2.6, base.s * 1.2));
-      var ox = base.cx + base.s * 50, oy = base.cy - base.s * 50;   // la esquina donde cae la escuadra
-      for (i = 0; i < CHISPAS.length; i++) { q = CHISPAS[i];
-        var o = q.y ? [ox, oy] : [base.cx, base.cy], dd = radio * q.rad * te * (q.y ? 0.7 : 1);
-        cuadrito(o[0] + Math.cos(q.ang) * dd, o[1] + Math.sin(q.ang) * dd, tam, q.y ? '#DFE700' : '#F3F2EE', fade * 0.85); }
-      ctx.globalAlpha = 1;
-    }
-    if (T > IMPACTO + 1.45) terminarCarga();
-  }
+  function dibujarCarga(ms){ cv.style.opacity = 0; if (ms > 3900) terminarCarga(); }
 
   /* ---------- 2. scroll: el edificio ---------- */
   var prog = 0, deriva = 0;
@@ -175,7 +157,7 @@
     mouse.x += (mouse.tx - mouse.x) * 0.2; mouse.y += (mouse.ty - mouse.y) * 0.2;
     if (mouse.tx < -9000) { mouse.x = mouse.y = -9999; }
     prog = progreso();
-    if (modo === 'carga' && prog > 0.015) { impacto = true; intro.classList.add('impacto', 'static'); terminarCarga(); }
+    if (modo === 'carga' && prog > 0.015) { intro.classList.remove('play'); intro.classList.add('static'); terminarCarga(); }
     if (modo === 'carga') dibujarCarga(ts - t0);
     else { if (prog > 0.06 && prog < 0.99) deriva += dt * 0.00007; dibujarScroll(); }
     requestAnimationFrame(cuadro);
