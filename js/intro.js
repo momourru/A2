@@ -12,11 +12,10 @@
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var Q = function(s){ return intro.querySelector(s); };
   var stage = Q('.intro-stage'), cv = Q('.intro-cv'), logo = Q('.intro-logo'), info = Q('.intro-info');
-  var cue = Q('.intro-cue'), skip = Q('.intro-skip'), flash = Q('.intro-flash'), shock = Q('.intro-shock');
-  var big = [].slice.call(intro.querySelectorAll('.intro-big b')), fase = Q('.intro-fase'), faseN = Q('.if-n b'), faseD = Q('.if-d');
+  var cue = Q('.intro-cue'), skip = Q('.intro-skip'), login = Q('.intro-login'), flash = Q('.intro-flash'), shock = Q('.intro-shock');
+  var verbs = Q('.intro-verbs'), vItems = [].slice.call(verbs.children);
   var m2 = Q('.intro-m2'), m2n = Q('.intro-m2 b'), wipeY = Q('.intro-wipe.y'), wipeK = Q('.intro-wipe.k');
   var box = document.getElementById('iso-box');
-  var FRASES = ['El plano: cada m² se piensa con propósito.', 'Viabilidad financiera, legal y técnica.', 'Obra con rigor técnico en cada fase.', 'Del suelo a la llave en mano.'];
   document.body.classList.add('has-intro');
 
   var visto = false; try { visto = sessionStorage.getItem('a2-intro') === '1'; } catch(e){}
@@ -80,39 +79,29 @@
   function cuadrito(px, py, tam, col, a){ if (a <= 0.003) return; var q = apartar(px, py);
     ctx.globalAlpha = Math.min(a, 1); ctx.fillStyle = col; ctx.fillRect(q[0] - tam / 2, q[1] - tam / 2, tam, tam); }
 
-  /* ---------- 1. carga: explosión → logo ---------- */
-  var modo = visto ? 'scroll' : 'carga', t0 = 0, impacto = false;
-  if (visto) intro.classList.add('static');
+  /* ---------- 1. carga: el punto dibuja el cuadro → impacto ---------- */
+  var IMPACTO = 1.55, modo = visto ? 'scroll' : 'carga', t0 = 0, impacto = false;
+  if (visto) intro.classList.add('static'); else intro.classList.add('play');
   function terminarCarga(){
     if (modo !== 'carga') return; modo = 'scroll';
-    if (!impacto) { intro.classList.add('static'); }
     intro.classList.add('listo'); try { sessionStorage.setItem('a2-intro', '1'); } catch(e){}
   }
   function dibujarCarga(ms){
-    var T = ms / 1000, s = base.s, cx = base.cx, cy = base.cy, i, q;
-    var ce = [cx, cy];                                   // de aquí sale todo
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, Hh); cv.style.opacity = 1;
-    if (T < 0.42) {                                      // el punto toma aire
-      var r = 2 + 9 * sm(0, 0.42, T) + Math.sin(T * 40) * 0.8 * sm(0.2, 0.42, T);
-      ctx.globalAlpha = 1; ctx.fillStyle = '#DFE700'; ctx.beginPath(); ctx.arc(ce[0], ce[1], r, 0, Math.PI * 2); ctx.fill();
-      return;
+    var T = ms / 1000, i, q;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, Hh);
+    if (!impacto && T > IMPACTO) { impacto = true; intro.classList.add('impacto'); shock.classList.add('go');
+      flash.style.opacity = 0.32; setTimeout(function(){ flash.style.opacity = 0; }, 90); }
+    if (impacto) {                                        // estallido de chispas desde el logo
+      cv.style.opacity = 1;
+      var te = outExpo(sm(IMPACTO, IMPACTO + 1.0, T)), fade = 1 - sm(IMPACTO + 0.35, IMPACTO + 1.25, T);
+      var radio = Math.max(W, Hh) * 0.62, tam = Math.max(1.6, Math.min(2.6, base.s * 1.2));
+      var ox = base.cx + base.s * 50, oy = base.cy - base.s * 50;   // la esquina donde cae la escuadra
+      for (i = 0; i < CHISPAS.length; i++) { q = CHISPAS[i];
+        var o = q.y ? [ox, oy] : [base.cx, base.cy], dd = radio * q.rad * te * (q.y ? 0.7 : 1);
+        cuadrito(o[0] + Math.cos(q.ang) * dd, o[1] + Math.sin(q.ang) * dd, tam, q.y ? '#DFE700' : '#F3F2EE', fade * 0.85); }
+      ctx.globalAlpha = 1;
     }
-    if (T < 0.6) flash.style.opacity = (1 - sm(0.42, 0.6, T)) * 0.55; else flash.style.opacity = 0;
-    var tam = Math.max(1.6, Math.min(2.6, s * 1.2)), radio = Math.max(W, Hh) * 0.55;
-    var te = outExpo(sm(0.42, 0.95, T));                  // explosión
-    for (i = 0; i < CHISPAS.length; i++) { q = CHISPAS[i];
-      var dd = radio * q.rad * te;
-      cuadrito(ce[0] + Math.cos(q.ang) * dd, ce[1] + Math.sin(q.ang) * dd, tam, q.y ? '#DFE700' : '#F3F2EE', (1 - sm(0.7, 1.5, T)) * 0.8); }
-    var fade = 1 - sm(1.75, 2.05, T);
-    for (i = 0; i < LOGO.length; i++) { q = LOGO[i];
-      var ex = ce[0] + Math.cos(q.ang) * radio * q.rad * 0.7 * te, ey = ce[1] + Math.sin(q.ang) * radio * q.rad * 0.7 * te;
-      var tc = inOut(sm(0.85 + q.del, 1.55 + q.del * 0.6, T));   // regreso al logo
-      var tx = cx + s * (q.x - 50), ty = cy + s * (q.y - 50);
-      cuadrito(lerp(ex, tx, tc), lerp(ey, ty, tc), tam, q.c ? '#DFE700' : '#F3F2EE', fade * (0.55 + 0.45 * tc)); }
-    ctx.globalAlpha = 1;
-    if (!impacto && T > 1.7) { impacto = true; intro.classList.add('impacto'); shock.classList.add('go');
-      flash.style.opacity = 0.25; setTimeout(function(){ flash.style.opacity = 0; }, 90); }
-    if (T > 3.1) terminarCarga();
+    if (T > IMPACTO + 1.45) terminarCarga();
   }
 
   /* ---------- 2. scroll: el edificio ---------- */
@@ -140,7 +129,7 @@
     var sF = (movil ? 0.44 : 0.7) * Hh / (H * Math.cos(0.58) + 141 * Math.sin(0.58));
     var s = lerp(base.s, sF, sm(0.05, 0.42, p)) * (1 + salida * 0.9);
     var techo = H * inOut(Math.min(Math.max((p - R0) / (R1 - R0), 0), 1));
-    var cx = lerp(base.cx, movil ? W * 0.5 : W * 0.66, t1);
+    var cx = lerp(base.cx, movil ? W * 0.5 : W * 0.7, t1);
     var cy = lerp(base.cy, movil ? Hh * 0.42 : Hh * 0.53, t1) + s * techo * Math.cos(fi) * 0.5;
     var cs = Math.cos(giro), sn = Math.sin(giro), sf = Math.sin(fi), cf = Math.cos(fi);
     var tam = Math.max(1.3, Math.min(2.5, s * 1.25));
@@ -168,18 +157,18 @@
     var fx = 0; [R0, 0.52, 0.78].forEach(function(b){ fx = Math.max(fx, 1 - Math.abs(p - b) / 0.012); });
     flash.style.opacity = fx * 0.22;
 
-    // palabra gigante, frase y contador
-    var idx = p < R0 ? 0 : p < 0.52 ? 1 : p < 0.78 ? 2 : 3, lim = [0.08, R0, 0.52, 0.78, 0.88];
-    var vis = p > 0.08 && p < 0.88;
-    big.forEach(function(b, n){ b.classList.toggle('on', vis && n === idx); b.classList.toggle('out', !vis || n < idx); });
-    if (big[idx]) big[idx].style.setProperty('--f', (sm(lim[idx], lim[idx + 1], p) * 100).toFixed(1) + '%');
-    if (idx !== idxPrev) { faseN.textContent = '0' + (idx + 1); faseD.textContent = FRASES[idx]; idxPrev = idx; }
-    fase.style.opacity = vis ? 1 : 0; m2.style.opacity = p > R0 - 0.04 && p < 0.88 ? 1 : 0;
+    // lo que hacemos y contador
+    var idx = p < R0 ? 0 : p < 0.52 ? 1 : p < 0.78 ? 2 : 3;
+    verbs.classList.toggle('show', p > 0.08 && p < 0.88);
+    if (idx !== idxPrev) { vItems.forEach(function(li, n){ li.classList.toggle('on', n === idx); li.classList.toggle('done', n < idx); }); idxPrev = idx; }
+    m2.style.opacity = p > R0 - 0.04 && p < 0.88 ? 1 : 0;
     m2n.textContent = fmt(750000 * inOut(Math.min(Math.max((p - R0) / (R1 - R0), 0), 1)));
 
     // cortinas de salida
-    wipeY.style.transform = 'translateY(' + ((1 - sm(0.88, 0.945, p)) * 101).toFixed(2) + '%)';
-    wipeK.style.transform = 'translateY(' + ((1 - sm(0.935, 0.995, p)) * 101).toFixed(2) + '%)';
+    var wy = sm(0.88, 0.945, p), wk = sm(0.935, 0.995, p);
+    wipeY.style.transform = 'translateY(' + ((1 - wy) * 101).toFixed(2) + '%)';
+    wipeK.style.transform = 'translateY(' + ((1 - wk) * 101).toFixed(2) + '%)';
+    login.classList.toggle('oscuro', wy > 0.95 && wk < 0.95);
   }
 
   /* ---------- bucle ---------- */
@@ -191,7 +180,7 @@
     mouse.x += (mouse.tx - mouse.x) * 0.2; mouse.y += (mouse.ty - mouse.y) * 0.2;
     if (mouse.tx < -9000) { mouse.x = mouse.y = -9999; }
     prog = progreso();
-    if (modo === 'carga' && prog > 0.015) { if (!impacto) { impacto = true; } intro.classList.add('impacto', 'static'); terminarCarga(); }
+    if (modo === 'carga' && prog > 0.015) { impacto = true; intro.classList.add('impacto', 'static'); terminarCarga(); }
     if (modo === 'carga') dibujarCarga(ts - t0);
     else { if (prog > 0.06 && prog < 0.99) deriva += dt * 0.00007; dibujarScroll(); }
     requestAnimationFrame(cuadro);
