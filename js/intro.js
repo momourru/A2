@@ -17,6 +17,7 @@
   var m2 = Q('.intro-m2'), m2n = Q('.intro-m2 b');
   var box = document.getElementById('iso-box');
   document.body.classList.add('has-intro');
+  var TINTA = '#111111', AMAR = '#C4CB00';                                 // puntos oscuros sobre papel blanco
 
   var visto = false; try { visto = sessionStorage.getItem('a2-intro') === '1'; } catch(e){}
   if (location.hash && location.hash !== '#a2-intro') visto = true;
@@ -104,6 +105,10 @@
     cue.style.opacity = p > 0.015 ? 0 : '';
     skip.style.opacity = p > 0.015 ? 1 - sm(0.82, 0.9, p) : ''; skip.style.pointerEvents = p > 0.88 ? 'none' : '';
     cv.style.opacity = sm(0.015, 0.06, p);
+    // del papel blanco al negro del hero
+    var nk = sm(0.86, 0.97, p), g = Math.round(255 * (1 - nk));
+    stage.style.backgroundColor = 'rgb(' + g + ',' + g + ',' + g + ')';
+    intro.classList.toggle('noche', nk > 0.5);
 
     // cámara y giro
     var fi = lerp(Math.PI / 2, 0.58, t1);
@@ -121,7 +126,7 @@
 
     // huella en el suelo
     var tg = sm(R0, R0 + 0.1, p) * (1 - e);
-    if (tg > 0) for (i = 0; i < LOGO.length; i++) { q = LOGO[i]; v = proy(q.x, q.y, 0); cuadrito(v[0], v[1], tam, q.c ? '#DFE700' : '#F3F2EE', 0.15 * tg * v[2]); }
+    if (tg > 0) for (i = 0; i < LOGO.length; i++) { q = LOGO[i]; v = proy(q.x, q.y, 0); cuadrito(v[0], v[1], tam, q.c ? AMAR : TINTA, 0.15 * tg * v[2]); }
     // columnas y losas: llegan volando
     for (i = 0; i < EDIF.length; i++) { q = EDIF[i];
       if (q.col && q.z > techo + 0.5) continue;
@@ -129,10 +134,10 @@
       var f = 1 - Math.pow(1 - r, 3), sc = (1 - f) + e * 2.6;
       v = proy(q.x + q.dx * sc, q.y + q.dy * sc, q.z + q.dz * sc);
       var acento = q.k === PISOS - 1 && p > 0.76;
-      cuadrito(v[0], v[1], tam, acento ? '#DFE700' : '#F3F2EE', q.al * (0.35 + 0.65 * f) * v[2] * (1 - e)); }
+      cuadrito(v[0], v[1], tam, acento ? AMAR : TINTA, q.al * (0.35 + 0.65 * f) * v[2] * (1 - e)); }
     // el logo es el techo
     for (i = 0; i < LOGO.length; i++) { q = LOGO[i]; var se = e * 2.2;
-      v = proy(q.x + q.dx * se, q.y + q.dy * se, techo + q.dz * se); cuadrito(v[0], v[1], tam * (q.c ? 1.1 : 1), q.c ? '#DFE700' : '#F3F2EE', (q.c ? 1 : 0.88) * (1 - e)); }
+      v = proy(q.x + q.dx * se, q.y + q.dy * se, techo + q.dz * se); cuadrito(v[0], v[1], tam * (q.c ? 1.1 : 1), q.c ? AMAR : TINTA, (q.c ? 1 : 0.88) * (1 - e)); }
     ctx.globalAlpha = 1;
 
     // destellos al cambiar de fase

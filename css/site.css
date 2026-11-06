@@ -960,3 +960,31 @@ body.has-intro .hero{padding-top:var(--hdr);min-height:100vh}
   .vsm-ficha > div:nth-child(even){padding-left:16px;border-left:1px solid #e2e1dc}
 }
 .historia.pagina{padding-top:clamp(96px,11vw,150px)}
+
+/* ===== INTRO en papel blanco (pasa a negro al final) ===== */
+section.intro{background:var(--negro)}
+section.intro .intro-stage{background:var(--blanco);color:var(--negro)}
+.intro .intro-grid{opacity:.07;background-image:linear-gradient(#000 1px,transparent 1px),linear-gradient(90deg,#000 1px,transparent 1px)}
+.intro.noche .intro-grid{opacity:.05;background-image:linear-gradient(var(--blanco) 1px,transparent 1px),linear-gradient(90deg,var(--blanco) 1px,transparent 1px)}
+.intro .intro-logo text{fill:var(--negro)}
+.intro .il-frame{fill:var(--negro)}
+.intro .ii-lead{color:#5c5c5c}
+.intro .ii-cifras{color:#5c5c5c}
+.intro .ii-cifras li{border-left:3px solid var(--amarillo)}
+.intro .ii-cifras b{color:var(--negro)}
+.intro .intro-verbs span{color:#9a9893}
+.intro .intro-verbs b{color:#dcdbd6}
+.intro .intro-verbs li.done b{color:#9a9893}
+.intro .intro-verbs li.on b{color:var(--negro)}
+.intro .intro-verbs li.on span{color:var(--negro);background:var(--amarillo);padding:2px 5px}
+.intro .intro-verbs small{color:#5c5c5c}
+.intro .intro-m2 b{color:var(--negro);box-shadow:inset 0 -.18em 0 var(--amarillo);display:inline-block}
+.intro .intro-m2 span{display:block;color:#5c5c5c}
+.intro .intro-cue{color:#5c5c5c}
+.intro .intro-cue i{background:linear-gradient(var(--negro),transparent)}
+.intro .intro-skip{color:#5c5c5c;border-bottom-color:#cfcec8}
+.intro .intro-skip:hover{color:var(--negro);border-color:var(--amarillo)}
+.intro .intro-login{color:var(--negro);border-color:var(--negro);transition:background .2s,color .4s,border-color .4s}
+.intro .intro-login:hover{background:var(--amarillo);border-color:var(--amarillo)}
+.intro.noche .intro-login{color:var(--blanco);border-color:rgba(243,242,238,.55)}
+.intro.reduce .intro-stage{background:var(--blanco)}
