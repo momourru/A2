@@ -78,7 +78,7 @@
   var ticking = false;
   var introEl = $('#a2-intro'), heroEl = $('.hero'), vsmImg = $('.vsm-ph img');
   if (heroEl && introEl && 'IntersectionObserver' in window){
-    var ho = new IntersectionObserver(function(en){ if (en[0].isIntersecting){ heroEl.classList.add('hero-in'); ho.disconnect(); } }, {threshold:.35});
+    var ho = new IntersectionObserver(function(en){ if (en[0].isIntersecting){ heroEl.classList.add('hero-in'); ho.disconnect(); } }, {threshold:.12});
     ho.observe(heroEl);
   } else if (heroEl) heroEl.classList.add('hero-in');
 

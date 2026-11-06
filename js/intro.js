@@ -96,7 +96,7 @@
   function dibujarScroll(){
     var p = prog, movil = W < 980;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, Hh);
-    var t1 = sm(0.05, 0.28, p), salida = sm(0.86, 0.98, p);
+    var t1 = sm(0.05, 0.28, p), salida = 0;
 
     // logo nítido → partículas
     var fl = 1 - sm(0.02, 0.08, p);
@@ -105,10 +105,7 @@
     cue.style.opacity = p > 0.015 ? 0 : '';
     skip.style.opacity = p > 0.015 ? 1 - sm(0.82, 0.9, p) : ''; skip.style.pointerEvents = p > 0.88 ? 'none' : '';
     cv.style.opacity = sm(0.015, 0.06, p);
-    // del papel blanco al negro del hero
-    var nk = sm(0.86, 0.97, p), g = Math.round(255 * (1 - nk));
-    stage.style.backgroundColor = 'rgb(' + g + ',' + g + ',' + g + ')';
-    intro.classList.toggle('noche', nk > 0.5);
+
 
     // cámara y giro
     var fi = lerp(Math.PI / 2, 0.58, t1);

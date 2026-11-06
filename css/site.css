@@ -988,3 +988,8 @@ section.intro .intro-stage{background:var(--blanco);color:var(--negro)}
 .intro .intro-login:hover{background:var(--amarillo);border-color:var(--amarillo)}
 .intro.noche .intro-login{color:var(--blanco);border-color:rgba(243,242,238,.55)}
 .intro.reduce .intro-stage{background:var(--blanco)}
+
+/* el hero sube como cortina sobre el final de la intro */
+body.has-intro .hero{position:relative;z-index:4;margin-top:-58vh;box-shadow:0 -24px 60px rgba(0,0,0,.18)}
+@media (max-width:980px){ body.has-intro .hero{margin-top:-52vh} }
+body.has-intro .dots{z-index:56}
