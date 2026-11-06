@@ -13,6 +13,46 @@
 </head>
 <body>
 
+<!-- 00 · INTRO: el giro de A2 -->
+<section class="intro" id="a2-intro" aria-label="Área Cuadrada · Innovación + Desarrollo">
+  <div class="intro-stage">
+    <div class="intro-grid" aria-hidden="true"></div>
+    <canvas class="intro-cv" aria-hidden="true"></canvas>
+
+    <div class="intro-logo">
+      <svg viewBox="0 0 216 112" role="img" aria-label="Área Cuadrada">
+        <rect id="iso-box" x="0" y="0" width="100" height="100" fill="none"/>
+        <circle class="il-dot" cx="0" cy="100" r="3.2" fill="#DFE700"/>
+        <path class="il-frame" pathLength="1" d="M0 0H28V11H11V89H89V76H100V100H0Z"/>
+        <g class="il-sq"><path fill-rule="evenodd" fill="#DFE700" d="M42 0H100V60H89V53L46 11H42Z M66 11H89V35.8Z"/></g>
+        <text class="il-t il-2" x="104" y="21" font-size="25" font-weight="600">2</text>
+        <text class="il-t il-a" x="103" y="66" font-size="25.5" font-weight="300">área</text>
+        <text class="il-t il-c" x="103" y="91" font-size="25.5" font-weight="300">cuadrada</text>
+        <text class="il-t il-g" x="104" y="107" font-size="7.6" font-weight="300" letter-spacing="1.05">INNOVACIÓN + DESARROLLO</text>
+      </svg>
+    </div>
+
+    <div class="intro-info">
+      <p class="ii-lead">Desarrolladora inmobiliaria guatemalteca</p>
+      <ul class="ii-cifras">
+        <li><b>40</b> años de trayectoria</li>
+        <li><b>+200</b> proyectos</li>
+        <li><b>+750,000</b> m² construidos</li>
+      </ul>
+    </div>
+
+    <ol class="intro-verbs" aria-label="Lo que hacemos">
+      <li><span>01</span><b>Concebimos</b><small>El plano: cada m² se piensa con propósito.</small></li>
+      <li><span>02</span><b>Estructuramos</b><small>Viabilidad financiera, legal y técnica.</small></li>
+      <li><span>03</span><b>Construimos</b><small>Obra con rigor técnico en cada fase.</small></li>
+      <li><span>04</span><b>Entregamos</b><small>Del suelo a la llave en mano.</small></li>
+    </ol>
+
+    <div class="intro-cue" aria-hidden="true"><i></i><span>Scroll</span></div>
+    <a class="intro-skip" href="#inicio">Saltar intro ↓</a>
+  </div>
+</section>
+
 <header class="site">
   <div class="wrap nav">
     <a href="#inicio" class="brand" aria-label="Área Cuadrada — inicio"><img src="img/logo-sd.png" alt="Área Cuadrada"></a>
@@ -467,6 +507,7 @@
   </div>
 </footer>
 
+<script src="js/intro.js"></script>
 <script src="js/site.js"></script>
 </body>
 </html>

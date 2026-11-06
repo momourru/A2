@@ -76,12 +76,19 @@
   var sections = dotLinks.map(function(a){ return $(a.getAttribute('href')); });
   var navLinks = $$('.nav ul a[href^="#"]');
   var ticking = false;
+  var introEl = $('#a2-intro'), heroEl = $('.hero');
+  if (heroEl && introEl && 'IntersectionObserver' in window){
+    var ho = new IntersectionObserver(function(en){ if (en[0].isIntersecting){ heroEl.classList.add('hero-in'); ho.disconnect(); } }, {threshold:.35});
+    ho.observe(heroEl);
+  } else if (heroEl) heroEl.classList.add('hero-in');
 
   function onScroll(){
     var y = window.scrollY, vh = window.innerHeight;
     if (hdr) hdr.classList.toggle('scrolled', y > 8);
 
-    if (plan && !reduce) plan.style.transform = 'translate3d(0,' + (y*0.18) + 'px,0)';
+    var heroTop = heroEl ? heroEl.offsetTop : 0;
+    if (plan && !reduce) plan.style.transform = 'translate3d(0,' + (Math.max(y - heroTop, 0)*0.18) + 'px,0)';
+    if (dots && introEl) dots.classList.toggle('oculto', y < heroTop - vh*0.4);
 
     if (qh && steps.length && window.innerWidth > 980){
       var r = qh.getBoundingClientRect();

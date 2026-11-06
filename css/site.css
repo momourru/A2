@@ -814,3 +814,78 @@ header.site-portal .nav-portal .nav-login:hover{background:var(--negro);color:va
   .doc-list li{grid-template-columns:1fr}
   .estado-box{flex-direction:column;gap:8px}
 }
+
+/* ===== INTRO · el giro de A2 ===== */
+.intro{position:relative;height:420vh;background:var(--negro);color:var(--blanco)}
+.intro-stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+.intro-grid{position:absolute;inset:0;opacity:.06;background-image:linear-gradient(var(--blanco) 1px,transparent 1px),linear-gradient(90deg,var(--blanco) 1px,transparent 1px);background-size:56px 56px;
+  -webkit-mask-image:radial-gradient(ellipse at 50% 45%,#000 20%,transparent 75%);mask-image:radial-gradient(ellipse at 50% 45%,#000 20%,transparent 75%)}
+.intro-cv{position:absolute;inset:0;width:100%;height:100%;opacity:0}
+.intro-logo{position:absolute;left:50%;top:44%;width:min(520px,78vw);transform:translate(-50%,-50%);will-change:opacity,transform}
+.intro-logo svg{display:block;width:100%;height:auto;overflow:visible}
+.intro-logo text{fill:var(--blanco);font-family:Inter,Arial,sans-serif}
+.intro-logo .il-2{font-family:Poppins,Arial,sans-serif}
+.il-frame{fill:var(--blanco);fill-opacity:0;stroke:var(--blanco);stroke-width:.9;stroke-dasharray:1;stroke-dashoffset:1}
+.il-dot{transform-box:fill-box;transform-origin:center;opacity:0}
+.il-sq{transform-box:view-box;transform-origin:100px 0;opacity:0;transform:rotate(-90deg) scale(.6)}
+.il-t{opacity:0;transform:translateY(8px)}
+.intro-info{position:absolute;left:50%;top:calc(44% + min(520px,78vw) * .26 + 30px);transform:translateX(-50%);width:min(560px,86vw);text-align:center;will-change:opacity}
+.ii-lead{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:#b9b8b3;opacity:0;transform:translateY(10px)}
+.ii-cifras{list-style:none;display:flex;justify-content:center;gap:clamp(16px,4vw,40px);margin-top:16px;font-size:13px;color:#8d8c87;flex-wrap:wrap}
+.ii-cifras li{opacity:0;transform:translateY(10px)}
+.ii-cifras b{font-family:var(--fh);font-weight:400;color:var(--amarillo);font-size:17px;margin-right:4px}
+.intro-verbs{position:absolute;left:max(var(--pad),calc((100vw - var(--wrap)) / 2 + var(--pad)));top:50%;transform:translateY(-50%);list-style:none;display:grid;gap:clamp(14px,2.6vh,26px);pointer-events:none}
+.intro-verbs li{display:grid;grid-template-columns:44px auto;column-gap:14px;align-items:baseline;opacity:0;transform:translateX(-24px);transition:opacity .5s var(--ease),transform .6s var(--ease),color .4s}
+.intro-verbs span{font-size:11px;letter-spacing:.2em;color:var(--cemento)}
+.intro-verbs b{font-family:var(--fh);font-weight:500;font-size:clamp(28px,3.7vw,54px);line-height:1.02;color:#3a3a38;transition:color .4s}
+.intro-verbs small{grid-column:2;font-size:14px;color:#9a9893;max-height:0;opacity:0;overflow:hidden;transition:max-height .5s var(--ease),opacity .4s,margin .4s}
+.intro-verbs.show li{opacity:1;transform:none}
+.intro-verbs li.done b{color:#77766f}
+.intro-verbs li.on b{color:var(--blanco)}
+.intro-verbs li.on span{color:var(--amarillo)}
+.intro-verbs li.on small{max-height:40px;opacity:1;margin-top:8px}
+.intro-cue{position:absolute;left:50%;bottom:34px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:#8d8c87;opacity:0;transition:opacity .4s}
+.intro-cue i{width:1px;height:42px;background:linear-gradient(var(--amarillo),transparent);animation:cue 1.8s var(--ease) infinite;transform-origin:top}
+@keyframes cue{0%{transform:scaleY(0)}55%{transform:scaleY(1)}100%{transform:scaleY(1);opacity:0}}
+.intro-skip{position:absolute;right:var(--pad);bottom:30px;font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:#8d8c87;border-bottom:1px solid #3a3a38;padding-bottom:4px;opacity:0;transition:opacity .4s,color .2s}
+.intro-skip:hover{color:var(--amarillo);border-color:var(--amarillo)}
+
+/* secuencia de armado (al cargar) */
+.intro.play .il-dot{animation:ilDot 1.1s var(--ease) forwards}
+.intro.play .il-frame{animation:ilDraw 1.15s cubic-bezier(.65,0,.35,1) .55s forwards,ilFill .5s ease 1.55s forwards}
+.intro.play .il-sq{animation:ilGiro 1s cubic-bezier(.2,.9,.25,1.15) 1.55s forwards}
+.intro.play .il-2{animation:ilUp .55s var(--ease) 2.25s forwards}
+.intro.play .il-a{animation:ilUp .6s var(--ease) 2.4s forwards}
+.intro.play .il-c{animation:ilUp .6s var(--ease) 2.5s forwards}
+.intro.play .il-g{animation:ilUp .6s var(--ease) 2.65s forwards}
+.intro.play .ii-lead{animation:ilUp .6s var(--ease) 2.95s forwards}
+.intro.play .ii-cifras li{animation:ilUp .6s var(--ease) 3.1s forwards}
+.intro.play .ii-cifras li:nth-child(2){animation-delay:3.2s}
+.intro.play .ii-cifras li:nth-child(3){animation-delay:3.3s}
+.intro.listo .intro-cue,.intro.listo .intro-skip{opacity:1}
+@keyframes ilDot{0%{opacity:0;transform:scale(0)}35%{opacity:1;transform:scale(1.6)}60%{transform:scale(1)}100%{opacity:0;transform:scale(.4)}}
+@keyframes ilDraw{to{stroke-dashoffset:0}}
+@keyframes ilFill{to{fill-opacity:1;stroke-opacity:0}}
+@keyframes ilGiro{to{opacity:1;transform:none}}
+@keyframes ilUp{to{opacity:1;transform:none}}
+/* sin animación (ya se vio en esta visita o movimiento reducido) */
+.intro.static .il-frame{stroke-dashoffset:0;fill-opacity:1;stroke-opacity:0}
+.intro.static .il-sq,.intro.static .il-t,.intro.static .ii-lead,.intro.static .ii-cifras li{opacity:1;transform:none}
+.intro.static .intro-cue,.intro.static .intro-skip{opacity:1}
+.intro.reduce{height:100vh}
+.intro.reduce .intro-cv,.intro.reduce .intro-verbs{display:none}
+/* hero espera a que termine la intro */
+body.has-intro .hero .in-1,body.has-intro .hero .in-2,body.has-intro .hero .in-3,body.has-intro .hero .in-4{animation-play-state:paused}
+body.has-intro .hero.hero-in .in-1,body.has-intro .hero.hero-in .in-2,body.has-intro .hero.hero-in .in-3,body.has-intro .hero.hero-in .in-4{animation-play-state:running}
+.dots.oculto{opacity:0;pointer-events:none}
+@media (max-width:980px){
+  .intro{height:380vh}
+  .intro-logo{top:40%}
+  .intro-info{top:calc(40% + min(520px,78vw) * .26 + 26px)}
+  .intro-verbs{left:var(--pad);right:var(--pad);top:auto;bottom:88px;transform:none;gap:6px}
+  .intro-verbs li{grid-template-columns:34px auto}
+  .intro-verbs b{font-size:26px}
+  .intro-verbs li:not(.on){display:none}
+  .intro-skip{right:auto;left:50%;transform:translateX(-50%);bottom:22px}
+  .intro-cue{bottom:64px}
+}
