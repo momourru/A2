@@ -834,28 +834,28 @@ section.intro{position:relative;height:460vh;background:var(--negro);color:var(-
 .bp-lines{opacity:.6}
 .bp-t > *,.bp-t text{opacity:0}
 .bp-h{opacity:0}
-.intro.play .bp-l{animation:ilDraw .75s cubic-bezier(.65,0,.35,1) var(--d,0s) forwards}
-.intro.play .bp-t > *,.intro.play .bp-t text{animation:ilFade .4s ease var(--d,0s) forwards}
-.intro.play .bp-o{animation:ilDraw 1s cubic-bezier(.65,0,.35,1) 1.05s forwards}
-.intro.play .bp-o.y{animation-delay:1.35s;animation-duration:.8s}
-.intro.play .bp-h{animation:ilFade .45s ease 1.85s forwards}
-.intro.play .bp-h.y{animation-delay:2s}
-.intro.play .il-frame{animation:ilFade .35s ease 2.3s forwards}
-.intro.play .il-sq{animation:ilDesliza .9s cubic-bezier(.16,1,.3,1) 2.4s forwards}
-.intro.play .il-trazo{animation:ilTrazo .9s cubic-bezier(.16,1,.3,1) 2.4s forwards,ilTrazoOut .7s ease 3.4s forwards}
+.intro.play .bp-l{animation:ilDraw 0.65s cubic-bezier(.65,0,.35,1) var(--d,0s) forwards}
+.intro.play .bp-t > *,.intro.play .bp-t text{animation:ilFade 0.35s ease var(--d,0s) forwards}
+.intro.play .bp-o{animation:ilDraw 0.87s cubic-bezier(.65,0,.35,1) 0.92s forwards}
+.intro.play .bp-o.y{animation-delay:1.18s;animation-duration:0.7s}
+.intro.play .bp-h{animation:ilFade 0.39s ease 1.61s forwards}
+.intro.play .bp-h.y{animation-delay:1.74s}
+.intro.play .il-frame{animation:ilFade 0.31s ease 2.01s forwards}
+.intro.play .il-sq{animation:ilDesliza 0.78s cubic-bezier(.16,1,.3,1) 2.09s forwards}
+.intro.play .il-trazo{animation:ilTrazo 0.78s cubic-bezier(.16,1,.3,1) 2.09s forwards,ilTrazoOut 0.61s ease 2.96s forwards}
 @keyframes ilDesliza{0%{opacity:0;transform:translateX(-72px)}10%{opacity:1}100%{opacity:1;transform:none}}
 @keyframes ilTrazo{0%{opacity:.95;stroke-dashoffset:1}100%{opacity:.95;stroke-dashoffset:0}}
 @keyframes ilTrazoOut{from{opacity:.95;stroke-dashoffset:0}to{opacity:0;stroke-dashoffset:0}}
-.intro.play .bp-all{animation:bpGhost .8s ease 2.7s forwards}
-.intro.play .il-2{animation:ilPop .5s cubic-bezier(.2,1.6,.4,1) 2.75s forwards}
-.intro.play .il-a{animation:ilUp .55s var(--ease) 2.85s forwards}
-.intro.play .il-c{animation:ilUp .55s var(--ease) 2.95s forwards}
-.intro.play .il-g{animation:ilUp .55s var(--ease) 3.1s forwards}
-.intro.play .ii-lead{animation:ilUp .55s var(--ease) 3.3s forwards}
-.intro.play .ii-cifras li{animation:ilUp .55s var(--ease) 3.45s forwards}
-.intro.play .ii-cifras li:nth-child(2){animation-delay:3.55s}
-.intro.play .ii-cifras li:nth-child(3){animation-delay:3.65s}
-.intro.play .ii-cifras li:nth-child(4){animation-delay:3.75s}
+.intro.play .bp-all{animation:bpGhost 0.7s ease 2.35s forwards}
+.intro.play .il-2{animation:ilPop 0.44s cubic-bezier(.2,1.6,.4,1) 2.4s forwards}
+.intro.play .il-a{animation:ilUp 0.48s var(--ease) 2.48s forwards}
+.intro.play .il-c{animation:ilUp 0.48s var(--ease) 2.57s forwards}
+.intro.play .il-g{animation:ilUp 0.48s var(--ease) 2.7s forwards}
+.intro.play .ii-lead{animation:ilUp 0.48s var(--ease) 2.88s forwards}
+.intro.play .ii-cifras li{animation:ilUp 0.48s var(--ease) 3.01s forwards}
+.intro.play .ii-cifras li:nth-child(2){animation-delay:3.09s}
+.intro.play .ii-cifras li:nth-child(3){animation-delay:3.18s}
+.intro.play .ii-cifras li:nth-child(4){animation-delay:3.27s}
 @keyframes ilDraw{to{stroke-dashoffset:0}}
 @keyframes ilFade{to{opacity:1}}
 @keyframes bpGhost{to{opacity:.16}}
@@ -998,3 +998,18 @@ section.intro .intro-stage{background:var(--blanco);color:var(--negro)}
 body.has-intro .hero{position:relative;z-index:4;margin-top:-58vh;box-shadow:0 -24px 60px rgba(0,0,0,.18)}
 @media (max-width:980px){ body.has-intro .hero{margin-top:-52vh} }
 body.has-intro .dots{z-index:56}
+
+/* intro a pantalla completa */
+.intro-stage{--lw:min(64vw, calc((100svh - 330px) * 1.93), 1000px)}
+.intro .intro-logo{top:38%;width:var(--lw)}
+.intro .intro-info{top:calc(38% + var(--lw) * .26 + 3.2vh);width:min(1240px,92vw)}
+.intro .ii-lead{font-size:clamp(12px,1.05vw,15px);letter-spacing:.36em}
+.intro .ii-cifras{gap:clamp(24px,5vw,90px);margin-top:clamp(18px,3.2vh,36px);font-size:clamp(13px,1.1vw,16px)}
+.intro .ii-cifras li{padding-left:18px;border-left-width:4px}
+.intro .ii-cifras b{font-size:clamp(38px,4.6vw,78px)}
+@media (max-width:980px){
+  .intro-stage{--lw:min(86vw, calc((100svh - 420px) * 1.93))}
+  .intro .intro-logo{top:31%}
+  .intro .intro-info{top:calc(31% + var(--lw) * .26 + 22px)}
+  .intro .ii-cifras b{font-size:34px}
+}

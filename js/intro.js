@@ -85,7 +85,7 @@
     if (modo !== 'carga') return; modo = 'scroll';
     intro.classList.add('listo'); try { sessionStorage.setItem('a2-intro', '1'); } catch(e){}
   }
-  function dibujarCarga(ms){ cv.style.opacity = 0; if (ms > 3900) terminarCarga(); }
+  function dibujarCarga(ms){ cv.style.opacity = 0; if (ms > 3400) terminarCarga(); }
 
   /* ---------- 2. scroll: el edificio ---------- */
   var prog = 0, deriva = 0;
@@ -96,7 +96,7 @@
   function dibujarScroll(){
     var p = prog, movil = W < 980;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, Hh);
-    var t1 = sm(0.05, 0.28, p), salida = 0;
+    var t1 = sm(0.03, 0.2, p), salida = 0;
 
     // logo nítido → partículas
     var fl = 1 - sm(0.02, 0.08, p);
@@ -111,7 +111,7 @@
     var fi = lerp(Math.PI / 2, 0.58, t1);
     var giro = lerp(0, -0.8, t1) + lerp(0, -1.9, sm(0.4, 1, p)) + deriva;
     var sF = (movil ? 0.44 : 0.7) * Hh / (H * Math.cos(0.58) + 141 * Math.sin(0.58));
-    var s = lerp(base.s, sF, sm(0.05, 0.42, p)) * (1 + salida * 0.9);
+    var s = lerp(base.s, sF, sm(0.03, 0.2, p)) * (1 + salida * 0.9);
     var techo = H * inOut(Math.min(Math.max((p - R0) / (R1 - R0), 0), 1));
     var cx = lerp(base.cx, movil ? W * 0.5 : W * 0.7, t1);
     var cy = lerp(base.cy, movil ? Hh * 0.42 : Hh * 0.53, t1) + s * techo * Math.cos(fi) * 0.5;
@@ -143,7 +143,7 @@
 
     // lo que hacemos y contador
     var idx = p < R0 ? 0 : p < 0.52 ? 1 : p < 0.78 ? 2 : 3;
-    verbs.classList.toggle('show', p > 0.08 && p < 0.88);
+    verbs.classList.toggle('show', p > 0.13 && p < 0.88);
     if (idx !== idxPrev) { vItems.forEach(function(li, n){ li.classList.toggle('on', n === idx); li.classList.toggle('done', n < idx); }); idxPrev = idx; }
     m2.style.opacity = p > R0 - 0.04 && p < 0.88 ? 1 : 0;
     m2n.textContent = fmt(750000 * inOut(Math.min(Math.max((p - R0) / (R1 - R0), 0), 1)));
