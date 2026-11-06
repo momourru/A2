@@ -827,7 +827,8 @@ section.intro{position:relative;height:460vh;background:var(--negro);color:var(-
 .intro-logo text{fill:var(--blanco);font-family:Inter,Arial,sans-serif}
 .intro-logo .il-2{font-family:Poppins,Arial,sans-serif}
 .il-frame{fill:var(--blanco);opacity:0}
-.il-sq{transform-box:view-box;transform-origin:100px 0;opacity:0;transform:rotate(-14deg)}
+.il-sq{transform-box:view-box;opacity:0;transform:translateX(-72px)}
+.il-trazo{stroke-dasharray:1;stroke-dashoffset:1;opacity:0}
 /* blueprint: líneas, cotas, ejes, contornos, achurado */
 .bp-l,.bp-o{stroke-dasharray:1;stroke-dashoffset:1}
 .bp-lines{opacity:.6}
@@ -840,7 +841,11 @@ section.intro{position:relative;height:460vh;background:var(--negro);color:var(-
 .intro.play .bp-h{animation:ilFade .45s ease 1.85s forwards}
 .intro.play .bp-h.y{animation-delay:2s}
 .intro.play .il-frame{animation:ilFade .35s ease 2.3s forwards}
-.intro.play .il-sq{animation:ilGiro .7s cubic-bezier(.2,1.35,.35,1) 2.45s forwards}
+.intro.play .il-sq{animation:ilDesliza .9s cubic-bezier(.16,1,.3,1) 2.4s forwards}
+.intro.play .il-trazo{animation:ilTrazo .9s cubic-bezier(.16,1,.3,1) 2.4s forwards,ilTrazoOut .7s ease 3.4s forwards}
+@keyframes ilDesliza{0%{opacity:0;transform:translateX(-72px)}10%{opacity:1}100%{opacity:1;transform:none}}
+@keyframes ilTrazo{0%{opacity:.95;stroke-dashoffset:1}100%{opacity:.95;stroke-dashoffset:0}}
+@keyframes ilTrazoOut{from{opacity:.95;stroke-dashoffset:0}to{opacity:0;stroke-dashoffset:0}}
 .intro.play .bp-all{animation:bpGhost .8s ease 2.7s forwards}
 .intro.play .il-2{animation:ilPop .5s cubic-bezier(.2,1.6,.4,1) 2.75s forwards}
 .intro.play .il-a{animation:ilUp .55s var(--ease) 2.85s forwards}
