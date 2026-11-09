@@ -188,7 +188,11 @@ document.addEventListener('DOMContentLoaded', function(){
   var PASOS = [['codigo','Código','Acceso'], ['datos','Datos','Empresa y contactos'], ['terminos','Términos','Reglas de A2'], ['docs','Documentos','Legales y fiscales'], ['cuentas','Cuentas','Para tus pagos'], ['enviar','Enviar','Declaración']];
   var CLAVE = {codigo:'codigo', datos:'datos', terminos:'terminos', docs:'documentos', cuentas:'cuentas', enviar:'enviado'};
 
-  function legal(box, t){ box.innerHTML = '<h4>' + esc(t.titulo) + '</h4><ol>' + t.parrafos.map(function(p){ return '<li>' + esc(p) + '</li>'; }).join('') + '</ol>'; }
+  function lista(ps){ return '<ol>' + ps.map(function(p){
+      if (typeof p === 'string') return '<li>' + esc(p) + '</li>';
+      return '<li>' + esc(p.texto) + (p.items ? '<ul>' + p.items.map(function(i){ return '<li>' + esc(i) + '</li>'; }).join('') + '</ul>' : '') + (p.nota ? '<p>' + esc(p.nota) + '</p>' : '') + '</li>';
+    }).join('') + '</ol>'; }
+  function legal(box, t){ box.innerHTML = '<h4>' + esc(t.titulo) + '</h4>' + lista(t.parrafos) + (t.secciones || []).map(function(s){ return '<h5>' + esc(s.titulo) + '</h5>' + lista(s.parrafos); }).join(''); }
   legal($('#ter-x'), T.terminos); $('#ter-t').textContent = T.terminos.titulo; legal($('#dil-x'), T.diligencia);
   $('#sel-isr').innerHTML = '<option value="">Seleccioná…</option>' + A.REGIMENES_ISR.map(function(r){ return '<option>' + esc(r) + '</option>'; }).join('');
 

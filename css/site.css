@@ -772,6 +772,8 @@ header.site-portal .nav-portal .nav-login:hover{background:var(--negro);color:va
 .legal{max-height:340px;overflow:auto;border:1px solid #dddcd7;background:var(--concreto);padding:18px 20px;font-size:13.5px;line-height:1.65}
 .legal h4{font-family:var(--fh);font-weight:500;font-size:15px;margin-bottom:10px}
 .legal ol{padding-left:20px;display:grid;gap:10px}
+.legal ul{padding-left:18px;margin-top:6px;list-style:disc;display:grid;gap:2px}.legal li p{margin-top:6px}
+.legal h5{font-family:var(--fh);font-weight:500;font-size:14px;margin:20px 0 10px;padding-top:14px;border-top:1px solid #dddcd7}
 .acepto{display:flex;gap:12px;align-items:flex-start;margin-top:16px;font-size:14px;cursor:pointer}
 .acepto input{width:20px;height:20px;flex:none;accent-color:#000;margin-top:1px}
 .doc-list{list-style:none;border-top:1px solid var(--negro)}
