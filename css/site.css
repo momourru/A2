@@ -1034,3 +1034,11 @@ body.has-intro .dots{z-index:56}
   .op-card{flex:0 0 68%;scroll-snap-align:start}
   .op-head .btn{width:100%;justify-content:center}
 }
+
+/* tarjeta "para terceros": se distingue del resto */
+.op-ter .op-ph{outline:2px dashed var(--negro);outline-offset:6px}
+.op-ter .op-ph img{filter:grayscale(1) contrast(1.05)}
+.op-ter:hover .op-ph img,.op-ter:focus-visible .op-ph img{filter:grayscale(.2)}
+.op-sello{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%) rotate(-6deg);background:var(--amarillo);color:var(--negro);text-align:center;font-size:clamp(11px,1vw,13px);font-weight:700;letter-spacing:.24em;text-transform:uppercase;padding:12px 8px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.op-ter .op-cat{background:var(--amarillo);color:var(--negro)}
+.op-nota{font-size:12.5px;line-height:1.5;color:var(--acero);margin-top:10px;padding-left:10px;border-left:3px solid var(--amarillo)}
