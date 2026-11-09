@@ -119,7 +119,7 @@
     <!-- 4. Documentos -->
     <section class="card sec" id="s-docs" hidden><div class="panel">
       <h3>Documentos</h3>
-      <p class="sub">PDF, JPG o PNG de hasta 10 MB. Si un documento cambia, cargá la versión nueva con “Reemplazar”.</p>
+      <p class="sub">PDF o imagen (JPG, PNG, HEIC, etc.) de hasta 20 MB. Si un documento cambia, cargá la versión nueva con “Reemplazar”.</p>
       <ul class="doc-list" id="docs"></ul>
       <div class="row-between" style="margin-top:18px" id="docs-nav"><span class="ro-note" id="docs-falta"></span><button class="btn dark" type="button" id="docs-btn">Continuar</button></div>
     </div></section>
@@ -140,7 +140,7 @@
           <div class="field"><label>Número de cuenta</label><input name="numero_cuenta" required><div class="msg">Requerido.</div></div>
           <div class="field"><label>Moneda</label><select name="moneda"><option value="GTQ">Quetzales</option><option value="USD">Dólares</option></select></div>
           <div class="field"><label>Correo para notificaciones de pago</label><input name="correo_notificacion" type="email" required><div class="msg">Ingresá un correo válido.</div></div>
-          <div class="field full"><label>Cheque anulado o encabezado de la cuenta</label><input type="file" id="cta-file" accept=".pdf,.jpg,.jpeg,.png,image/*,application/pdf"><div class="hint" id="cta-fh">Imagen o PDF donde se vea el nombre y número de la cuenta.</div><div class="msg">Adjuntá el cheque anulado o el encabezado.</div></div>
+          <div class="field full"><label>Cheque anulado o encabezado de la cuenta</label><input type="file" id="cta-file" accept=".pdf,.png,.jpg,.jpeg,.jfif,.webp,.heic,.heif,.gif,.tif,.tiff,.bmp,application/pdf,image/*"><div class="hint" id="cta-fh">Imagen o PDF donde se vea el nombre y número de la cuenta.</div><div class="msg">Adjuntá el cheque anulado o el encabezado.</div></div>
           <label class="acepto full" style="margin-top:0"><input type="checkbox" name="principal"> <span>Usar como cuenta principal para mis pagos</span></label>
           <datalist id="bancos"><option>Banco Industrial</option><option>Banrural</option><option>Banco G&amp;T Continental</option><option>BAM</option><option>BAC Credomatic</option><option>Bantrab</option><option>Banco Promerica</option><option>Interbanco</option><option>Banco Ficohsa</option><option>Banco de Antigua</option><option>Vivibanco</option><option>Banco Inmobiliario</option><option>Banco Cuscatlán</option><option>Banco Azteca</option><option>Banco INV</option><option>Banco Nexa</option></datalist>
           <div class="full" id="cta-out" hidden></div>
@@ -321,18 +321,18 @@ document.addEventListener('DOMContentLoaded', function(){
     var w = window.open('', '_blank'); A.urlAdjunto(a.dataset.r).then(function(u){ if (w) w.location = u; else location.href = u; }, function(m){ if (w) w.close(); UI.flash(m, true); }); }); }
   function subir(tipo, cuenta, file){
     if (!file) return Promise.resolve();
-    if (!/\.(pdf|jpe?g|png)$/i.test(file.name)) return Promise.reject('Usá un archivo PDF, JPG o PNG.');
+    if (!A.docPermitido(file)) return Promise.reject('Ese tipo de archivo no se puede cargar. Usá un PDF o una imagen (JPG, PNG, HEIC, etc.).');
     return A.subirDocProveedor(X.proveedor.id, tipo, file, cuenta);
   }
   function renderDocs(){
     $('#docs').innerHTML = A.docsProveedor(X.proveedor).map(function(d){ var u = ultimo(d.id);
       return '<li><div><b>' + esc(d.n) + '</b>' + (d.req ? '' : ' <span class="pill">Si aplica</span>') + '<small>' + esc(d.d) + '</small>' +
         (u ? '<div class="d-file"><span class="pill ok">Cargado</span> <a href="#" data-r="' + esc(u.ruta) + '">' + esc(u.nombre) + '</a> <small style="display:inline">· ' + UI.fecha(u.subido_at) + '</small></div>' : (d.req ? '<div class="d-file"><span class="pill warn">Pendiente</span></div>' : '')) + '</div>' +
-        '<label class="btn' + (u ? '' : ' dark') + '">' + (u ? 'Reemplazar' : 'Subir') + '<input type="file" hidden data-t="' + d.id + '" accept=".pdf,.jpg,.jpeg,.png,image/*,application/pdf"></label></li>';
+        '<label class="btn' + (u ? '' : ' dark') + '">' + (u ? 'Reemplazar' : 'Subir') + '<input type="file" hidden data-t="' + d.id + '" accept=".pdf,.png,.jpg,.jpeg,.jfif,.webp,.heic,.heif,.gif,.tif,.tiff,.bmp,application/pdf,image/*"></label></li>';
     }).join('');
     $$('#docs a[data-r]').forEach(verDoc);
-    $$('#docs input[type=file]').forEach(function(i){ i.addEventListener('change', function(){ var lab = i.closest('label'); UI.busy(lab, true);
-      subir(i.dataset.t, null, i.files[0]).then(function(){ UI.flash('Documento cargado.'); return cargar('docs'); }, function(m){ UI.flash(m, true); }).finally(function(){ UI.busy(lab, false); }); }); });
+    $$('#docs input[type=file]').forEach(function(i){ i.addEventListener('change', function(){ if (!i.files || !i.files[0]) return; var lab = i.closest('label'); UI.busy(lab, true);
+      subir(i.dataset.t, null, i.files[0]).then(function(){ UI.flash('Documento cargado.'); return cargar('docs'); }, function(m){ UI.flash(m, true); }).finally(function(){ UI.busy(lab, false); i.value = ''; }); }); });
     var falta = A.docsProveedor(X.proveedor).filter(function(d){ return d.req && !ultimo(d.id); });
     $('#docs-nav').hidden = aprobado();
     $('#docs-falta').textContent = falta.length ? 'Falta: ' + falta.map(function(d){ return d.n; }).join(', ') + '.' : '';

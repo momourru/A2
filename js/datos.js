@@ -30,6 +30,24 @@
     corregir:    {n:'Correcciones pedidas',   corto:'Corrigiendo',    paso:2},
     aprobado:    {n:'Aprobado',               corto:'Aprobado',       paso:4}
   };
+  var MIME_DOC = {pdf:'application/pdf', png:'image/png', jpg:'image/jpeg', jpeg:'image/jpeg', jfif:'image/jpeg', webp:'image/webp', heic:'image/heic', heif:'image/heif', gif:'image/gif', tif:'image/tiff', tiff:'image/tiff', bmp:'image/bmp'};
+  function extDe(n){ var m = /\.([a-z0-9]+)\s*$/i.exec(n || ''); return m ? m[1].toLowerCase() : ''; }
+  A.docPermitido = function(file){
+    if (!file) return false;
+    var t = (file.type || '').toLowerCase();
+    return !!MIME_DOC[extDe(file.name)] || t === 'application/pdf' || t.indexOf('image/') === 0;
+  };
+  A.tipoArchivo = function(file){
+    var t = (file.type || '').toLowerCase();
+    return (t && t !== 'application/octet-stream') ? t : (MIME_DOC[extDe(file.name)] || 'application/octet-stream');
+  };
+  A.errorSubida = function(e){
+    var m = String((e && (e.message || e.error)) || e || '');
+    if (/mime|content.?type|not supported/i.test(m)) return 'El almacenamiento rechazó este tipo de archivo. Avisale a A2 para habilitar PDF e imágenes (' + m + ').';
+    if (/size|too large|exceed|413/i.test(m)) return 'El archivo es demasiado grande para el almacenamiento (' + m + ').';
+    if (/row.level|policy|unauthori|403|permission/i.test(m)) return 'No tenés permiso para cargar en esta carpeta. Volvé a iniciar sesión e intentá de nuevo (' + m + ').';
+    return 'No se pudo cargar el archivo: ' + (m || 'error desconocido') + '.';
+  };
   A.DOCS_PROVEEDOR = [
     {id:'rep_legal',        n:'Representación legal',          d:'Nombramiento o acta de representación legal vigente.', req:true},
     {id:'dpi_rep',          n:'DPI del representante legal',   d:'Ambos lados, legible.', req:true},
@@ -127,9 +145,12 @@
     /* Registro de proveedores: todo pasa por la función "proveedores" */
     provAccion: function(accion, d){ return A._invoke('proveedores', Object.assign({accion:accion}, d || {})); },
     subirDocProveedor: function(provId, tipo, file, cuentaId){
-      if (file.size > 10 * 1024 * 1024) return R('El archivo pesa más de 10 MB.');
-      var r = 'proveedores/' + provId + '/' + tipo + '/' + uid() + '-' + file.name.normalize('NFD').replace(/[^\w.\-]+/g, '_').slice(-80);
-      return sb.storage.from('a2-docs').upload(r, file, {contentType: file.type || 'application/octet-stream'}).then(ok)
+      if (!A.docPermitido(file)) return R('Ese tipo de archivo no se puede cargar. Usá un PDF o una imagen (JPG, PNG, HEIC, etc.).');
+      if (file.size > 20 * 1024 * 1024) return R('El archivo pesa más de 20 MB.');
+      var limpio = file.name.trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^\w.\-]+/g, '_').slice(-80);
+      var r = 'proveedores/' + provId + '/' + tipo + '/' + uid() + '-' + limpio;
+      return sb.storage.from('a2-docs').upload(r, file, {contentType: A.tipoArchivo(file), upsert:false})
+        .then(function(res){ if (res.error) throw A.errorSubida(res.error); return res.data; })
         .then(function(){ return live.provAccion('registrar_documento', {tipo:tipo, nombre:file.name, ruta:r, cuenta_id:cuentaId || null}); });
     },
     eliminarSolicitud: function(id, motivo){ return A._invoke('pagos', {accion:'eliminar', id:id, nota:motivo}); },
@@ -405,7 +426,7 @@
         if (banco) { if (banco.id) f.bancos = f.bancos.map(function(b){ return b.id === banco.id ? Object.assign({}, b, banco) : b; });
           else f.bancos.push(Object.assign({id:uid(), proveedor_id:id, principal:!f.bancos.some(function(b){ return b.proveedor_id === id; }), verificada:true}, banco)); } });
       return P({id:id, codigo:codigo}); },
-    subirDocProveedor: function(provId, tipo, file, cuentaId){ return demo.provAccion('registrar_documento', {tipo:tipo, nombre:file.name, ruta:'#', cuenta_id:cuentaId || null, _prov:provId}); },
+    subirDocProveedor: function(provId, tipo, file, cuentaId){ if (!A.docPermitido(file)) return R('Ese tipo de archivo no se puede cargar. Usá un PDF o una imagen (JPG, PNG, HEIC, etc.).'); return demo.provAccion('registrar_documento', {tipo:tipo, nombre:file.name, ruta:'#', cuenta_id:cuentaId || null, _prov:provId}); },
     eliminarSolicitud: function(id, motivo){ var me = meDemo();
       if (!A.inArea(me, 'admin')) return R('Solo Administración puede eliminar solicitudes de pago.');
       var s = F().solicitudes.filter(function(x){ return x.id === id; })[0]; if (!s) return R('No encontramos la solicitud.');
