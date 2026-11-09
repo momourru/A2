@@ -136,4 +136,7 @@
       if (show){ o.classList.remove('in'); void o.offsetWidth; o.classList.add('in'); }
     });
   })});
+  /* abrir el portafolio ya filtrado: portafolio.html?f=com | res | ter */
+  var fq = new URLSearchParams(location.search).get('f');
+  if (fq) fb.forEach(function(b){ if (b.dataset.f === fq) b.click(); });
 })();
