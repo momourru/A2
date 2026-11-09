@@ -1063,3 +1063,46 @@ body.has-intro .dots{z-index:56}
   .np-promesa span{grid-row:auto}
 }
 @media (max-width:560px){ .vals.seis{grid-template-columns:1fr} }
+
+/* ===== Historia: accesos rápidos ===== */
+.hist-saltos{display:flex;flex-wrap:wrap;gap:10px;margin-top:40px}
+.hist-saltos a{font-size:11px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--blanco);border:1px solid rgba(243,242,238,.35);padding:12px 18px;transition:background .2s,color .2s,border-color .2s}
+.hist-saltos a:hover{background:var(--amarillo);color:var(--negro);border-color:var(--amarillo)}
+.adn-mas{margin-top:36px}
+.link-arr{display:inline-flex;align-items:center;gap:10px;font-size:12px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;border-bottom:2px solid var(--amarillo);padding-bottom:6px}
+.link-arr .arr{width:12px;height:12px}
+
+/* ===== Proyectos ===== */
+.py-claves{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(24px,3vw,48px);margin-top:clamp(48px,6vw,80px)}
+.py-claves span{font-size:11px;letter-spacing:.2em;color:var(--cemento)}
+.py-claves h3{font-family:var(--fh);font-weight:500;font-size:clamp(20px,1.8vw,26px);margin:12px 0 10px;padding-top:14px;border-top:2px solid var(--amarillo)}
+.py-claves p{color:var(--acero);font-size:15px;line-height:1.6}
+.py-viene{background:var(--negro);color:var(--blanco)}
+.py-viene .head p{color:#bdbcb7}
+.py-slots{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:clamp(36px,4vw,56px)}
+.py-slot{border:1px dashed #4a4a48;min-height:220px;padding:26px;display:flex;flex-direction:column;justify-content:space-between;color:var(--blanco)}
+.py-slot b{font-family:var(--fh);font-weight:300;font-size:clamp(44px,5vw,72px);color:#3a3a38;line-height:1}
+.py-slot span{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#8d8c87}
+.py-slot-cta{border:0;background:var(--amarillo);color:var(--negro);transition:transform .3s var(--ease)}
+.py-slot-cta b{font-size:clamp(26px,2.4vw,36px);font-weight:500;color:var(--negro)}
+.py-slot-cta span{display:inline-flex;align-items:center;gap:10px;color:var(--negro);font-weight:600}
+.py-slot-cta:hover{transform:translateY(-4px)}
+
+/* ===== Contacto ===== */
+.ct-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:clamp(32px,4vw,52px)}
+.ct-card{display:flex;flex-direction:column;border:1px solid #dddcd7;padding:26px 24px;min-height:300px;color:inherit;background:var(--blanco);transition:border-color .2s,transform .3s var(--ease),box-shadow .3s}
+.ct-card:hover{border-color:var(--negro);transform:translateY(-4px);box-shadow:0 14px 34px rgba(0,0,0,.08)}
+.ct-n{font-size:11px;letter-spacing:.2em;color:var(--cemento)}
+.ct-card h3{font-family:var(--fh);font-weight:500;font-size:clamp(19px,1.6vw,23px);margin:18px 0 10px;line-height:1.2}
+.ct-card p{color:var(--acero);font-size:14.5px;line-height:1.6;flex:1}
+.ct-card b{display:inline-flex;align-items:center;gap:10px;margin-top:22px;font-size:11px;letter-spacing:.22em;text-transform:uppercase;border-bottom:2px solid var(--amarillo);padding-bottom:6px;align-self:flex-start}
+.ct-card .arr{width:12px;height:12px}
+.ct-form-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(32px,6vw,96px);align-items:start}
+.ct-form{background:var(--blanco);padding:clamp(24px,3vw,40px)}
+@media (max-width:980px){
+  .py-claves,.py-slots{grid-template-columns:1fr}
+  .ct-cards{grid-template-columns:1fr 1fr}
+  .ct-form-grid{grid-template-columns:1fr}
+}
+@media (max-width:560px){ .ct-cards{grid-template-columns:1fr} .py-slot{min-height:150px} }
+.py-slot-cta .arr{width:14px;height:14px}

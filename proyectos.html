@@ -4,201 +4,111 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Proyectos — Área Cuadrada</title>
-<meta name="robots" content="noindex">
+<meta name="description" content="Los proyectos de Área Cuadrada (A2). Vistas de San Miguel, en Villa Nueva, es el primer desarrollo de A2: 934 unidades residenciales.">
 <link rel="icon" type="image/png" href="img/iso.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="css/site.css?v=14">
 </head>
 <body>
 
-<header class="site site-portal">
+<header class="site">
   <div class="wrap nav">
-    <a href="portal.html" class="brand" aria-label="Portal A2"><img src="img/logo-sd.png" alt="Área Cuadrada"></a>
-    <ul class="nav-portal">
-      <li><button type="button" class="nav-login" id="hdr-logout">Cerrar sesión</button></li>
+    <a href="index.html" class="brand" aria-label="Área Cuadrada — inicio"><img src="img/logo-sd.png" alt="Área Cuadrada"></a>
+    <button class="menu-btn" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span></button>
+    <ul>
+      <li><a href="proyectos.html" class="active" aria-current="page">Proyectos</a></li>
+      <li><a href="nosotros.html">Nosotros</a></li>
+      <li><a href="historia.html">Historia</a></li>
+      <li><a href="contacto.html">Contacto</a></li>
+      <li class="nav-sep" aria-hidden="true"></li>
+      <li><a href="login.html" class="nav-login">Log In</a></li>
     </ul>
   </div>
 </header>
 
-
-<div class="demo-bar"><b>Modo demostración</b><span>Todavía no está conectado a Supabase: no se crean cuentas ni se envían correos.</span></div>
-
-<main class="portal">
+<section class="pf-hero on-dark">
   <div class="grid-bg" aria-hidden="true"></div>
-  <div class="portal-col wide" style="max-width:1160px">
-    <a class="back" href="portal.html" id="back">← Volver al portal</a>
-    <div class="dash-head">
-      <div>
-        <span class="tag">Proyectos y obra</span>
-        <h1 id="h-title">Proyectos</h1>
-        <div class="who" id="h-sub">Los proyectos en los que participás y su equipo.</div>
-      </div>
-      <div class="dash-actions"><button class="btn dark" type="button" id="b-new" hidden>Nuevo proyecto</button></div>
-    </div>
-    <div class="err-box" id="c-err" hidden></div>
-    <div class="card" id="c-load"><div class="panel"><p class="sub" style="margin:0">Cargando…</p></div></div>
-
-    <!-- formulario crear / editar -->
-    <form class="card" id="f-pry" hidden novalidate><div class="panel">
-      <h3 id="f-t">Nuevo proyecto</h3>
-      <div class="form" style="margin-top:18px">
-        <div class="field"><label>Código</label><input name="codigo" placeholder="Ej. A2-003"></div>
-        <div class="field"><label>Nombre del proyecto</label><input name="nombre" required><div class="msg">Requerido.</div></div>
-        <div class="field"><label>Empresa interna</label><select name="empresa_id" id="f-emp"></select></div>
-        <div class="field"><label>Tipo</label><select name="tipo" id="f-tipo"></select></div>
-        <div class="field"><label>Estado</label><select name="estado" id="f-est"></select></div>
-        <div class="field"><label>Ubicación</label><input name="ubicacion"></div>
-        <div class="field"><label>Inicio</label><input name="inicio" type="date"></div>
-        <div class="field"><label>Fin estimado</label><input name="fin_estimado" type="date"></div>
-        <div class="field full"><label>Descripción</label><textarea name="descripcion"></textarea></div>
-        <div class="full" id="f-out" hidden></div>
-        <div class="full row-between"><button type="button" class="link" id="f-cancel">Cancelar</button><button class="btn dark" type="submit">Guardar proyecto</button></div>
-      </div>
-    </div></form>
-
-    <!-- lista -->
-    <section id="v-list" hidden>
-      <div class="toolbar"><div class="filtros" id="f-est-list"></div><div class="field"><input id="q" placeholder="Buscar proyecto"></div></div>
-      <div class="pj-grid" id="list"></div>
-    </section>
-
-    <!-- detalle -->
-    <section id="v-det" hidden>
-      <div class="det-grid">
-        <div>
-          <div class="card"><div class="panel">
-            <div class="row-between"><h3 class="det-h" style="margin:0">Información del proyecto</h3><button class="link" type="button" id="d-edit" hidden>Editar</button></div>
-            <dl class="summary" id="d-datos" style="margin-top:14px"></dl>
-          </div></div>
-          <div class="card"><div class="panel">
-            <h3 class="det-h">Equipo del proyecto</h3>
-            <ul class="people" id="d-team"></ul>
-            <form class="inline-add" id="f-team" hidden novalidate>
-              <select id="t-user"></select><input id="t-fun" placeholder="Función en el proyecto"><button class="btn" type="submit">Agregar</button>
-            </form>
-          </div></div>
-        </div>
-        <div>
-          <div class="card"><div class="panel">
-            <h3 class="det-h">Proveedores del proyecto</h3>
-            <ul class="people" id="d-prv"></ul>
-            <form class="inline-add" id="f-prv" hidden novalidate>
-              <select id="v-prv"></select><input id="v-serv" placeholder="Servicio o material"><button class="btn" type="submit">Asignar</button>
-            </form>
-          </div></div>
-          <div class="card" id="d-pagos-c" hidden><div class="panel">
-            <h3 class="det-h">Compras del proyecto</h3>
-            <ul class="mini-list" id="d-pagos"></ul>
-          </div></div>
-          <div class="card soon-card"><div class="panel">
-            <h3 class="det-h">Planos, documentos y cronograma</h3>
-            <p class="sub" style="margin:0">Llegan en la Fase 2: carpetas de planos y documentos de obra, y el cronograma del proyecto.</p>
-          </div></div>
-        </div>
-      </div>
-    </section>
+  <div class="wrap">
+    <span class="tag rv">Proyectos</span>
+    <h1 class="split">Lo que estamos construyendo.</h1>
+    <p class="rv" style="--d:.2s">Desarrollos concebidos, estructurados y construidos por A2. El primero ya está en marcha.</p>
   </div>
-</main>
+</section>
 
-<script>
-document.addEventListener('DOMContentLoaded', function(){
-  var $ = UI.$, $$ = UI.$$, esc = UI.esc, A = A2Portal;
-  var ME, prys = [], emps = [], estado = 'todos', DET = null, GEST = false;
+<section class="vsm" id="vistas-de-san-miguel" data-theme="light">
+  <div class="wrap vsm-top">
+    <div>
+      <span class="vsm-eyebrow rv"><i aria-hidden="true"></i>Proyecto 01 · El primero de A2</span>
+      <h2 class="vsm-title split">Vistas de San Miguel</h2>
+      <p class="vsm-lead rv" style="--d:.15s">Con este proyecto A2 sale al aire: la primera obra que desarrollamos con nombre propio, con cuatro décadas de experiencia detrás.</p>
+    </div>
+    <div class="vsm-brand rv" style="--d:.2s"><img src="img/vsm.png" alt="Vistas de San Miguel"></div>
+  </div>
+  <div class="vsm-media rv">
+    <div class="vsm-ph"><img src="img/vsm-render.jpg" alt="Render de Vistas de San Miguel, Villa Nueva"></div>
+    <span class="vsm-corner tl" aria-hidden="true"></span><span class="vsm-corner br" aria-hidden="true"></span>
+    <div class="vsm-badge"><b>01</b><span>Primer desarrollo<br>Área Cuadrada</span></div>
+  </div>
+  <div class="wrap">
+    <dl class="vsm-ficha rv">
+      <div><dt>Ubicación</dt><dd>Villa Nueva</dd></div>
+      <div><dt>Tipo</dt><dd>Residencial</dd></div>
+      <div><dt>Unidades</dt><dd><span data-count="934">934</span></dd></div>
+      <div class="por"><dt>Desarrolla</dt><dd><img src="img/logo-sd.png" alt="Área Cuadrada"></dd></div>
+    </dl>
 
-  UI.sesion(function(me){
-    ME = me; GEST = A.can(me, 'gestionar_proyectos');
-    $('#b-new').hidden = !GEST;
-    UI.opciones($('#f-tipo'), Object.keys(A.TIPOS_PROYECTO).map(function(k){ return {id:k, n:A.TIPOS_PROYECTO[k]}; }), 'id', 'n');
-    UI.opciones($('#f-est'), Object.keys(A.ESTADOS_PROYECTO).map(function(k){ return {id:k, n:A.ESTADOS_PROYECTO[k]}; }), 'id', 'n');
-    var emp = (A.inArea(me, 'admin') || GEST) ? A.listEmpresas() : Promise.resolve([]);
-    emp.then(function(e){ emps = e || []; UI.opciones($('#f-emp'), emps, 'id', 'razon_social', 'Sin asignar'); }, function(){});
-    var id = UI.param('id'); if (id) detalle(id); else lista();
-  });
+    <div class="py-claves">
+      <div class="rv"><span>01</span><h3>Vivienda donde la ciudad crece</h3><p>Villa Nueva es uno de los municipios de mayor crecimiento del área metropolitana. Vistas de San Miguel responde a esa demanda con vivienda pensada para quedarse.</p></div>
+      <div class="rv" style="--d:.1s"><span>02</span><h3>Escala de ciudad</h3><p>934 unidades en un solo desarrollo: un proyecto que exige planificación urbana, estructura financiera sólida y una ejecución por etapas cuidadosa.</p></div>
+      <div class="rv" style="--d:.2s"><span>03</span><h3>Del suelo a la entrega</h3><p>Es el primer proyecto que A2 lleva completo, de la compra de la tierra a la entrega de llaves, con el mismo equipo en cada fase.</p></div>
+    </div>
 
-  function lista(){
-    A.listProyectos().then(function(l){
-      prys = l || []; $('#c-load').hidden = true; $('#v-list').hidden = false;
-      var est = [['todos','Todos']].concat(Object.keys(A.ESTADOS_PROYECTO).map(function(k){ return [k, A.ESTADOS_PROYECTO[k]]; }));
-      $('#f-est-list').innerHTML = est.map(function(e){ var n = prys.filter(function(p){ return e[0] === 'todos' || p.estado === e[0]; }).length;
-        return '<button type="button" data-e="' + e[0] + '" aria-pressed="' + (e[0] === estado) + '">' + esc(e[1]) + ' <em>' + n + '</em></button>'; }).join('');
-      $$('#f-est-list button').forEach(function(b){ b.addEventListener('click', function(){ estado = b.dataset.e; $$('#f-est-list button').forEach(function(x){ x.setAttribute('aria-pressed', x === b); }); pintar(); }); });
-      pintar();
-    }).catch(function(m){ $('#c-load').hidden = true; UI.err($('#c-err'), m); });
-  }
-  function pintar(){
-    var q = $('#q').value.trim().toLowerCase();
-    var l = prys.filter(function(p){ return (estado === 'todos' || p.estado === estado) && (!q || (p.nombre + ' ' + (p.codigo || '') + ' ' + (p.ubicacion || '')).toLowerCase().indexOf(q) > -1); });
-    $('#list').innerHTML = l.length ? l.map(function(p){
-      return '<a class="pj" href="proyectos.html?id=' + encodeURIComponent(p.id) + '"><span class="pj-st s-' + esc(p.estado) + '">' + esc(A.ESTADOS_PROYECTO[p.estado] || p.estado) + '</span>' +
-        '<small>' + esc(p.codigo || '') + '</small><h3>' + esc(p.nombre) + '</h3>' +
-        '<p>' + esc([A.TIPOS_PROYECTO[p.tipo], p.ubicacion].filter(Boolean).join(' · ')) + '</p>' +
-        (p.empresa ? '<p class="pj-emp">' + esc(p.empresa.razon_social) + '</p>' : '') + '</a>';
-    }).join('') : '<p class="empty">' + (prys.length ? 'No hay proyectos con ese filtro.' : 'Todavía no estás asignado a ningún proyecto.') + '</p>';
-  }
-  $('#q').addEventListener('input', pintar);
+    <div class="vsm-cta rv" style="display:flex;gap:14px;flex-wrap:wrap">
+      <a href="https://www.vistasdesanmiguel.com" target="_blank" rel="noopener" class="btn dark">Visitar vistasdesanmiguel.com <svg class="arr" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 7h12M8 2l5 5-5 5"/></svg></a>
+      <a href="contacto.html" class="btn">Contactar a A2</a>
+    </div>
+  </div>
+</section>
 
-  /* formulario */
-  function abrirForm(p){ $('#f-pry').hidden = false; $('#f-t').textContent = p ? 'Editar proyecto' : 'Nuevo proyecto'; UI.llenar($('#f-pry'), p || {tipo:'residencial', estado:'planificacion'}); $('#f-pry').dataset.id = p ? p.id : ''; $('#f-out').hidden = true; window.scrollTo({top:0, behavior:'smooth'}); }
-  $('#b-new').addEventListener('click', function(){ abrirForm(null); });
-  $('#f-cancel').addEventListener('click', function(){ $('#f-pry').hidden = true; });
-  $('#f-pry').addEventListener('submit', function(e){
-    e.preventDefault(); var f = this; if (!UI.requeridos(f)) return;
-    var d = UI.datos(f); if (f.dataset.id) d.id = f.dataset.id; UI.busy(f, true);
-    A.saveProyecto(d).then(function(r){ location.href = 'proyectos.html?id=' + encodeURIComponent((r && r.id) || d.id); }, function(m){ UI.err($('#f-out'), m); }).finally(function(){ UI.busy(f, false); });
-  });
+<section class="block on-dark py-viene" data-theme="dark">
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <span class="tag rv">Lo que viene</span>
+        <h2 class="split">Nuevos desarrollos en preparación.</h2>
+      </div>
+      <p class="rv" style="--d:.2s">Seguimos evaluando tierra y oportunidades en el área metropolitana. Cada nuevo proyecto pasa por el mismo filtro: suelo con potencial real, un producto pensado para quien lo va a vivir y una viabilidad que se sostiene en números.</p>
+    </div>
+    <div class="py-slots">
+      <div class="py-slot rv"><b>02</b><span>Próximamente</span></div>
+      <div class="py-slot rv" style="--d:.1s"><b>03</b><span>Próximamente</span></div>
+      <a class="py-slot py-slot-cta rv" style="--d:.2s" href="contacto.html"><b>¿Tenés un terreno?</b><span>Conversemos <svg class="arr" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 7h12M8 2l5 5-5 5"/></svg></span></a>
+    </div>
+  </div>
+</section>
 
-  /* detalle */
-  function detalle(id){
-    $('#back').href = 'proyectos.html'; $('#back').textContent = '← Volver a proyectos'; $('#b-new').hidden = true;
-    A.getProyecto(id).then(function(p){
-      $('#c-load').hidden = true;
-      if (!p) { UI.err($('#c-err'), 'No encontramos este proyecto o no formás parte de él.'); return; }
-      DET = p; $('#v-det').hidden = false; pintarDet();
-      if (GEST) { $('#d-edit').hidden = false; $('#f-team').hidden = false;
-        A.directorio().then(function(d){ UI.opciones($('#t-user'), d || [], 'id', function(u){ return (u.nombres || '') + ' ' + (u.apellidos || '') + ' · ' + (u.puesto || u.correo); }, 'Agregar a alguien del equipo A2…'); }); }
-      if (GEST || A.can(ME, 'gestionar_proveedores')) { $('#f-prv').hidden = false;
-        A.listProveedores().then(function(l){ UI.opciones($('#v-prv'), (l || []).filter(function(x){ return x.activo !== false; }), 'id', function(x){ return x.codigo + ' · ' + x.razon_social; }, 'Asignar un proveedor…'); }); }
-      var vePagos = A.inArea(ME, 'admin') || A.can(ME, 'solicitar_pago') || ['revisar_solicitud','vobo_contable','aprobar_pago','registrar_pago'].some(function(x){ return A.can(ME, x); });
-      if (vePagos) A.listSolicitudes().then(function(l){ var m = (l || []).filter(function(s){ return s.proyecto_id === p.id; });
-        $('#d-pagos-c').hidden = false;
-        $('#d-pagos').innerHTML = m.length ? m.slice(0, 8).map(function(s){ return '<li><a href="pagos.html?id=' + encodeURIComponent(s.id) + '"><b>' + esc(s.numero) + '</b> ' + esc(s.concepto) + '</a><span class="fase f-' + s.fase + '">' + esc(A.fase(s.fase).corto) + '</span></li>'; }).join('') : '<li class="empty">Sin solicitudes de pago.</li>'; });
-    }).catch(function(m){ $('#c-load').hidden = true; UI.err($('#c-err'), m); });
-  }
-  function pintarDet(){
-    var p = DET;
-    $('#h-title').textContent = p.nombre; $('#h-sub').innerHTML = esc(p.codigo || '') + ' · <span class="pj-st s-' + esc(p.estado) + '">' + esc(A.ESTADOS_PROYECTO[p.estado]) + '</span>';
-    var filas = [['Empresa', p.empresa ? p.empresa.razon_social : '—'], ['Tipo', A.TIPOS_PROYECTO[p.tipo]], ['Ubicación', p.ubicacion], ['Inicio', p.inicio ? UI.fecha(p.inicio) : ''], ['Fin estimado', p.fin_estimado ? UI.fecha(p.fin_estimado) : ''], ['Descripción', p.descripcion]];
-    $('#d-datos').innerHTML = filas.filter(function(f){ return f[1]; }).map(function(f){ return '<div><dt>' + f[0] + '</dt><dd>' + esc(f[1]) + '</dd></div>'; }).join('');
-    $('#d-team').innerHTML = (p.miembros || []).map(function(m){
-      return '<li><div><b>' + esc((m.nombres || '') + ' ' + (m.apellidos || '')) + '</b><small>' + esc([m.funcion, m.puesto, A.areaName(m.area)].filter(Boolean).join(' · ')) + '</small>' +
-        '<small>' + esc([m.correo, m.celular, m.extension ? 'Ext. ' + m.extension : ''].filter(Boolean).join(' · ')) + '</small></div>' +
-        (GEST ? '<button class="link danger" data-u="' + esc(m.perfil_id) + '">Quitar</button>' : '') + '</li>';
-    }).join('') || '<li class="empty">Sin equipo asignado.</li>';
-    $$('#d-team [data-u]').forEach(function(b){ b.addEventListener('click', function(){ UI.confirmar(b, '¿Quitar?', function(){ A.removeMiembro(p.id, b.dataset.u).then(recargar); }); }); });
-    var gp = GEST || A.can(ME, 'gestionar_proveedores');
-    $('#d-prv').innerHTML = (p.proveedores || []).map(function(v){
-      return '<li><div><b>' + esc(v.razon_social) + '</b><small>' + esc([v.codigo, v.servicio || v.rubro].filter(Boolean).join(' · ')) + '</small>' +
-        '<small>' + esc([v.contacto_nombre, v.correo, v.telefono].filter(Boolean).join(' · ')) + '</small></div>' +
-        (gp ? '<button class="link danger" data-v="' + esc(v.id) + '">Quitar</button>' : '') + '</li>';
-    }).join('') || '<li class="empty">Sin proveedores asignados.</li>';
-    $$('#d-prv [data-v]').forEach(function(b){ b.addEventListener('click', function(){ UI.confirmar(b, '¿Quitar?', function(){ A.removeProveedorProyecto(p.id, b.dataset.v).then(recargar); }); }); });
-  }
-  function recargar(){ return A.getProyecto(DET.id).then(function(p){ DET = p; pintarDet(); }); }
-  $('#d-edit').addEventListener('click', function(){ abrirForm(DET); });
-  $('#f-team').addEventListener('submit', function(e){ e.preventDefault(); var u = $('#t-user').value; if (!u) return;
-    A.addMiembro(DET.id, u, $('#t-fun').value.trim()).then(function(){ $('#t-fun').value = ''; $('#t-user').value = ''; UI.flash('Agregado al equipo.'); return recargar(); }, function(m){ UI.flash(m, true); }); });
-  $('#f-prv').addEventListener('submit', function(e){ e.preventDefault(); var v = $('#v-prv').value; if (!v) return;
-    A.addProveedorProyecto(DET.id, v, $('#v-serv').value.trim()).then(function(){ $('#v-serv').value = ''; $('#v-prv').value = ''; UI.flash('Proveedor asignado.'); return recargar(); }, function(m){ UI.flash(m, true); }); });
-});
-</script>
+<section class="block pf-cta" style="padding:72px 0">
+  <div class="wrap">
+    <h2 class="split">Antes de A2: cuarenta años de obra en la ciudad.</h2>
+    <a href="historia.html#portafolio" class="btn dark">Ver proyectos realizados <svg class="arr" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 7h12M8 2l5 5-5 5"/></svg></a>
+  </div>
+</section>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/config.js"></script>
-<script src="js/portal.js"></script>
-<script src="js/datos.js"></script>
-<script src="js/ui.js"></script>
-<script src="js/site.js"></script>
+<footer>
+  <div class="wrap">
+    <img src="img/logo-neg.png" alt="Área Cuadrada — Innovación + Desarrollo">
+    <ul>
+      <li><a href="proyectos.html">Proyectos</a></li>
+      <li><a href="nosotros.html">Nosotros</a></li>
+      <li><a href="historia.html">Historia</a></li>
+      <li><a href="contacto.html">Contacto</a></li>
+    </ul>
+    <small><span>© 2026 Área Cuadrada. Guatemala.</span><span>Una evolución de Arqs. M. Urruela · desde 1985</span></small>
+  </div>
+</footer>
+
+<script src="js/site.js?v=14"></script>
 </body>
 </html>

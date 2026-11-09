@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/site.css?v=13">
+<link rel="stylesheet" href="css/site.css?v=14">
 </head>
 <body>
 
@@ -103,11 +103,10 @@
     <a href="#inicio" class="brand" aria-label="Área Cuadrada — inicio"><img src="img/logo-sd.png" alt="Área Cuadrada"></a>
     <button class="menu-btn" aria-label="Abrir menú" aria-expanded="false"><span></span><span></span></button>
     <ul>
-      <li><a href="#proyectos">Proyectos</a></li>
+      <li><a href="proyectos.html">Proyectos</a></li>
       <li><a href="nosotros.html">Nosotros</a></li>
       <li><a href="historia.html">Historia</a></li>
-      <li><a href="portafolio.html">Portafolio</a></li>
-      <li><a href="#contacto">Contacto</a></li>
+      <li><a href="contacto.html">Contacto</a></li>
       <li class="nav-sep" aria-hidden="true"></li>
       <li><a href="login.html" class="nav-login">Log In</a></li>
     </ul>
@@ -351,7 +350,7 @@
       <div class="btns in-4">
         <a href="#proyectos" class="btn primary">Ver primer proyecto
           <svg class="arr" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 7h12M8 2l5 5-5 5"/></svg></a>
-        <a href="portafolio.html" class="btn ghost">Ver portafolio</a>
+        <a href="historia.html#portafolio" class="btn ghost">Ver portafolio</a>
       </div>
     </div>
   </div>
@@ -380,7 +379,7 @@
       <div><dt>Unidades</dt><dd><span data-count="934">934</span></dd></div>
       <div class="por"><dt>Un desarrollo de</dt><dd><img src="img/logo-sd.png" alt="Área Cuadrada"></dd></div>
     </dl>
-    <div class="vsm-cta rv"><a href="https://www.vistasdesanmiguel.com" target="_blank" rel="noopener" class="btn dark">Quiero información
+    <div class="vsm-cta rv" style="display:flex;gap:14px;flex-wrap:wrap"><a href="proyectos.html" class="btn">Ver más del proyecto</a><a href="https://www.vistasdesanmiguel.com" target="_blank" rel="noopener" class="btn dark">Quiero información
       <svg class="arr" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 7h12M8 2l5 5-5 5"/></svg></a></div>
   </div>
 </section>
@@ -401,38 +400,33 @@
         <div class="yrs"><span>1985</span><span>2025</span></div></div>
       <img class="a2" src="img/logo-sd.png" alt="Área Cuadrada">
     </div>
-    <div class="adn-rows">
-      <div class="adn-row rv"><h3>Lo que heredamos</h3><p>A2 lleva consigo los 40 años de experiencia de Arqs. M. Urruela: su estructura administrativa, su conocimiento en desarrollo y construcción, y una red de relaciones construida proyecto a proyecto durante cuatro décadas.</p></div>
-      <div class="adn-row rv" style="--d:.1s"><h3>La transición</h3><p>La pausa que impuso la pandemia se convirtió en una oportunidad para mirar hacia adentro. Hacía años que nuestra vocación ya no era diseñar, sino desarrollar, y el nombre «Arquitectos» había dejado de describir lo que éramos. El amarillo que nos identificó por 40 años sigue siendo nuestro color, por decisión propia.</p></div>
-      <div class="adn-row rv" style="--d:.2s"><h3>A2 hoy</h3><p>Área Cuadrada: Innovación + Desarrollo. Una desarrolladora que estructura y ejecuta sus propios proyectos inmobiliarios, con una nueva generación de talento y un equipo técnico renovado que suma su visión a la experiencia heredada.</p></div>
-    </div>
-
+    <div class="adn-mas rv"><a href="historia.html#adn" class="link-arr">Conocé la historia completa <svg class="arr" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 7h12M8 2l5 5-5 5"/></svg></a></div>
     <div class="obras-prev">
       <div class="op-head">
         <div>
           <span class="tag rv">Obras de Arqs. M. Urruela</span>
           <h3 class="op-t rv" style="--d:.1s">Cuarenta años de proyectos que hoy respaldan a A2.</h3>
         </div>
-        <a href="portafolio.html" class="btn dark rv" style="--d:.2s">Ver proyectos realizados
+        <a href="historia.html#portafolio" class="btn dark rv" style="--d:.2s">Ver proyectos realizados
           <svg class="arr" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 7h12M8 2l5 5-5 5"/></svg></a>
       </div>
       <div class="op-cards">
-        <a class="op-card rv" style="--d:0.00s" href="portafolio.html?f=com">
+        <a class="op-card rv" style="--d:0.00s" href="historia.html?f=com#portafolio">
           <div class="op-ph"><img src="img/san-nicolas.jpg" alt="Plaza San Nicolás" loading="lazy"></div>
           <span class="op-cat">Centro comercial</span>
           <h4>Plaza San Nicolás</h4><span class="op-lugar">Mixco · inicios de los 2000</span>
         </a>
-        <a class="op-card rv" style="--d:0.08s" href="portafolio.html?f=com">
+        <a class="op-card rv" style="--d:0.08s" href="historia.html?f=com#portafolio">
           <div class="op-ph"><img src="img/centrasur.jpg" alt="CentraSur" loading="lazy"></div>
           <span class="op-cat">Centro comercial</span>
           <h4>CentraSur</h4><span class="op-lugar">Villa Nueva · 2010–2011</span>
         </a>
-        <a class="op-card rv" style="--d:0.16s" href="portafolio.html?f=res">
+        <a class="op-card rv" style="--d:0.16s" href="historia.html?f=res#portafolio">
           <div class="op-ph"><img src="img/jardin-san-rafael.jpg" alt="Jardín de San Rafael" loading="lazy"></div>
           <span class="op-cat">Residencial</span>
           <h4>Jardín de San Rafael</h4><span class="op-lugar">Carretera a El Salvador</span>
         </a>
-        <a class="op-card op-ter rv" style="--d:.24s" href="portafolio.html?f=ter">
+        <a class="op-card op-ter rv" style="--d:.24s" href="historia.html?f=ter#portafolio">
           <div class="op-ph"><img src="img/dubai.jpg" alt="Dubai Center" loading="lazy" style="object-position:center 30%"></div>
           <span class="op-cat">Para terceros</span>
           <h4>Dubai Center</h4><span class="op-lugar">Zona 10</span>
@@ -452,7 +446,7 @@
         <span class="tag rv">Contacto</span>
         <h2 class="split">Cada proyecto empieza con un trazo.</h2>
         <p class="lead rv" style="--d:.2s">Si tenés un terreno, una oportunidad o querés invertir en nuestro próximo desarrollo, conversemos.</p>
-        <div class="btns rv" style="--d:.3s"><a href="mailto:info@a2desarrollos.com" class="btn primary">Escribinos
+        <div class="btns rv" style="--d:.3s"><a href="contacto.html" class="btn primary">Contactanos
           <svg class="arr" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M1 7h12M8 2l5 5-5 5"/></svg></a></div>
       </div>
       <dl class="c-data rv" style="--d:.2s">
@@ -469,17 +463,16 @@
   <div class="wrap">
     <img src="img/logo-neg.png" alt="Área Cuadrada — Innovación + Desarrollo">
     <ul>
+      <li><a href="proyectos.html">Proyectos</a></li>
       <li><a href="nosotros.html">Nosotros</a></li>
       <li><a href="historia.html">Historia</a></li>
-      <li><a href="#proyectos">Proyectos</a></li>
-      <li><a href="portafolio.html">Portafolio</a></li>
-      <li><a href="#contacto">Contacto</a></li>
+      <li><a href="contacto.html">Contacto</a></li>
     </ul>
     <small><span>© 2026 Área Cuadrada. Guatemala.</span><span>Una evolución de Arqs. M. Urruela · desde 1985</span></small>
   </div>
 </footer>
 
-<script src="js/intro.js?v=13"></script>
-<script src="js/site.js?v=13"></script>
+<script src="js/intro.js?v=14"></script>
+<script src="js/site.js?v=14"></script>
 </body>
 </html>
