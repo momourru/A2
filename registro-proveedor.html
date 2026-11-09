@@ -46,10 +46,24 @@
       </div>
     </div>
 
-    <div class="card" id="wrap-form"><div class="panel">
+    <div class="card" id="wrap-tipo"><div class="panel">
+      <h3>¿Cómo te vas a registrar?</h3>
+      <p class="sub">Así te pedimos solo la información que aplica a tu caso.</p>
+      <div class="tipo-opc">
+        <button type="button" class="tipo-btn" data-tipo="individual">
+          <svg viewBox="0 0 40 40" fill="none" stroke-width="2.4" aria-hidden="true"><circle cx="20" cy="13" r="7" stroke="#000"/><path d="M6 36c1.5-8 7-12 14-12s12.5 4 14 12" stroke="#000"/><path d="M14 36h12" stroke="#DFE700"/></svg>
+          <b>Persona individual</b><span>Profesional o comerciante que factura a su nombre.</span></button>
+        <button type="button" class="tipo-btn" data-tipo="juridica">
+          <svg viewBox="0 0 40 40" fill="none" stroke-width="2.4" aria-hidden="true"><path d="M7 36V9h16v27M23 16h10v20" stroke="#000"/><path d="M12 15h6M12 21h6M12 27h6" stroke="#000"/><path d="M4 36h32" stroke="#DFE700"/></svg>
+          <b>Empresa</b><span>Sociedad anónima u otra persona jurídica.</span></button>
+      </div>
+    </div></div>
+
+    <div class="card" id="wrap-form" hidden><div class="panel">
+      <div class="row-between" style="margin-bottom:18px"><span class="pill dark" id="g-tipo-l"></span><button class="link" type="button" id="g-cambiar">Cambiar</button></div>
       <form class="form" id="f-reg" novalidate>
-        <div class="field"><label for="g-emp">Nombre de la empresa</label><input id="g-emp" required autocomplete="organization" placeholder="Nombre comercial"><div class="msg">Requerido.</div></div>
-        <div class="field"><label for="g-rs">Razón social</label><input id="g-rs" required placeholder="Como aparece en el RTU"><div class="msg">Requerido.</div></div>
+        <div class="field"><label for="g-emp" id="g-emp-l">Nombre de la empresa</label><input id="g-emp" required autocomplete="organization" placeholder="Nombre comercial"><div class="msg">Requerido.</div></div>
+        <div class="field"><label for="g-rs" id="g-rs-l">Razón social</label><input id="g-rs" placeholder="Como aparece en el RTU"><div class="msg">Requerido.</div></div>
         <div class="field"><label for="g-nit">NIT</label><input id="g-nit" required inputmode="text" placeholder="1234567-8"><div class="msg">Ingresá un NIT válido.</div></div>
         <div class="field"><label for="g-tel">Teléfono</label><input id="g-tel" type="tel" required placeholder="+502" autocomplete="tel"><div class="msg">Requerido.</div></div>
         <div class="field full"><label for="g-mail">Correo</label><input id="g-mail" type="email" required autocomplete="email" placeholder="nombre@empresa.com">
@@ -81,19 +95,32 @@
 <script>
 document.addEventListener('DOMContentLoaded', function(){
   var $ = function(s){ return document.querySelector(s); }, A = A2Portal;
-  var mailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  var mailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/, TIPO = null;
+  function elegir(t){
+    TIPO = t; var ind = t === 'individual';
+    $('#wrap-tipo').hidden = true; $('#wrap-form').hidden = false;
+    $('#g-tipo-l').textContent = ind ? 'Persona individual' : 'Empresa';
+    $('#g-emp-l').innerHTML = ind ? 'Nombre completo' : 'Nombre de la empresa';
+    $('#g-emp').placeholder = ind ? 'Como aparece en tu DPI' : 'Nombre comercial'; $('#g-emp').autocomplete = ind ? 'name' : 'organization';
+    $('#g-rs-l').innerHTML = ind ? 'Nombre comercial <span class="opt">(opcional)</span>' : 'Razón social';
+    $('#g-rs').placeholder = ind ? 'Si facturás con un nombre comercial' : 'Como aparece en el RTU';
+    $('#g-emp').focus();
+  }
+  [].forEach.call(document.querySelectorAll('.tipo-btn'), function(b){ b.addEventListener('click', function(){ elegir(b.dataset.tipo); }); });
+  $('#g-cambiar').addEventListener('click', function(){ $('#wrap-form').hidden = true; $('#wrap-tipo').hidden = false; });
   function check(i, ok){ i.closest('.field').classList.toggle('err', !ok); return ok; }
   $('#f-reg').addEventListener('submit', function(e){
     e.preventDefault();
     var pw = $('#g-pw').value;
-    var ok = [check($('#g-emp'), $('#g-emp').value.trim()), check($('#g-rs'), $('#g-rs').value.trim()),
+    var ok = [check($('#g-emp'), $('#g-emp').value.trim()), check($('#g-rs'), TIPO === 'individual' || $('#g-rs').value.trim()),
       check($('#g-nit'), $('#g-nit').value.toUpperCase().replace(/[^0-9K]/g, '').length >= 5), check($('#g-tel'), $('#g-tel').value.trim().length >= 8),
       check($('#g-mail'), mailRe.test($('#g-mail').value.trim())), check($('#g-pw'), pw.length >= 8 && /[A-Za-z]/.test(pw) && /\d/.test(pw)),
       check($('#g-pw2'), pw === $('#g-pw2').value && pw.length > 0)].every(Boolean);
     if (!ok) return;
     var f = this, out = $('#g-out'); out.hidden = true; f.classList.add('loading');
     var correo = $('#g-mail').value.trim().toLowerCase();
-    A.provAccion('solicitar', {empresa:$('#g-emp').value.trim(), razon_social:$('#g-rs').value.trim(), nit:$('#g-nit').value.trim(), telefono:$('#g-tel').value.trim(),
+    var ind = TIPO === 'individual';
+    A.provAccion('solicitar', {tipo:TIPO, empresa:$('#g-emp').value.trim(), razon_social:ind ? '' : $('#g-rs').value.trim(), nombre_comercial:ind ? $('#g-rs').value.trim() : '', nit:$('#g-nit').value.trim(), telefono:$('#g-tel').value.trim(),
       correo:correo, password:pw, sitio:$('#g-hp').value}).then(function(r){
       $('#wrap-form').hidden = true; $('#wrap-done').hidden = false; $('#d-mail').textContent = correo;
       if (A.demo) { $('#demo-next').hidden = false; $('#demo-a2').href = 'proveedores.html?demo=owner&id=' + encodeURIComponent(r.id); }

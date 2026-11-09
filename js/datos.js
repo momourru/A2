@@ -37,14 +37,22 @@
     {id:'patente_comercio', n:'Patente de comercio',           d:'Patente de comercio de empresa.', req:true},
     {id:'patente_sociedad', n:'Patente de sociedad',           d:'Solo si es sociedad anónima u otra sociedad.', req:false}
   ];
+  A.DOCS_INDIVIDUAL = [
+    {id:'dpi',              n:'DPI',                           d:'Tu Documento Personal de Identificación, ambos lados.', req:true},
+    {id:'rtu',              n:'RTU',                           d:'Constancia de inscripción y actualización en el RTU de la SAT.', req:true},
+    {id:'patente_comercio', n:'Patente de comercio',           d:'Solo si operás con un nombre comercial.', req:false}
+  ];
+  /* documentos que aplican según sea persona individual o empresa */
+  A.docsProveedor = function(p){ return p && p.tipo_persona === 'individual' ? A.DOCS_INDIVIDUAL : A.DOCS_PROVEEDOR; };
+  A.esIndividual = function(p){ return !!p && p.tipo_persona === 'individual'; };
   A.NOMBRE_DOC = {cuenta:'Cheque anulado o encabezado de cuenta', otro:'Otro documento'};
-  A.DOCS_PROVEEDOR.forEach(function(d){ A.NOMBRE_DOC[d.id] = d.n; });
+  A.DOCS_PROVEEDOR.concat(A.DOCS_INDIVIDUAL).forEach(function(d){ A.NOMBRE_DOC[d.id] = d.n; });
   A.REGIMENES_ISR = ['Régimen sobre las utilidades de actividades lucrativas', 'Régimen opcional simplificado sobre ingresos', 'Pequeño contribuyente', 'Exento', 'Otro'];
   /* ¿qué pasos del registro ya completó el proveedor? */
   A.pasosProveedor = function(x){
     var p = x.proveedor, docs = x.documentos || [], ctas = x.cuentas || [];
     var tipos = {}; docs.forEach(function(d){ tipos[d.tipo] = 1; });
-    var docsOk = A.DOCS_PROVEEDOR.every(function(d){ return !d.req || tipos[d.id]; });
+    var docsOk = A.docsProveedor(p).every(function(d){ return !d.req || tipos[d.id]; });
     var ctasOk = ctas.length > 0 && ctas.every(function(c){ return docs.some(function(d){ return d.cuenta_id === c.id; }); });
     return {codigo: !!p.codigo_validado_at, datos: !!p.datos_at, terminos: !!p.terminos_at, documentos: docsOk, cuentas: ctasOk, enviado: p.estado === 'en_revision' || p.estado === 'aprobado'};
   };
@@ -259,11 +267,13 @@
   function provDemo(accion, d){
     var f = F(), ahora = new Date().toISOString();
     if (accion === 'solicitar') {
+      var tipoP = d.tipo === 'individual' ? 'individual' : 'juridica';
+      if (tipoP === 'individual') { d.razon_social = d.empresa; d.empresa = d.nombre_comercial || d.empresa; }
       if (!d.empresa || !d.razon_social || !d.nit || !d.correo || !d.telefono) return R('Completá todos los campos.');
       if (f.proveedores.some(function(p){ return nitL(p.nit) === nitL(d.nit); })) return R('Ya hay un proveedor registrado con ese NIT. Si es tu empresa, ingresá con tu correo y contraseña, o escribinos a info@a2desarrollos.com.');
       if (f.proveedores.some(function(p){ return (p.correo || '').toLowerCase() === d.correo.toLowerCase() && p.usuario_id; })) return R('Ese correo ya tiene una cuenta. Ingresá desde Log In con tu contraseña.');
       var nid = uid();
-      guardar(function(f){ f.proveedores.push({id:nid, codigo:null, razon_social:d.razon_social, nombre_comercial:d.empresa, nit:d.nit, correo:d.correo.toLowerCase(), telefono:d.telefono, estado:'solicitado', activo:false, usuario_id:'pv-' + nid, solicitado_at:ahora});
+      guardar(function(f){ f.proveedores.push({id:nid, codigo:null, tipo_persona:tipoP, razon_social:d.razon_social, nombre_comercial:d.empresa, nit:d.nit, correo:d.correo.toLowerCase(), telefono:d.telefono, estado:'solicitado', activo:false, usuario_id:'pv-' + nid, solicitado_at:ahora});
         f.demoProv = nid; hist(f, nid, 'Solicitó código de proveedor', null, true); });
       A2Demo.setProv(nid); return P({ok:true, id:nid});
     }
@@ -313,11 +323,14 @@
     if (!p.codigo_validado_at || p.estado === 'en_revision' || p.estado === 'solicitado') return R(p.estado === 'en_revision' ? 'Tu expediente está en revisión; podrás editarlo cuando A2 responda.' : 'Primero validá tu código de acceso.');
     var aprobado = p.estado === 'aprobado';
     if (accion === 'guardar_datos') { var x2 = d.datos || {}, c = x2.contacto || {}, r = x2.representante || {}, falta = [];
-      if (!aprobado && (!x2.razon_social || !x2.nit)) falta.push('razón social y NIT');
+      var ind = A.esIndividual(p), dpiOk = String(r.dpi || '').replace(/\D/g, '').length === 13;
+      if (ind && !c.nombre) c = {nombre:r.nombre, apellido:r.apellido, sexo:r.sexo, titulo:r.titulo, puesto:r.puesto, telefono:r.telefono, correo:r.correo};
+      if (!aprobado && (!x2.razon_social || !x2.nit)) falta.push(ind ? 'nombre completo y NIT' : 'razón social y NIT');
       if (!x2.telefono || !x2.direccion) falta.push('teléfonos y dirección');
-      if (!c.nombre || !c.apellido || !c.sexo || !c.puesto || !c.telefono || !c.correo) falta.push('datos de contacto directo');
-      if (!r.nombre || !r.sexo || !r.puesto || !r.telefono || !r.correo || String(r.dpi || '').replace(/\D/g, '').length !== 13) falta.push('datos del representante legal (el DPI tiene 13 dígitos)');
-      if (!x2.rubro || !x2.fecha_constitucion || !x2.regimen_isr) falta.push('servicios a proveer');
+      if (!ind && (!c.nombre || !c.apellido || !c.sexo || !c.puesto || !c.telefono || !c.correo)) falta.push('datos de contacto directo');
+      if (ind ? (!r.nombre || !r.apellido || !r.sexo || !r.telefono || !r.correo || !dpiOk) : (!r.nombre || !r.sexo || !r.puesto || !r.telefono || !r.correo || !dpiOk))
+        falta.push(ind ? 'tus datos personales (el DPI tiene 13 dígitos)' : 'datos del representante legal (el DPI tiene 13 dígitos)');
+      if (!x2.rubro || (!ind && !x2.fecha_constitucion) || !x2.regimen_isr) falta.push('servicios a proveer');
       if (!(x2.referencias || []).some(function(z){ return z.nombre && z.telefono; })) falta.push('al menos una referencia');
       if (falta.length) return R('Falta: ' + falta.join(', ') + '.');
       guardar(function(f){ var cm = {telefono:x2.telefono, direccion:x2.direccion, web:x2.web, rubro:x2.rubro, regimen_isr:x2.regimen_isr, contacto:c, contacto_nombre:c.nombre + ' ' + c.apellido, datos_at:p.datos_at || ahora};

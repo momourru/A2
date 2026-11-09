@@ -65,35 +65,35 @@
       <h3>Datos del proveedor</h3>
       <p class="sub">Podés guardar y volver después: tu avance queda registrado.</p>
       <div class="form">
-        <h4 class="grp">Datos de la empresa</h4>
-        <div class="field"><label>Razón social</label><input name="razon_social" required data-lock><div class="msg">Requerido.</div></div>
+        <h4 class="grp" data-ind="Datos generales">Datos de la empresa</h4>
+        <div class="field"><label data-ind="Nombre completo (como en tu DPI)">Razón social</label><input name="razon_social" required data-lock><div class="msg">Requerido.</div></div>
         <div class="field"><label>NIT</label><input name="nit" required data-lock><div class="msg">Requerido.</div></div>
-        <div class="field"><label>Teléfonos de la empresa</label><input name="telefono" required placeholder="+502 2222 3333 / +502 5555 6666"><div class="msg">Requerido.</div></div>
+        <div class="field"><label data-ind="Teléfonos">Teléfonos de la empresa</label><input name="telefono" required placeholder="+502 2222 3333 / +502 5555 6666"><div class="msg">Requerido.</div></div>
         <div class="field"><label>Página web <span class="opt">(opcional)</span></label><input name="web" placeholder="www.empresa.com"></div>
         <div class="field full"><label>Dirección</label><input name="direccion" required><div class="msg">Requerido.</div></div>
 
-        <h4 class="grp">Contacto directo <small>Con quien coordinamos cotizaciones y órdenes</small></h4>
-        <div class="field"><label>Nombre</label><input name="c.nombre" required><div class="msg">Requerido.</div></div>
-        <div class="field"><label>Apellido</label><input name="c.apellido" required><div class="msg">Requerido.</div></div>
-        <div class="field"><label>Sexo</label><select name="c.sexo" required><option value="">Seleccioná…</option><option value="F">Femenino</option><option value="M">Masculino</option></select><div class="msg">Requerido.</div></div>
-        <div class="field"><label>Título</label><input name="c.titulo" list="titulos" placeholder="Lic., Ing., Arq., Sr., Sra."></div>
-        <div class="field"><label>Puesto</label><input name="c.puesto" required><div class="msg">Requerido.</div></div>
-        <div class="field"><label>Teléfono</label><input name="c.telefono" type="tel" required><div class="msg">Requerido.</div></div>
-        <div class="field full"><label>Correo</label><input name="c.correo" type="email" required><div class="msg">Ingresá un correo válido.</div></div>
+        <h4 class="grp solo-jur">Contacto directo <small>Con quien coordinamos cotizaciones y órdenes</small></h4>
+        <div class="field solo-jur"><label>Nombre</label><input name="c.nombre" required><div class="msg">Requerido.</div></div>
+        <div class="field solo-jur"><label>Apellido</label><input name="c.apellido" required><div class="msg">Requerido.</div></div>
+        <div class="field solo-jur"><label>Sexo</label><select name="c.sexo" required><option value="">Seleccioná…</option><option value="F">Femenino</option><option value="M">Masculino</option></select><div class="msg">Requerido.</div></div>
+        <div class="field solo-jur"><label>Título</label><input name="c.titulo" list="titulos" placeholder="Lic., Ing., Arq., Sr., Sra."></div>
+        <div class="field solo-jur"><label>Puesto</label><input name="c.puesto" required><div class="msg">Requerido.</div></div>
+        <div class="field solo-jur"><label>Teléfono</label><input name="c.telefono" type="tel" required><div class="msg">Requerido.</div></div>
+        <div class="field full solo-jur"><label>Correo</label><input name="c.correo" type="email" required><div class="msg">Ingresá un correo válido.</div></div>
 
-        <h4 class="grp">Representante legal</h4>
+        <h4 class="grp" data-ind="Tus datos personales">Representante legal</h4>
         <div class="field"><label>Nombre</label><input name="r.nombre" required><div class="msg">Requerido.</div></div>
         <div class="field"><label>Apellido</label><input name="r.apellido" required><div class="msg">Requerido.</div></div>
         <div class="field"><label>DPI</label><input name="r.dpi" required inputmode="numeric" placeholder="0000 00000 0000"><div class="msg">El DPI tiene 13 dígitos.</div></div>
         <div class="field"><label>Sexo</label><select name="r.sexo" required><option value="">Seleccioná…</option><option value="F">Femenino</option><option value="M">Masculino</option></select><div class="msg">Requerido.</div></div>
         <div class="field"><label>Título</label><input name="r.titulo" list="titulos"></div>
-        <div class="field"><label>Puesto</label><input name="r.puesto" required placeholder="Gerente general, administrador único…"><div class="msg">Requerido.</div></div>
+        <div class="field"><label data-ind="Profesión u oficio">Puesto</label><input name="r.puesto" required data-req-jur placeholder="Gerente general, administrador único…" data-ph-ind="Ej. ingeniero civil, electricista"><div class="msg">Requerido.</div></div>
         <div class="field"><label>Teléfono</label><input name="r.telefono" type="tel" required><div class="msg">Requerido.</div></div>
         <div class="field"><label>Correo</label><input name="r.correo" type="email" required><div class="msg">Ingresá un correo válido.</div></div>
 
         <h4 class="grp">Servicios a proveer</h4>
         <div class="field full"><label>Tipo de producto o servicio</label><input name="rubro" required placeholder="Ej. Concreto premezclado, instalaciones eléctricas, imprenta"><div class="msg">Requerido.</div></div>
-        <div class="field"><label>Fecha de constitución de la empresa</label><input name="fecha_constitucion" type="date" required><div class="msg">Requerido.</div></div>
+        <div class="field"><label data-ind="Inicio de actividades (opcional)">Fecha de constitución de la empresa</label><input name="fecha_constitucion" type="date" required data-req-jur><div class="msg">Requerido.</div></div>
         <div class="field"><label>Régimen de ISR</label><select name="regimen_isr" required id="sel-isr"></select><div class="msg">Requerido.</div></div>
 
         <h4 class="grp">Referencias comerciales <small>Al menos una</small></h4>
@@ -271,14 +271,22 @@ document.addEventListener('DOMContentLoaded', function(){
     d.querySelector('button').addEventListener('click', function(){ if ($$('#refs .ref-row').length > 1) d.remove(); else $$('input', d).forEach(function(i){ i.value = ''; }); });
     $('#refs').appendChild(d); }
   $('#ref-add').addEventListener('click', function(){ if ($$('#refs .ref-row').length < 6) refRow(); });
+  function aplicarTipo(){
+    var ind = A.esIndividual(X.proveedor);
+    $$('#s-datos [data-ind]').forEach(function(el){ if (el.dataset.jur == null) el.dataset.jur = el.textContent; el.textContent = ind ? el.dataset.ind : el.dataset.jur; });
+    $$('#s-datos .solo-jur').forEach(function(el){ el.hidden = ind; $$('[required], [data-req-c]', el).forEach(function(i){ i.dataset.reqC = '1'; i.required = !ind; }); });
+    $$('#s-datos [data-req-jur]').forEach(function(i){ i.required = !ind; });
+    $$('#s-datos [data-ph-ind]').forEach(function(i){ if (i.dataset.phJur == null) i.dataset.phJur = i.placeholder; i.placeholder = ind ? i.dataset.phInd : i.dataset.phJur; });
+  }
   function renderDatos(){
+    aplicarTipo();
     var p = X.proveedor, e = X.expediente || {}, c = p.contacto || {}, r = e.representante || {};
     $$('#s-datos [name]').forEach(function(i){ var n = i.name, v;
       if (n.indexOf('c.') === 0) v = c[n.slice(2)]; else if (n.indexOf('r.') === 0) v = r[n.slice(2)];
       else if (n === 'fecha_constitucion') v = e.fecha_constitucion; else v = p[n];
       i.value = v == null ? '' : v; i.closest('.field').classList.remove('err');
       if (i.hasAttribute('data-lock')) i.readOnly = aprobado(); });
-    $('#dat-lock').textContent = aprobado() ? 'La razón social y el NIT solo los puede cambiar A2. Escribinos a info@a2desarrollos.com si cambiaron.' : '';
+    $('#dat-lock').textContent = aprobado() ? (A.esIndividual(X.proveedor) ? 'Tu nombre y el NIT' : 'La razón social y el NIT') + ' solo los puede cambiar A2. Escribinos a info@a2desarrollos.com si cambiaron.' : '';
     $('#dat-ok').textContent = aprobado() ? 'Guardar cambios' : 'Guardar y continuar';
     $('#refs').innerHTML = ''; var refs = e.referencias && e.referencias.length ? e.referencias : [{}, {}]; refs.forEach(refRow);
     $('#dat-out').hidden = true;
@@ -286,14 +294,15 @@ document.addEventListener('DOMContentLoaded', function(){
   $('#s-datos').addEventListener('submit', function(e){
     e.preventDefault(); var f = this;
     var ok = UI.requeridos(f), mailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    ['c.correo','r.correo'].forEach(function(n){ var i = $('[name="' + n + '"]', f); if (!mailRe.test(i.value.trim())) { i.closest('.field').classList.add('err'); ok = false; } });
+    var indiv = A.esIndividual(X.proveedor);
+    (indiv ? ['r.correo'] : ['c.correo','r.correo']).forEach(function(n){ var i = $('[name="' + n + '"]', f); if (!mailRe.test(i.value.trim())) { i.closest('.field').classList.add('err'); ok = false; } });
     var dpi = $('[name="r.dpi"]', f); if (dpi.value.replace(/\D/g, '').length !== 13) { dpi.closest('.field').classList.add('err'); ok = false; }
     var refs = $$('#refs .ref-row').map(function(rw){ return {nombre: $('[data-k=nombre]', rw).value.trim(), telefono: $('[data-k=telefono]', rw).value.trim()}; });
     if (!refs.some(function(x){ return x.nombre && x.telefono; })) { UI.err($('#dat-out'), 'Agregá al menos una referencia con nombre y teléfono.'); ok = false; }
     if (!ok) { var first = $('.field.err', f); if (first) first.scrollIntoView({behavior:'smooth', block:'center'}); return; }
     var d = {contacto:{}, representante:{}, referencias:refs};
     $$('[name]', f).forEach(function(i){ var n = i.name, v = i.value.trim();
-      if (n.indexOf('c.') === 0) d.contacto[n.slice(2)] = v; else if (n.indexOf('r.') === 0) d.representante[n.slice(2)] = v; else d[n] = v; });
+      if (n.indexOf('c.') === 0) { if (!indiv) d.contacto[n.slice(2)] = v; } else if (n.indexOf('r.') === 0) d.representante[n.slice(2)] = v; else d[n] = v; });
     UI.busy(f, true); $('#dat-out').hidden = true;
     A.provAccion('guardar_datos', {datos:d}).then(function(){ UI.flash('Datos guardados.'); return aprobado() ? cargar('datos') : siguiente('datos'); }, function(m){ UI.err($('#dat-out'), m); }).finally(function(){ UI.busy(f, false); });
   });
@@ -316,7 +325,7 @@ document.addEventListener('DOMContentLoaded', function(){
     return A.subirDocProveedor(X.proveedor.id, tipo, file, cuenta);
   }
   function renderDocs(){
-    $('#docs').innerHTML = A.DOCS_PROVEEDOR.map(function(d){ var u = ultimo(d.id);
+    $('#docs').innerHTML = A.docsProveedor(X.proveedor).map(function(d){ var u = ultimo(d.id);
       return '<li><div><b>' + esc(d.n) + '</b>' + (d.req ? '' : ' <span class="pill">Si aplica</span>') + '<small>' + esc(d.d) + '</small>' +
         (u ? '<div class="d-file"><span class="pill ok">Cargado</span> <a href="#" data-r="' + esc(u.ruta) + '">' + esc(u.nombre) + '</a> <small style="display:inline">· ' + UI.fecha(u.subido_at) + '</small></div>' : (d.req ? '<div class="d-file"><span class="pill warn">Pendiente</span></div>' : '')) + '</div>' +
         '<label class="btn' + (u ? '' : ' dark') + '">' + (u ? 'Reemplazar' : 'Subir') + '<input type="file" hidden data-t="' + d.id + '" accept=".pdf,.jpg,.jpeg,.png,image/*,application/pdf"></label></li>';
@@ -324,7 +333,7 @@ document.addEventListener('DOMContentLoaded', function(){
     $$('#docs a[data-r]').forEach(verDoc);
     $$('#docs input[type=file]').forEach(function(i){ i.addEventListener('change', function(){ var lab = i.closest('label'); UI.busy(lab, true);
       subir(i.dataset.t, null, i.files[0]).then(function(){ UI.flash('Documento cargado.'); return cargar('docs'); }, function(m){ UI.flash(m, true); }).finally(function(){ UI.busy(lab, false); }); }); });
-    var falta = A.DOCS_PROVEEDOR.filter(function(d){ return d.req && !ultimo(d.id); });
+    var falta = A.docsProveedor(X.proveedor).filter(function(d){ return d.req && !ultimo(d.id); });
     $('#docs-nav').hidden = aprobado();
     $('#docs-falta').textContent = falta.length ? 'Falta: ' + falta.map(function(d){ return d.n; }).join(', ') + '.' : '';
     $('#docs-btn').disabled = !!falta.length;
@@ -391,10 +400,10 @@ document.addEventListener('DOMContentLoaded', function(){
 
   /* ---------- Resumen ---------- */
   function resumen(){
-    var p = X.proveedor, c = p.contacto || {}, docs = A.DOCS_PROVEEDOR.filter(function(d){ return ultimo(d.id); }).length;
-    var filas = [['Código de proveedor', p.codigo || 'Se asigna al autorizar tu solicitud'], ['Estado', (A.ESTADOS_PROVEEDOR[p.estado] || {}).n], ['Razón social', p.razon_social], ['NIT', p.nit], ['Correo de acceso', p.correo], ['Teléfonos', p.telefono],
-      ['Dirección', p.direccion], ['Contacto directo', c.nombre ? [c.titulo, c.nombre, c.apellido].filter(Boolean).join(' ') + ' · ' + (c.puesto || '') : ''], ['Servicio', p.rubro], ['Régimen ISR', p.regimen_isr],
-      ['Documentos', p.datos_at ? docs + ' de ' + A.DOCS_PROVEEDOR.length + ' cargados' : ''], ['Cuentas bancarias', (X.cuentas || []).length ? String((X.cuentas || []).length) : ''],
+    var p = X.proveedor, c = p.contacto || {}, docs = A.docsProveedor(X.proveedor).filter(function(d){ return ultimo(d.id); }).length;
+    var filas = [['Código de proveedor', p.codigo || 'Se asigna al autorizar tu solicitud'], ['Estado', (A.ESTADOS_PROVEEDOR[p.estado] || {}).n], ['Tipo', A.esIndividual(p) ? 'Persona individual' : 'Empresa'], [A.esIndividual(p) ? 'Nombre' : 'Razón social', p.razon_social], ['NIT', p.nit], ['Correo de acceso', p.correo], ['Teléfonos', p.telefono],
+      ['Dirección', p.direccion], [A.esIndividual(p) ? 'Contacto' : 'Contacto directo', c.nombre ? [c.titulo, c.nombre, c.apellido].filter(Boolean).join(' ') + ' · ' + (c.puesto || '') : ''], ['Servicio', p.rubro], ['Régimen ISR', p.regimen_isr],
+      ['Documentos', p.datos_at ? docs + ' de ' + A.docsProveedor(X.proveedor).length + ' cargados' : ''], ['Cuentas bancarias', (X.cuentas || []).length ? String((X.cuentas || []).length) : ''],
       ['Solicitado', UI.fecha(p.solicitado_at)], ['Aprobado', p.aprobado_at ? UI.fecha(p.aprobado_at) : '']];
     $('#res').innerHTML = filas.filter(function(f){ return f[1]; }).map(function(f){ return '<div><dt>' + f[0] + '</dt><dd>' + esc(f[1]) + '</dd></div>'; }).join('');
   }

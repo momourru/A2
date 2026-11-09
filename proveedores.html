@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function(){
       return ok && (!q || [p.codigo, p.razon_social, p.nombre_comercial, p.nit, p.rubro].join(' ').toLowerCase().indexOf(q) > -1); });
     if (proc) l.sort(function(a, b){ var o = {en_revision:0, solicitado:1, corregir:2, en_registro:3}; return (o[a.estado] - o[b.estado]) || (a.solicitado_at < b.solicitado_at ? 1 : -1); });
     $('#tbl tbody').innerHTML = l.length ? l.map(function(p){
-      return '<tr data-id="' + esc(p.id) + '"><td><b>' + esc(p.codigo || '—') + '</b></td><td>' + esc(p.razon_social) + (p.nombre_comercial ? '<small>' + esc(p.nombre_comercial) + '</small>' : '') + '</td>' +
+      return '<tr data-id="' + esc(p.id) + '"><td><b>' + esc(p.codigo || '—') + '</b></td><td>' + esc(p.razon_social) + (A.esIndividual(p) ? ' <span class="pill">Individual</span>' : '') + (p.nombre_comercial && p.nombre_comercial !== p.razon_social ? '<small>' + esc(p.nombre_comercial) + '</small>' : '') + '</td>' +
         (proc ? '<td>' + pill(p.estado) + '</td>' : '<td>' + esc(p.rubro || '—') + '</td>') +
         '<td>' + esc(p.contacto_nombre || '—') + '<small>' + esc(p.correo || '') + '</small></td><td>' + (proc ? UI.fecha(p.solicitado_at) : esc(p.telefono || '—')) + '</td></tr>';
     }).join('') : '<tr><td colspan="5" class="empty">' + (proc ? 'No hay proveedores en proceso de registro.' : prvs.length ? 'No hay proveedores con ese filtro.' : 'Todavía no hay proveedores registrados.') + '</td></tr>';
@@ -230,13 +230,14 @@ document.addEventListener('DOMContentLoaded', function(){
     $('#d-steps').innerHTML = pasos.map(function(x, i){ return '<div class="' + (x[1] ? 'ok' : i === cur ? 'on' : '') + '"><span>' + (i + 1) + '</span><b>' + x[0] + '</b><small>' + (typeof x[1] === 'string' ? UI.fecha(x[1]) : '&nbsp;') + '</small></div>'; }).join('');
 
     var c = p.contacto || {};
-    $('#d-datos').innerHTML = dl([['Código', esc(p.codigo)], ['Estado', esc(EST(est).n)], ['Nombre comercial', esc(p.nombre_comercial)], ['NIT', esc(p.nit)], ['Rubro', esc(p.rubro)], ['Régimen ISR', esc(p.regimen_isr)],
+    var ind = A.esIndividual(p);
+    $('#d-datos').innerHTML = dl([['Código', esc(p.codigo)], ['Estado', esc(EST(est).n)], ['Tipo', ind ? 'Persona individual' : 'Empresa'], ['Nombre comercial', esc(p.nombre_comercial)], ['NIT', esc(p.nit)], ['Rubro', esc(p.rubro)], ['Régimen ISR', esc(p.regimen_isr)],
       ['Contacto', c.nombre ? persona(c) : esc(p.contacto_nombre)], ['Correo', esc(p.correo)], ['Teléfonos', esc(p.telefono)], ['Dirección', esc(p.direccion)], ['Página web', esc(p.web)], ['Notas internas', esc(p.notas)]]);
 
     // expediente
     var e = p.expediente;
     $('#d-exp-c').hidden = !(VEEXP && (e || p.terminos_at));
-    if (VEEXP) $('#d-exp').innerHTML = dl([['Representante legal', e ? persona(e.representante) : ''], ['Fecha de constitución', e && e.fecha_constitucion ? UI.fecha(e.fecha_constitucion) : ''],
+    if (VEEXP) $('#d-exp').innerHTML = dl([[ind ? 'Datos personales' : 'Representante legal', e ? persona(e.representante) : ''], [ind ? 'Inicio de actividades' : 'Fecha de constitución', e && e.fecha_constitucion ? UI.fecha(e.fecha_constitucion) : ''],
       ['Referencias', e && e.referencias && e.referencias.length ? e.referencias.map(function(r){ return esc(r.nombre) + '<small>' + esc(r.telefono) + '</small>'; }).join('') : ''],
       ['Términos y condiciones', p.terminos_at ? 'Aceptados<small>' + UI.fecha(p.terminos_at, true) + (p.terminos_version ? ' · versión ' + esc(p.terminos_version) : '') + '</small>' : ''],
       ['Declaración y autorización de verificación', p.diligencia_at ? 'Aceptada<small>' + UI.fecha(p.diligencia_at, true) + (p.diligencia_version ? ' · versión ' + esc(p.diligencia_version) : '') + '</small>' : '']]);
@@ -244,7 +245,7 @@ document.addEventListener('DOMContentLoaded', function(){
     // documentos
     var docs = p.documentos || [];
     $('#d-docs-c').hidden = !(VEEXP && (docs.length || p.datos_at));
-    if (VEEXP) $('#d-docs').innerHTML = A.DOCS_PROVEEDOR.map(function(d){ var l = docs.filter(function(x){ return x.tipo === d.id; });
+    if (VEEXP) $('#d-docs').innerHTML = A.docsProveedor(p).map(function(d){ var l = docs.filter(function(x){ return x.tipo === d.id; });
       return '<li><span class="d-tipo">' + esc(d.n) + '</span>' + (l[0] ? '<a href="#" data-r="' + esc(l[0].ruta) + '">' + esc(l[0].nombre) + '</a><small>' + UI.fecha(l[0].subido_at) + (l.length > 1 ? ' · ' + (l.length - 1) + ' anterior' + (l.length > 2 ? 'es' : '') : '') + '</small>'
         : '<span class="sub" style="margin:0">' + (d.req ? 'Pendiente' : 'No aplica / no cargado') + '</span><small></small>') + '</li>'; }).join('');
     $$('#d-docs a[data-r]').forEach(verDoc);
